@@ -1,12 +1,16 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
+import Menu from './pages/Menu';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes path="/">
+    <div className='w-full'>
+
+      <Routes>
+        <Route path='/' element={<Menu />} />
       </Routes>
-    </BrowserRouter>
+
+    </div>
   );
 }
 
