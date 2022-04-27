@@ -14,8 +14,7 @@ const CategoryBar = ({ currCategory, setCategory, categories, myRef }) => {
       <nav>
         <ul className='mt-5 space-y-6 text-lg'>
           {categories.map((c, i) => <li
-            className='cursor-pointer'
-            style={{ fontWeight: c === currCategory ? 'bold' : 'normal' }}
+            className={currCategory === c ? 'cursor-pointer font-bold' : 'cursor-pointer hover:font-semibold'}
             key={i}
             onClick={() => categoryClick(c, i)}>
             {c}
