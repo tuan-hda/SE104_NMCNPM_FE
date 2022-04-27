@@ -17,6 +17,7 @@ module.exports = {
         primary: "#E16246",
         divider: "#ABABAB",
         'gray-thumb': '#F8F7F5',
+        'gray-auth': '#F2F2F2',
       },
       fontSize: {
         '22': "22px",
