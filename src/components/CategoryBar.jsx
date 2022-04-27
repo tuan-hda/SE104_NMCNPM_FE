@@ -5,7 +5,6 @@ const CategoryBar = ({ currCategory, setCategory, categories, myRef }) => {
     setCategory(c);
     myRef[i].scrollIntoView({
       behavior: 'smooth',
-      block: 'start'
     })
   }
 

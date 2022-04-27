@@ -7,7 +7,7 @@ function App() {
     <div className='w-full'>
 
       <Routes>
-        <Route path='/' element={<Menu />} />
+        <Route path='/menu' element={<Menu />} />
       </Routes>
 
     </div>

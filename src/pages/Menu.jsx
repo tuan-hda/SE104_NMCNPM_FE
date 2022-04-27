@@ -14,7 +14,7 @@ const Menu = () => {
 
   return (
     <div className='flex pt-10 px-32'>
-      <aside className='h-screen sticky top-0'>
+      <aside className='h-screen sticky top-10'>
         <CategoryBar currCategory={currCategory} setCategory={setCategory} categories={categories} myRef={myRef} />
       </aside>
 
