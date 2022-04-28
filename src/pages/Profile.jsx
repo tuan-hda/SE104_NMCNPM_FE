@@ -40,9 +40,10 @@ const Profile = () => {
       <div className='border-gray-border border-t-[1px] mt-8' />
 
       <div className='mt-8 flex'>
-        {/* Navigation Bar (including: Profile, Password, Orders, and Log out button) */}
+        {/* Navigation Bar */}
         <nav className='w-28'>
           <ul className='space-y-5 text-15'>
+            {/* Profile, Password, Orders */}
             {navbarData.map((d, i) => <li
               key={i}
               className={d === currNav ?
@@ -52,6 +53,7 @@ const Profile = () => {
               {d}
             </li>)}
 
+            {/* Log out button */}
             <li className={navItemStyle + 'hover:bg-blue-nav hover:font-semibold duration-75'}>
               Log out
             </li>
