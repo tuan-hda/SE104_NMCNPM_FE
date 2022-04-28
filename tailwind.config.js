@@ -21,10 +21,12 @@ module.exports = {
         'gray-border': '#CFCFCF',
         'black-placeholder': '#595959',
         'blue-facebook': '#1877F2',
+        'blue-nav': '#F3F4F8',
       },
       fontSize: {
         '22': "22px",
         '13': ['13px', '13px'],
+        '15': '15px',
         '32': ['32px', '36px'],
         '34': "34px",
         '40': "40px"
