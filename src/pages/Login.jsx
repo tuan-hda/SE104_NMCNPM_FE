@@ -1,10 +1,114 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import GoogleIcon from '../images/GoogleIcon.svg'
+import FacebookIcon from '../images/FacebookIcon.png'
+import CrossIcon from '../images/CrossIcon.svg'
 
 const Login = () => {
-  return (
-    <div className='py-[112px] px-[468px] bg-gray-auth h-screen'>
-      <div className='w-full h-full bg-white rounded-xl'>
+  const [detail, setDetail] = useState({
+    email: '',
+    password: ''
+  })
 
+  // Change detail state when user typ
+  const changeDetail = (e) => {
+    setDetail({ ...detail, [e.target.name]: e.target.value })
+  }
+
+  return (
+    <div className='px-[450px] py-16 bg-gray-auth h-screen text-13 font-semibold '>
+      {/* Close button */}
+      <div className='relative'>
+        <div className='absolute rounded-full cursor-pointer right-7 top-7
+        transition duration-300 hover:bg-gray-200 w-8 h-8 flex justify-center items-center'>
+          <img
+            className='w-4 h-4'
+            alt='Close'
+            src={CrossIcon}></img>
+        </div>
+      </div>
+
+      <div className='w-full h-full bg-white rounded-xl py-12 px-24'>
+
+        {/* Greetings go here */}
+        <div>
+          <h1 className='text-32 font-extrabold text-center'>WELCOME BACK!</h1>
+          <p className='text-13 text-center font-normal mt-1'>We are so happy to see you again.</p>
+        </div>
+
+        {/* Login form here */}
+        <form className='mt-12 space-y-4 text-13'>
+          {/* Email */}
+          <input
+            type='text'
+            className='auth-input font-semibold'
+            placeholder='Email'
+            value={detail.email}
+            name='email'
+            onChange={changeDetail} />
+
+          {/* Password */}
+          <input
+            type='password'
+            className='auth-input font-semibold'
+            value={detail.password}
+            name='password'
+            onChange={changeDetail}
+            placeholder='Password' />
+
+          {/* Stay signed in */}
+          <div className='flex items-center gap-2'>
+            <input
+              type='checkbox'
+              id='staySignedIn'
+              className='w-4 h-4 accent-primary' />
+
+            <label htmlFor='staySignedIn' className='font-semibold'>
+              Stay signed in
+            </label>
+          </div>
+
+          {/* Button sign in */}
+          <button
+            type='submit'
+            onClick={e => e.preventDefault()}
+            className='auth-input bg-primary text-white font-bold'>
+            Sign in
+          </button>
+        </form>
+
+        {/* Divider */}
+        <div className='flex items-center mt-6 justify-between'>
+          <span className='border-t-[0.5px] border-gray-border w-[45%]' />
+          <span>or</span>
+          <span className='border-t-[0.5px] border-gray-border w-[45%]' />
+        </div>
+
+        {/* Sign in with Google | Sign in with Facebook */}
+        <div>
+          <button className='flex mt-6 gap-2 justify-center items-center auth-input font-bold transition duration-300 hover:bg-gray-50'>
+            <img
+              src={GoogleIcon}
+              alt='Google Icon'
+              className='w-5 h-5' />
+            <span>Sign in with Google</span>
+          </button>
+
+          <button className='text-center mt-2 auth-input font-bold bg-blue-facebook transition duration-300
+           hover:bg-opacity-90 text-white flex gap-2 justify-center items-center'>
+            <img
+              src={FacebookIcon}
+              alt='Facebook Icon'
+              className='w-5 h-5' />
+            Sign in with Facebook
+          </button>
+        </div>
+
+        {/* Create account | Forget password */}
+        <div className='flex underline justify-between mt-6'>
+          <Link to='/signup'>Create account</Link>
+          <Link to='/forgetpassword'>Forget password</Link>
+        </div>
       </div>
     </div>
   )

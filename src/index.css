@@ -18,3 +18,8 @@ body {
 html, body {
   scroll-behavior: smooth;
 }
+
+.auth-input {
+  @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
+  border-gray-border rounded-lg px-5 py-4
+}
