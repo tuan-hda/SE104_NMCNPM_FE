@@ -4,7 +4,7 @@ import GoogleIcon from '../images/GoogleIcon.svg'
 import FacebookIcon from '../images/FacebookIcon.png'
 import CrossIcon from '../images/CrossIcon.svg'
 
-const Login = () => {
+const SignIn = () => {
   const [detail, setDetail] = useState({
     email: '',
     password: ''
@@ -16,19 +16,18 @@ const Login = () => {
   }
 
   return (
-    <div className='px-[450px] py-16 bg-gray-auth h-screen text-13 font-semibold '>
-      {/* Close button */}
-      <div className='relative'>
+    <div className='px-[450px] py-16 bg-gray-auth h-screen text-13 font-semibold'>
+
+      <div className='w-full h-full bg-white rounded-xl flex flex-col justify-center
+        px-24 relative'>
+        {/* Close button */}
         <div className='absolute rounded-full cursor-pointer right-7 top-7
-        transition duration-300 hover:bg-gray-200 w-8 h-8 flex justify-center items-center'>
+          transition duration-300 hover:bg-gray-200 w-8 h-8 flex justify-center items-center'>
           <img
             className='w-4 h-4'
             alt='Close'
             src={CrossIcon}></img>
         </div>
-      </div>
-
-      <div className='w-full h-full bg-white rounded-xl py-12 px-24'>
 
         {/* Greetings go here */}
         <div>
@@ -63,7 +62,7 @@ const Login = () => {
               id='staySignedIn'
               className='w-4 h-4 accent-primary' />
 
-            <label htmlFor='staySignedIn' className='font-semibold'>
+            <label htmlFor='staySignedIn' className='font-semibold cursor-pointer'>
               Stay signed in
             </label>
           </div>
@@ -72,7 +71,8 @@ const Login = () => {
           <button
             type='submit'
             onClick={e => e.preventDefault()}
-            className='auth-input bg-primary text-white font-bold'>
+            className='auth-input bg-primary text-white font-bold hover:bg-opacity-90
+            transition duration-300 '>
             Sign in
           </button>
         </form>
@@ -86,12 +86,12 @@ const Login = () => {
 
         {/* Sign in with Google | Sign in with Facebook */}
         <div>
-          <button className='flex mt-6 gap-2 justify-center items-center auth-input font-bold transition duration-300 hover:bg-gray-50'>
+          <button className='flex mt-6 gap-2 justify-center items-center auth-input font-bold transition duration-300 hover:bg-gray-100'>
             <img
               src={GoogleIcon}
               alt='Google Icon'
               className='w-5 h-5' />
-            <span>Sign in with Google</span>
+            Sign in with Google
           </button>
 
           <button className='text-center mt-2 auth-input font-bold bg-blue-facebook transition duration-300
@@ -110,8 +110,8 @@ const Login = () => {
           <Link to='/forgetpassword'>Forget password</Link>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 
-export default Login
+export default SignIn
