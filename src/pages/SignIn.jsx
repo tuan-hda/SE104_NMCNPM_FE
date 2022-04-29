@@ -16,9 +16,9 @@ const SignIn = () => {
   }
 
   return (
-    <div className='px-[450px] py-16 bg-gray-auth h-screen text-13 font-semibold'>
+    <div className='px-[450px] py-4 min-h-screen bg-gray-auth text-13 font-semibold flex items-center'>
 
-      <div className='w-full h-full bg-white rounded-xl flex flex-col justify-center
+      <div className='w-full h-full py-16 bg-white rounded-xl flex flex-col justify-center
         px-24 relative'>
         {/* Close button */}
         <div className='absolute rounded-full cursor-pointer right-7 top-7

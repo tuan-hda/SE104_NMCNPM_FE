@@ -3,13 +3,38 @@ import { Link } from 'react-router-dom'
 import GoogleIcon from '../images/GoogleIcon.svg'
 import FacebookIcon from '../images/FacebookIcon.png'
 import CrossIcon from '../images/CrossIcon.svg'
+import { validateInfo } from '../utils/validateInfo'
+
+const showError = (text, isPassword = false) => {
+  if (isPassword && text && Array.isArray(text)) {
+    return text.map((t, i) => <span
+      key={i}
+      className='ml-4 text-red-500 font-normal text-xs'>
+      {t}
+      <br />
+    </span>)
+  }
+
+  if (text) return <span className='ml-4 text-red-500 font-normal text-xs'>
+    {text}
+  </span>
+}
 
 const SignUp = () => {
   const [detail, setDetail] = useState({
     email: '',
     name: '',
-    password: ''
+    password: '',
+    confirmPassword: '',
   })
+
+  // Validate information
+  const [error, setError] = useState({});
+
+  const handleSubmit = (e) => {
+    setError(validateInfo(detail));
+    e.preventDefault();
+  }
 
   // Change detail state when user typ
   const changeDetail = (e) => {
@@ -17,9 +42,9 @@ const SignUp = () => {
   }
 
   return (
-    <div className='px-[450px] py-8 bg-gray-auth h-screen text-13 font-semibold'>
+    <div className='py-8 bg-gray-auth text-13 font-semibold min-h-screen flex items-center'>
 
-      <div className='w-full h-full bg-white rounded-xl flex flex-col justify-center
+      <div className='mx-[450px] h-full py-8 bg-white rounded-xl flex flex-col justify-center
         px-24 relative'>
         {/* Close button */}
         <div className='absolute rounded-full cursor-pointer right-7 top-7
@@ -46,6 +71,7 @@ const SignUp = () => {
             value={detail.email}
             name='email'
             onChange={changeDetail} />
+          {showError(error.email)}
 
           {/* Name */}
           <input
@@ -55,6 +81,7 @@ const SignUp = () => {
             value={detail.name}
             name='name'
             onChange={changeDetail} />
+          {showError(error.name)}
 
           {/* Password */}
           <input
@@ -64,17 +91,22 @@ const SignUp = () => {
             name='password'
             onChange={changeDetail}
             placeholder='Password' />
+          {showError(error.password, true)}
 
           {/* Confirm password */}
           <input
             type='password'
             className='auth-input font-semibold'
+            value={detail.confirmPassword}
+            name='confirmPassword'
+            onChange={changeDetail}
             placeholder='Confirm Password' />
+          {showError(error.confirmPassword)}
 
           {/* Button sign up */}
           <button
             type='submit'
-            onClick={e => e.preventDefault()}
+            onClick={handleSubmit}
             className='auth-input bg-primary text-white font-bold hover:bg-opacity-90
             transition duration-300 '>
             Sign up

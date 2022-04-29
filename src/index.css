@@ -23,3 +23,8 @@ html, body {
   @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
   border-gray-border rounded-lg px-5 py-4
 }
+
+.save-button {
+  @apply absolute right-0 bg-primary p-4 py-3 rounded-md text-white font-semibold text-sm 
+  hover:bg-opacity-90 transition duration-300
+}
