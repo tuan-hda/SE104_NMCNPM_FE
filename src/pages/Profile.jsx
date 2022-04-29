@@ -54,7 +54,8 @@ const Profile = () => {
             </li>)}
 
             {/* Log out button */}
-            <li className={navItemStyle + 'text-red-500 hover:font-semibold duration-300'}>
+            <li
+              className={navItemStyle + 'text-red-500 hover:font-semibold duration-300'}>
               Log out
             </li>
           </ul>

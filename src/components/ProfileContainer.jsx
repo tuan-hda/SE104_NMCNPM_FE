@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import MakimaAva from '../images/Makima.jpg'
 
 const ProfileContainer = () => {
+  const [detail, setDetail] = useState({});
+
   return (
     <div>
       {/* Header of profile */}
@@ -23,6 +25,11 @@ const ProfileContainer = () => {
         <button className='save-button'>Save</button>
       </div>
 
+      <div className='flex mt-16 justify-between text-sm font-semibold items-center'>
+        <p className='w-36'>Your name</p>
+
+        <input type='text' className='profile-input' />
+      </div>
     </div>
   )
 }
