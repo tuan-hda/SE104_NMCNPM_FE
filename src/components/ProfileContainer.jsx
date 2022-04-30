@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import MakimaAva from '../images/Makima.jpg'
+import GenderRadioButton from './GenderRadioButton'
 
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
 
@@ -44,17 +45,17 @@ const ProfileContainer = () => {
   const [ward, setWard] = useState([]);
 
   useEffect(() => {
-    console.log(isDistrictSelected + ' ' + isWardSelected)
-  }, [isWardSelected, isDistrictSelected])
-
-  useEffect(() => {
-    setDistrictSelected(isWardSelected => null);
-    setWardSelected(null);
-  }, [province])
-
-  useEffect(() => {
+    setDistrictSelected(null);
     setWardSelected(null);
   }, [district])
+
+  useEffect(() => {
+    setWardSelected(null);
+  }, [ward])
+
+  useEffect(() => {
+    console.log(detail)
+  }, [detail])
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -126,6 +127,13 @@ const ProfileContainer = () => {
     setDetail({
       ...detail,
       [e.target.name]: e.target.value
+    })
+  }
+
+  const handleGenderSelect = (g) => {
+    setDetail({
+      ...detail,
+      gender: g
     })
   }
 
@@ -267,7 +275,6 @@ const ProfileContainer = () => {
             className='province-input'
             name='ward'
             placeholder='Ward'
-            defaultValue='default'
             value={isWardSelected ? detail.ward : 'default'}
             onChange={handleChange}>
             <option value='default' disabled />
@@ -282,15 +289,18 @@ const ProfileContainer = () => {
       <div className='flex mt-6 justify-between text-sm items-center'>
         <p className='min-w-[144px] font-semibold'>Gender</p>
 
-        <div className='ml-36 w-full flex items-center font-semibold'>
+        <GenderRadioButton
+          OnClick={handleGenderSelect} />
+        {/*<div className='flex items-center font-semibold'>
           <input id='Male' type='radio' name='gender' value='Male' onChange={handleChange} />
           <label htmlFor='Male' className='ml-2'>Male</label>
           <input id='Female' type='radio' name='gender' value='Female' className='ml-10' onChange={handleChange} />
           <label htmlFor='Female' className='ml-2'>Female</label>
           <input id='Other' type='radio' name='gender' value='Other' className='ml-10' onChange={handleChange} />
           <label htmlFor='Other' className='ml-2'>Other</label>
-        </div>
+       </div>*/}
       </div>
+
 
       {divider}
 
@@ -306,7 +316,7 @@ const ProfileContainer = () => {
           onChange={handleChange} />
       </div>
 
-    </form>
+    </form >
   )
 }
 

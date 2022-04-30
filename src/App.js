@@ -5,6 +5,7 @@ import SignUp from './pages/SignUp';
 import Menu from './pages/Menu';
 import Profile from './pages/Profile';
 import Contact from './pages/Contact';
+import Test from './pages/Test'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path='/signup' element={<SignUp />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/contact' element={<Contact />} />
+        <Route path='/test' element={<Test />} />
       </Routes>
 
     </div>

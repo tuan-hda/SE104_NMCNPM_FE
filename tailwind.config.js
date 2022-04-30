@@ -22,6 +22,7 @@ module.exports = {
         'black-placeholder': '#595959',
         'blue-facebook': '#1877F2',
         'blue-nav': '#F3F4F8',
+        'gray-rdo': '#C5C5C5',
       },
       fontSize: {
         '22': "22px",
