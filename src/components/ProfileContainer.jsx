@@ -1,13 +1,128 @@
-import React, { useState } from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import MakimaAva from '../images/Makima.jpg'
 
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
 
+// Create axios
+const provinceApi = axios.create({
+  baseURL: 'https://provinces.open-api.vn/api/'
+})
+
+// Create data for combobox
+const createComboboxData = data => {
+  return data.map((d, i) => <option key={i} value={d.code + '_' + d.name}>
+    {d.name}
+  </option>)
+}
+
+// Handle call API error
+const handleApiCallError = err => {
+  if (err.response) {
+    console.log(err.response.data);
+    console.log(err.response.code);
+    console.log(err.response.headers);
+  } else {
+    console.log('Error: ' + err.message);
+  }
+}
+
 const ProfileContainer = () => {
-  const [detail, setDetail] = useState({});
+  const [detail, setDetail] = useState({
+    name: '',
+    email: '',
+    photo: '',
+    phone: '',
+    address: '',
+    gender: '',
+    dob: ''
+  });
+  const [province, setProvince] = useState([]);
+  const [district, setDistrict] = useState([]);
+  const [isDistrictSelected, setDistrictSelected] = useState(null);
+  const [isWardSelected, setWardSelected] = useState(null);
+  const [ward, setWard] = useState([]);
+
+  useEffect(() => {
+    console.log(isDistrictSelected + ' ' + isWardSelected)
+  }, [isWardSelected, isDistrictSelected])
+
+  useEffect(() => {
+    setDistrictSelected(isWardSelected => null);
+    setWardSelected(null);
+  }, [province])
+
+  useEffect(() => {
+    setWardSelected(null);
+  }, [district])
+
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      try {
+        const response = await provinceApi.get('/p');
+        setProvince(response.data);
+      }
+      catch (err) {
+        handleApiCallError(err);
+      }
+    }
+
+    fetchProvinces();
+  }, [])
+
+  useEffect(() => {
+    const fetchDistricts = async () => {
+      try {
+        const str = String(detail.province);
+        const code = str.substring(0, str.indexOf('_'));
+        const response = await provinceApi.get(`p/${code}`, {
+          params: {
+            depth: 2
+          }
+        })
+
+        setDistrict(response.data.districts);
+      } catch (err) {
+        handleApiCallError(err);
+
+      }
+    }
+
+    if (detail.province)
+      fetchDistricts();
+  }, [detail.province])
+
+  useEffect(() => {
+    const fetchWards = async () => {
+      try {
+        const str = String(detail.district);
+        const code = str.substring(0, str.indexOf('_'));
+        const response = await provinceApi.get(`d/${code}`, {
+          params: {
+            depth: 2
+          }
+        })
+
+        setWard(response.data.wards);
+      } catch (err) {
+        handleApiCallError(err);
+      }
+    }
+
+    if (detail.district)
+      fetchWards();
+  }, [detail.district])
 
   // handle user's changes in input
   const handleChange = e => {
+    if (e.target.name === 'district' && e.target.value !== 'default') {
+      setDistrictSelected(1);
+    }
+
+    if (e.target.name === 'ward' && e.target.value !== 'default') {
+      setWardSelected(1);
+    }
+
     setDetail({
       ...detail,
       [e.target.name]: e.target.value
@@ -55,13 +170,15 @@ const ProfileContainer = () => {
       {divider}
 
       {/* Email */}
-      <div className='flex mt-6 justify-between text-sm items-center text-[#515151]'>
+      <div className='flex mt-6 justify-between text-sm items-center'>
         <p className='min-w-[144px] font-semibold'>Your email</p>
 
         <input
           type='text'
-          className='profile-input'
+          className='profile-input text-[#515151]'
           name='email'
+          disabled
+          onChange={handleChange}
           value={detail.email} />
       </div>
 
@@ -125,13 +242,12 @@ const ProfileContainer = () => {
           <select
             className='province-input'
             name='province'
+            defaultValue={'default'}
             placeholder='Province'
             value={detail.province}
-            select={null}
             onChange={handleChange}>
-
-            <option value='TP Ho Chi Minh' >TP Ho Chi Minh</option>
-
+            <option disabled value='default' />
+            {createComboboxData(province)}
           </select>
 
           {/* District */}
@@ -139,11 +255,10 @@ const ProfileContainer = () => {
             className='province-input'
             name='district'
             placeholder='District'
-            value={detail.district}
+            value={isDistrictSelected ? detail.district : 'default'}
             onChange={handleChange}>
-
-            <option value='Quan Thu Duc' >Quan Thu Duc</option>
-
+            <option value='default' disabled />
+            {createComboboxData(district)}
           </select>
 
 
@@ -152,11 +267,11 @@ const ProfileContainer = () => {
             className='province-input'
             name='ward'
             placeholder='Ward'
-            value={detail.ward}
+            defaultValue='default'
+            value={isWardSelected ? detail.ward : 'default'}
             onChange={handleChange}>
-
-            <option value='Phuong Linh Trung' >Phuong Linh Trung</option>
-            <option value='Phuong Linh Trung' >Phuong Linh Trung</option>
+            <option value='default' disabled />
+            {createComboboxData(ward)}
           </select>
         </div>
       </div>
@@ -168,11 +283,11 @@ const ProfileContainer = () => {
         <p className='min-w-[144px] font-semibold'>Gender</p>
 
         <div className='ml-36 w-full flex items-center font-semibold'>
-          <input id='Male' type='radio' name='gender' value='Male' />
+          <input id='Male' type='radio' name='gender' value='Male' onChange={handleChange} />
           <label htmlFor='Male' className='ml-2'>Male</label>
-          <input id='Female' type='radio' name='gender' value='Female' className='ml-10' />
+          <input id='Female' type='radio' name='gender' value='Female' className='ml-10' onChange={handleChange} />
           <label htmlFor='Female' className='ml-2'>Female</label>
-          <input id='Other' type='radio' name='gender' value='Other' className='ml-10' />
+          <input id='Other' type='radio' name='gender' value='Other' className='ml-10' onChange={handleChange} />
           <label htmlFor='Other' className='ml-2'>Other</label>
         </div>
       </div>
