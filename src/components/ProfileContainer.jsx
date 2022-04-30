@@ -1,6 +1,8 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import MakimaAva from '../images/Makima.jpg'
+import useModal from '../utils/useModal'
+import AlertModal from './AlertModal'
 import GenderRadioButton from './GenderRadioButton'
 
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
@@ -43,6 +45,7 @@ const ProfileContainer = () => {
   const [isDistrictSelected, setDistrictSelected] = useState(null);
   const [isWardSelected, setWardSelected] = useState(null);
   const [ward, setWard] = useState([]);
+  const { isShowing, toggle } = useModal();
 
   useEffect(() => {
     setDistrictSelected(null);
@@ -52,10 +55,6 @@ const ProfileContainer = () => {
   useEffect(() => {
     setWardSelected(null);
   }, [ward])
-
-  useEffect(() => {
-    console.log(detail)
-  }, [detail])
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -85,7 +84,6 @@ const ProfileContainer = () => {
         setDistrict(response.data.districts);
       } catch (err) {
         handleApiCallError(err);
-
       }
     }
 
@@ -142,7 +140,7 @@ const ProfileContainer = () => {
   }
 
   return (
-    <form className='mb-10'>
+    <form className='mb-10' onSubmit={e => e.preventDefault()}>
       {/* Header of profile (Including avatar, title, description and Save button) */}
       <div className='flex items-center relative'>
         {/* User's avatar goes here */}
@@ -206,7 +204,10 @@ const ProfileContainer = () => {
 
           {/* Button delete and button update */}
           <div>
-            <button className='font-semibold hover:underline' type='button'>Delete</button>
+            <button className='font-semibold hover:underline' type='button'
+              onClick={toggle}>Delete</button>
+            <AlertModal msg='Are you sure you want to delete your photo?' isShowing={isShowing}
+              hide={toggle} />
             <button className='ml-4 font-semibold hover:underline' type='button'>Update</button>
           </div>
         </div>
@@ -291,14 +292,6 @@ const ProfileContainer = () => {
 
         <GenderRadioButton
           OnClick={handleGenderSelect} />
-        {/*<div className='flex items-center font-semibold'>
-          <input id='Male' type='radio' name='gender' value='Male' onChange={handleChange} />
-          <label htmlFor='Male' className='ml-2'>Male</label>
-          <input id='Female' type='radio' name='gender' value='Female' className='ml-10' onChange={handleChange} />
-          <label htmlFor='Female' className='ml-2'>Female</label>
-          <input id='Other' type='radio' name='gender' value='Other' className='ml-10' onChange={handleChange} />
-          <label htmlFor='Other' className='ml-2'>Other</label>
-       </div>*/}
       </div>
 
 
@@ -309,7 +302,7 @@ const ProfileContainer = () => {
         <p className='min-w-[144px] font-semibold'>Your date of birth</p>
 
         <input
-          type='text'
+          type='date'
           className='profile-input'
           name='dob'
           value={detail.dob}

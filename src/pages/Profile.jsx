@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+import AlertModal from '../components/AlertModal'
 import OrdersContainer from '../components/OrdersContainer'
 import PasswordContainer from '../components/PasswordContainer'
 import ProfileContainer from '../components/ProfileContainer'
+import useModal from '../utils/useModal'
 
 // Profile navbar data
 const navbarData = [
@@ -12,6 +14,7 @@ const navbarData = [
 
 const Profile = () => {
   const [currNav, setNav] = useState('Profile')
+  const { isShowing, toggle } = useModal()
 
   const handleNavClick = (navData) => {
     setNav(navData)
@@ -33,6 +36,11 @@ const Profile = () => {
 
   return (
     <div className='pt-10 px-32'>
+      {/* Alert Modal trigger whenever user click log out */}
+      <AlertModal msg='Are you sure you want to log out?'
+        isShowing={isShowing}
+        hide={toggle} />
+
       {/* Title */}
       <h1 className='font-extrabold text-32'>PROFILE</h1>
 
@@ -55,7 +63,8 @@ const Profile = () => {
 
             {/* Log out button */}
             <li
-              className={navItemStyle + 'text-red-500 hover:font-semibold duration-300'}>
+              className={navItemStyle + 'text-red-500 hover:font-semibold duration-300'}
+              onClick={toggle}>
               Log out
             </li>
           </ul>
