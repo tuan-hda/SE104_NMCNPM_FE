@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import MakimaAva from '../images/Makima.jpg'
+import DefaultAvatar from '../images/User-avatar.svg'
 import useModal from '../utils/useModal'
 import AlertModal from './AlertModal'
 import GenderRadioButton from './GenderRadioButton'
@@ -34,7 +34,7 @@ const ProfileContainer = () => {
   const [detail, setDetail] = useState({
     name: '',
     email: '',
-    photo: '',
+    photo: null,
     phone: '',
     address: '',
     gender: '',
@@ -46,14 +46,15 @@ const ProfileContainer = () => {
   const [isWardSelected, setWardSelected] = useState(null);
   const [ward, setWard] = useState([]);
   const { isShowing, toggle } = useModal();
+  // get result of modal
+  const [modalResult, setModalResult] = useState(-1);
 
   useEffect(() => {
-    setDistrictSelected(null);
-    setWardSelected(null);
+
   }, [district])
 
   useEffect(() => {
-    setWardSelected(null);
+
   }, [ward])
 
   useEffect(() => {
@@ -71,6 +72,18 @@ const ProfileContainer = () => {
   }, [])
 
   useEffect(() => {
+    switch (modalResult) {
+      case 1:
+        setDetail(detail => ({
+          ...detail,
+          photo: null
+        }))
+        break;
+      default: break;
+    }
+  }, [modalResult])
+
+  useEffect(() => {
     const fetchDistricts = async () => {
       try {
         const str = String(detail.province);
@@ -81,6 +94,8 @@ const ProfileContainer = () => {
           }
         })
 
+        setDistrictSelected(null);
+        setWardSelected(null);
         setDistrict(response.data.districts);
       } catch (err) {
         handleApiCallError(err);
@@ -102,6 +117,7 @@ const ProfileContainer = () => {
           }
         })
 
+        setWardSelected(null);
         setWard(response.data.wards);
       } catch (err) {
         handleApiCallError(err);
@@ -139,6 +155,21 @@ const ProfileContainer = () => {
     e.preventDefault();
   }
 
+  // Handle when user update photo
+  const handlePhotoChange = e => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setDetail({
+          ...detail,
+          photo: reader.result
+        })
+      }
+    }
+    reader.readAsDataURL(e.target.files[0]);
+  }
+
+
   return (
     <form className='mb-10' onSubmit={e => e.preventDefault()}>
       {/* Header of profile (Including avatar, title, description and Save button) */}
@@ -146,8 +177,8 @@ const ProfileContainer = () => {
         {/* User's avatar goes here */}
         <div className='rounded-full shadow-circle w-[184px] h-[184px] flex justify-center items-center'>
           <div>
-            <img src={MakimaAva} alt="Sample Avatar"
-              className='rounded-full w-44 h-44' />
+            <img src={detail.photo || DefaultAvatar} alt="Sample Avatar"
+              className='rounded-full w-44 h-44 object-contain' />
           </div>
         </div>
 
@@ -197,8 +228,8 @@ const ProfileContainer = () => {
         <div className='flex justify-between items-center w-full ml-36'>
           {/* User's current avatar */}
           <div>
-            <img src={MakimaAva} alt="User's ava"
-              className='w-20 h-20 rounded-full inline' />
+            <img src={detail.photo || DefaultAvatar} alt="User's ava"
+              className='w-20 h-20 rounded-full inline object-contain' />
             <span className='ml-3'>This will be displayed on your profile.</span>
           </div>
 
@@ -207,8 +238,11 @@ const ProfileContainer = () => {
             <button className='font-semibold hover:underline' type='button'
               onClick={toggle}>Delete</button>
             <AlertModal msg='Are you sure you want to delete your photo?' isShowing={isShowing}
-              hide={toggle} />
-            <button className='ml-4 font-semibold hover:underline' type='button'>Update</button>
+              hide={toggle} setResult={setModalResult} />
+
+            <label className='ml-4 font-semibold hover:underline cursor-pointer' htmlFor='photo'>Upload</label>
+            <input className='hidden' type='file' onChange={handlePhotoChange} id='photo'
+              accept='image/*' />
           </div>
         </div>
       </div>

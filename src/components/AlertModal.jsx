@@ -1,6 +1,18 @@
 import React from 'react'
 
-const AlertModal = ({ msg, isShowing, hide }) => {
+const AlertModal = ({ msg, isShowing, hide, setResult }) => {
+  const handleCancel = () => {
+    if (setResult)
+      setResult(0);
+    hide();
+  }
+
+  const handleOK = () => {
+    if (setResult)
+      setResult(1);
+    hide();
+  }
+
   return <div
     className={`${!isShowing ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'} 
     duration-300 transition-opacity fixed top-0 left-0 w-screen h-screen flex justify-center
@@ -16,8 +28,10 @@ const AlertModal = ({ msg, isShowing, hide }) => {
 
       {/* Buttons */}
       <div className='flex items-center absolute bottom-6 gap-4'>
-        <button onClick={hide} className='font-semibold rounded-md bg-gray-200 p-2 px-4 hover:bg-opacity-60 transition duration-300'>Cancel</button>
-        <button onClick={hide} className='font-semibold rounded-md bg-primary p-2 px-5 text-white hover:bg-opacity-80 transition duration-300'>OK</button>
+        {/* Button Cancel */}
+        <button onClick={handleCancel} className='font-semibold rounded-md bg-gray-200 p-2 px-4 hover:bg-opacity-60 transition duration-300'>Cancel</button>
+        {/* Button OK */}
+        <button onClick={handleOK} className='font-semibold rounded-md bg-primary p-2 px-5 text-white hover:bg-opacity-80 transition duration-300'>OK</button>
       </div>
     </div>
   </div>
