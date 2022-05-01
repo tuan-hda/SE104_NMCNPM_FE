@@ -7,6 +7,17 @@ import GenderRadioButton from './GenderRadioButton'
 
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
 
+// Define default user avatar
+const defaultAvatar = (style) => <svg
+  className={`rounded-full inline object-contain fill-gray-500 ${style}`}
+  xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512">
+  <g>
+    <circle cx="256" cy="128" r="128" />
+    <path d="M256,298.667c-105.99,0.118-191.882,86.01-192,192C64,502.449,73.551,512,85.333,512h341.333   c11.782,0,21.333-9.551,21.333-21.333C447.882,384.677,361.99,298.784,256,298.667z" />
+  </g>
+</svg>
+
+
 // Create axios
 const provinceApi = axios.create({
   baseURL: 'https://provinces.open-api.vn/api/'
@@ -177,8 +188,10 @@ const ProfileContainer = () => {
         {/* User's avatar goes here */}
         <div className='rounded-full shadow-circle w-[184px] h-[184px] flex justify-center items-center'>
           <div>
-            <img src={detail.photo || DefaultAvatar} alt="Sample Avatar"
+            {detail.photo ? <img src={detail.photo || DefaultAvatar} alt="Sample Avatar"
               className='rounded-full w-44 h-44 object-contain' />
+              : defaultAvatar('w-44 h-44')
+            }
           </div>
         </div>
 
@@ -228,8 +241,10 @@ const ProfileContainer = () => {
         <div className='flex justify-between items-center w-full ml-36'>
           {/* User's current avatar */}
           <div>
-            <img src={detail.photo || DefaultAvatar} alt="User's ava"
-              className='w-20 h-20 rounded-full inline object-contain' />
+            {detail.photo ? <img src={detail.photo} alt="User's ava"
+              className='w-20 h-20 rounded-full inline object-contain fill-gray-500' />
+              : defaultAvatar('w-20 h-20')
+            }
             <span className='ml-3'>This will be displayed on your profile.</span>
           </div>
 

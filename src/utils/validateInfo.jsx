@@ -39,5 +39,10 @@ export const validateInfo = (value) => {
     error.confirmPassword = 'Password required.'
   else if (value.confirmPassword !== value.password)
     error.confirmPassword = 'Your password do not match'
+
+  // Old password validation
+  if (!value.oldPassword)
+    error.oldPassword = 'Old password required.'
+
   return error
 }
