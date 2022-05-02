@@ -18,7 +18,7 @@ export const validateInfo = (value) => {
 
   // Password validation
   if (!value.password) {
-    error.password = 'Password required.'
+    error.password = ['Password required.']
   } else {
     const password = String(value.password);
 

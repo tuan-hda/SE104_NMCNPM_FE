@@ -9,7 +9,7 @@ import Test from './pages/Test'
 
 function App() {
   return (
-    <div className='w-full'>
+    <div className='w-full rounded-full'>
 
       <Routes>
         <Route path='/menu' element={<Menu />} />
