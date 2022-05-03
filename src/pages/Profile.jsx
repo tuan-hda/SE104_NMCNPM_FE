@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import AlertModal from '../components/AlertModal'
 import OrdersContainer from '../components/OrdersContainer'
 import PasswordContainer from '../components/PasswordContainer'
@@ -7,28 +8,36 @@ import useModal from '../utils/useModal'
 
 // Profile navbar data
 const navbarData = [
-  'Profile',
+  'Detail',
   'Password',
   'Orders'
 ]
 
 const Profile = () => {
-  const [currNav, setNav] = useState('Profile')
   const { isShowing, toggle } = useModal()
+  const [initNav, setNav] = useState('')
+  const navigate = useNavigate();
 
+  // Get current nav based on URL
+  useEffect(() => {
+    setNav(window.location.pathname.substring(9));
+  }, [navigate])
+
+  // Switch to other nav
   const handleNavClick = (navData) => {
-    setNav(navData)
+    const path = String(navData).toLowerCase();
+    navigate('/profile/' + path)
   }
 
   const navItemStyle = 'cursor-pointer px-3 py-2 transition duration-300 rounded-md '
 
   const getCurrentContainer = () => {
-    switch (currNav) {
-      case navbarData[0]:
+    switch (initNav) {
+      case navbarData[0].toLowerCase():
         return <ProfileContainer />
-      case navbarData[1]:
+      case navbarData[1].toLowerCase():
         return <PasswordContainer />
-      case navbarData[2]:
+      case navbarData[2].toLowerCase():
         return <OrdersContainer />
       default: break;
     }
@@ -54,7 +63,7 @@ const Profile = () => {
             {/* Profile, Password, Orders */}
             {navbarData.map((d, i) => <li
               key={i}
-              className={d === currNav ?
+              className={d.toLowerCase() === initNav ?
                 navItemStyle + 'font-semibold bg-blue-nav ' :
                 navItemStyle + 'hover:font-semibold'}
               onClick={() => handleNavClick(d)}>
