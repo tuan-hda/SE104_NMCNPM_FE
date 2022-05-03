@@ -6,6 +6,7 @@ import Menu from './pages/Menu';
 import Profile from './pages/Profile';
 import Contact from './pages/Contact';
 import Test from './pages/Test'
+import Purchase from './pages/Purchase';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path='/profile/password' element={<Profile />} />
         <Route path='/profile/orders' element={<Profile />} />
         <Route path='/contact' element={<Contact />} />
+        <Route path='/purchase' element={<Purchase />} />
         <Route path='/test' element={<Test />} />
       </Routes>
 

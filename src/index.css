@@ -36,3 +36,16 @@ html, body {
 .province-input {
   @apply outline-none border-[#C5C5C5] border-[1px] w-full block rounded-lg px-5 h-[45px] font-medium
 }
+
+a.font-bold.text-primary {
+  cursor: pointer;
+}
+
+a.font-bold.text-primary:hover {
+  text-decoration: underline;
+}
+
+.delivery-input {
+  @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
+  border-gray-border rounded-lg px-5
+}
