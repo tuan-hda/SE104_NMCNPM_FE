@@ -41,15 +41,12 @@ const getDeliveryStatus = (code) => {
   }
 }
 
-// get text color based on status code 
+// Get text color based on status code 
 const getTextColor = (code) => {
   switch (code) {
-    case 0:
-      return '#FFC107';
-    case 1:
-      return '#FF0000';
-    case 2:
-      return '#009D34';
+    case 0: return 'text-[#FFC107]';
+    case 1: return 'text-[#FF0000]';
+    case 2: return 'text-[#009D34]';
     default:
       return ''
   }
@@ -89,10 +86,14 @@ const OrdersContainer = () => {
               return <React.Fragment key={i} >
                 {divider}
                 <tr className='font-medium' height='40px'>
-                  <td className='text-[#1976D2] cursor-pointer' onClick={() => handleClick(o.orderID)}>{'#' + o.orderID}</td>
+                  <td
+                    className='text-[#1976D2] cursor-pointer hover:underline'
+                    onClick={() => handleClick(o.orderID)}>
+                    {'#' + o.orderID}
+                  </td>
                   <td>{o.purchaseDate}</td>
-                  <td>{'#' + o.total}</td>
-                  <td className={`text-[${getTextColor(o.status)}]`}>{getDeliveryStatus(o.status)}</td>
+                  <td>{'$ ' + o.total}</td>
+                  <td className={getTextColor(o.status)}>{getDeliveryStatus(o.status)}</td>
                   <td>{o.payment ? 'Paid' : 'Cash'}</td>
                 </tr>
               </React.Fragment>

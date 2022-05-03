@@ -57,17 +57,11 @@ const ProfileContainer = () => {
   const [isWardSelected, setWardSelected] = useState(null);
   const [ward, setWard] = useState([]);
   const { isShowing, toggle } = useModal();
-  // get result of modal
+
+  // Get result of Modal
   const [modalResult, setModalResult] = useState(-1);
 
-  useEffect(() => {
-
-  }, [district])
-
-  useEffect(() => {
-
-  }, [ward])
-
+  // Fetch province data
   useEffect(() => {
     const fetchProvinces = async () => {
       try {
@@ -82,6 +76,7 @@ const ProfileContainer = () => {
     fetchProvinces();
   }, [])
 
+  // Delete user avatar if modalResult = 1
   useEffect(() => {
     switch (modalResult) {
       case 1:
@@ -94,6 +89,7 @@ const ProfileContainer = () => {
     }
   }, [modalResult])
 
+  // Fetch district data after user choose province
   useEffect(() => {
     const fetchDistricts = async () => {
       try {
@@ -117,6 +113,7 @@ const ProfileContainer = () => {
       fetchDistricts();
   }, [detail.province])
 
+  // Fetch ward data after user choose district
   useEffect(() => {
     const fetchWards = async () => {
       try {
@@ -139,7 +136,7 @@ const ProfileContainer = () => {
       fetchWards();
   }, [detail.district])
 
-  // handle user's changes in input
+  // Handle user's changes in input
   const handleChange = e => {
     if (e.target.name === 'district' && e.target.value !== 'default') {
       setDistrictSelected(1);
@@ -155,6 +152,7 @@ const ProfileContainer = () => {
     })
   }
 
+  // Handle gender selection
   const handleGenderSelect = (g) => {
     setDetail({
       ...detail,
@@ -179,7 +177,6 @@ const ProfileContainer = () => {
     }
     reader.readAsDataURL(e.target.files[0]);
   }
-
 
   return (
     <form className='mb-10' onSubmit={e => e.preventDefault()}>
@@ -255,7 +252,7 @@ const ProfileContainer = () => {
             <AlertModal msg='Are you sure you want to delete your photo?' isShowing={isShowing}
               hide={toggle} setResult={setModalResult} />
 
-            <label className='ml-4 font-semibold hover:underline cursor-pointer' htmlFor='photo'>Upload</label>
+            <label className='ml-4 font-semibold hover:underline cursor-pointer' htmlFor='photo'>Update</label>
             <input className='hidden' type='file' onChange={handlePhotoChange} id='photo'
               accept='image/*' />
           </div>
