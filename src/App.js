@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
+import Home from './pages/Home'
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Menu from './pages/Menu';
@@ -7,12 +8,15 @@ import Profile from './pages/Profile';
 import Contact from './pages/Contact';
 import Test from './pages/Test'
 import Purchase from './pages/Purchase';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 function App() {
   return (
     <div className='w-full rounded-full'>
-
-      <Routes>
+      <Header />
+      <Routes >
+        <Route path='/' element={<Home />} />
         <Route path='/menu' element={<Menu />} />
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp />} />
@@ -23,7 +27,7 @@ function App() {
         <Route path='/purchase' element={<Purchase />} />
         <Route path='/test' element={<Test />} />
       </Routes>
-
+      <Footer/>
     </div>
   );
 }
