@@ -102,21 +102,21 @@ const AddressBookModal = ({ ABM_isShowing, hide, setResult }) => {
     </div>
   }
 
-  // Handle onAddAddressClic
-  const handleOnAddressClick = () => {
-    toggle();
-  }
-
   // Full screen layer
   return (<div className={`${ABM_isShowing ? 'opacity-100' : 'opacity-0 pointer-events-none'} flex items-center justify-center h-screen w-full bg-opacity-70 duration-300 transition-opacity fixed bg-gray-500`} onClick={() => hide()}>
 
-    {<AddAddressModal AAM_isShowing={isShowing} hide={toggle} />}
+    {/* Add Address Modal */}
+    <div className={`${isShowing ? '' : 'opacity-0 pointer-events-none'} absolute`}
+      onClick={e => e.stopPropagation()}>
+      {< AddAddressModal AAM_isShowing={isShowing} hide={toggle} />}
+    </div>
 
     {/* Address Book Modal */}
-    <div>
-      <div className='w-[640px] max-h-[640px] flex flex-col justify-start  bg-white rounded-lg overflow-auto pt-8 pb-7 px-20 relative' onClick={(e) => {
+    <div className={`${isShowing ? 'opacity-0 pointer-events-none' : ''} absolute`}>
+      <div className='w-[640px] max-h-[640px] address-modal' onClick={(e) => {
         e.stopPropagation();
       }}>
+
         {/* Close button */}
         <div className='absolute top-7 right-7 hover:bg-gray-border transition duration-300 rounded-full cursor-pointer w-8 h-8 flex items-center justify-center'
           onClick={() => { hide() }}>
@@ -132,16 +132,17 @@ const AddressBookModal = ({ ABM_isShowing, hide, setResult }) => {
         {/* Fill the gap between User's addresses and Save button */}
         <div className='flex-grow' />
 
-        {/* Save button */}
+        {/* Add address button */}
         <div className='flex justify-center mt-7'>
           <button className='w-40 font-semibold text-13 bg-gray-border rounded-lg h-10 hover:bg-gray-500 hover:text-white duration-300 transition'
+            onClick={() => toggle()}
           >
             Add address
           </button>
         </div>
       </div>
     </div>
-  </div>
+  </div >
   )
 }
 

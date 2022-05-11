@@ -54,3 +54,7 @@ a.font-bold.text-primary:hover {
   @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
   border-red-500 rounded-lg px-5 py-4
 }
+
+.address-modal {
+  @apply flex flex-col justify-start  bg-white rounded-lg overflow-auto pt-8 pb-7 px-20 relative
+}
