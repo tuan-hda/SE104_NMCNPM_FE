@@ -49,3 +49,8 @@ a.font-bold.text-primary:hover {
   @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
   border-gray-border rounded-lg px-5
 }
+
+.auth-input-err {
+  @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
+  border-red-500 rounded-lg px-5 py-4
+}
