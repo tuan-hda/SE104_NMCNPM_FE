@@ -4,41 +4,46 @@ import productThumb from '../images/ProductThumbImage.png'
 
 const FavoriteItems = () => {
     const productData = [
-        {
-          image: productThumb,
-          title: 'Hamburgers And Chips Meal',
-          calories: 6750,
-          category: 'Featured',
-          price: 59.99
-        },
-        {
-          image: productThumb,
-          title: 'Hamburgers And Chips Meal',
-          calories: 6750,
-          category: 'Combos',
-          price: 59.99
-        },
-        {
-          image: productThumb,
-          title: 'Hamburgers And Chips Meal',
-          calories: 6750,
-          category: 'Hamburgers',
-          price: 59.99
-        },
-        {
-          image: productThumb,
-          title: 'Hamburgers And Chips Meal',
-          calories: 6750,
-          category: 'Chicken',
-          price: 59.99
-        },
-        {
-          image: productThumb,
-          title: 'Hamburgers And Chips Meal',
-          calories: 6750,
-          category: 'Rice',
-          price: 59.99
-        },
+      {
+        id:1,
+        image: productThumb,
+        title: 'Hamburgers And Chips Meal',
+        calories: 6750,
+        category: 'Featured',
+        price: 59.99
+      },
+      {
+        id:2,
+        image: productThumb,
+        title: 'Hamburgers And Chips Meal',
+        calories: 6750,
+        category: 'Combos',
+        price: 59.99
+      },
+      {
+        id:3,
+        image: productThumb,
+        title: 'Hamburgers And Chips Meal',
+        calories: 6750,
+        category: 'Hamburgers',
+        price: 59.99
+      },
+      {
+        id:4,
+        image: productThumb,
+        title: 'Hamburgers And Chips Meal',
+        calories: 6750,
+        category: 'Chicken',
+        price: 59.99
+      },
+      {
+        id:5,
+        image: productThumb,
+        title: 'Hamburgers And Chips Meal',
+        calories: 6750,
+        category: 'Rice',
+        price: 59.99
+      },
     ]
 
 

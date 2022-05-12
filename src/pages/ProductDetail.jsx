@@ -1,9 +1,11 @@
 import React,{useState,useEffect} from 'react'
+import { connect } from 'react-redux';
+import { addToCart } from '../actions/cart-actions';
 import { useLocation } from 'react-router-dom';
 import AddIcon from '../images/addIcon.svg'
 import MinusIcon from '../images/minusIcon.svg'
 
-const ProductDetail = () => {
+const ProductDetail = ({addToCart}) => {
     const [quantity,setQuantity] = useState(1);
     
     //Retrieve product from ProductThumb (Link)
@@ -15,7 +17,7 @@ const ProductDetail = () => {
     },[])
 
 
-    const handleAdd = () => {
+    const handleIncrease = () => {
         setQuantity(+quantity+1)
     }
     const handleDecrease = () => {
@@ -50,14 +52,14 @@ const ProductDetail = () => {
                             value={quantity}
                             onChange={e => {!isNaN(e.target.value)&&setQuantity(e.target.value)}}
                             />
-                            <button onClick={handleAdd}>
+                            <button onClick={handleIncrease}>
                                 <img src={AddIcon} alt="Add" className='w-10'/>
                             </button>
                         </div>
                     </div>
                 </div>
                 {/* Add to Cart Button */}
-                <button className='hidden md:flex items-center justify-center bg-secondary text-5xl text-white font-medium rounded-[50px] w-50 h-20 px-10'>
+                <button onClick={() => addToCart({product,quantity})} className='hidden md:flex items-center justify-center bg-secondary text-5xl text-white font-medium rounded-[50px] w-50 h-20 px-10'>
                     Add to Cart
                 </button>
             </div>
@@ -66,4 +68,10 @@ const ProductDetail = () => {
     )
 }
 
-export default ProductDetail
+const mapDispatchToProps = dispatch => {
+    return {
+        addToCart: ({product,quantity}) => dispatch(addToCart({product,quantity}))
+    }
+}
+
+export default connect(null,mapDispatchToProps)(ProductDetail)
