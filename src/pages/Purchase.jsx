@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AddressBookModal from '../components/modals/AddressBookModal';
 import PaymentMethodRadioButton from '../components/PaymentMethodRadioButton';
 import ProvinceGetter from '../components/ProvinceGetter';
@@ -33,9 +33,14 @@ const Purchase = () => {
   const [isDistrictSelected, setDistrictSelected] = useState(false);
   const [isWardSelected, setWardSelected] = useState(false);
 
+  // ABM (Address Book Modal) is true by default, otherwise AAM (Add Address Modal) is true
+  const [isABM, setIsABM] = useState(true);
+
+  const [result, setResult] = useState()
+
   const { isShowing, toggle } = useModal();
 
-  ProvinceGetter({ province: deliveryInfo.province, district: deliveryInfo.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected })
+  ProvinceGetter({ province: deliveryInfo.province, district: deliveryInfo.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info: deliveryInfo, setInfo: setDeliveryInfo, result })
 
   const handleChange = e => {
     if (e.target.name === 'phone') {
@@ -64,8 +69,25 @@ const Purchase = () => {
     })
   }
 
+  const showModal = () => {
+    toggle();
+  }
+
+  useEffect(() => {
+    if (!isShowing) {
+      setIsABM(true)
+      if (result) {
+        setProvinceSelected(true)
+        setDeliveryInfo(deliveryInfo => ({
+          ...deliveryInfo,
+          province: result.province
+        }))
+      }
+    }
+  }, [isShowing])
+
   return (<div className='w-full h-full'>
-    <AddressBookModal ABM_isShowing={isShowing} hide={toggle} />
+    <AddressBookModal isABM={isABM} setIsABM={setIsABM} ABM_isShowing={isShowing} hide={toggle} setResult={setResult} />
     <div className='pt-10 px-32 flex justify-between gap-8'>
 
       {/* Left section */}
@@ -77,7 +99,7 @@ const Purchase = () => {
           <div className='justify-between flex'>
             <h1 className='text-32 font-extrabold'>DELIVERY INFORMATION</h1>
             <button className='text-13 font-semibold hover:underline'
-              onClick={() => toggle()}>Address book</button>
+              onClick={() => showModal()}>Address book</button>
           </div>
 
           {/* Information input */}

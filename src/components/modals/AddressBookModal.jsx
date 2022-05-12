@@ -8,68 +8,18 @@ const crossIcon = <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa
   </g>
 </svg>
 
-const AddressBookModal = ({ ABM_isShowing, hide, setResult }) => {
+const getProvinceName = (p) => p.substring(p.indexOf('_') + 1)
+
+const AddressBookModal = ({ isABM, setIsABM, ABM_isShowing, hide, setResult }) => {
   const [addresses, setAddresses] = useState([
     {
       id: 1,
       name: 'Nguyen Van A',
       phone: '0123456789',
       address: 'KTX Khu A, Khu pho 6',
-      province: 'TP Ho Chi Minh',
-      district: 'Quan Thu Duc',
-      ward: 'Phuong Linh Trung'
-    }, {
-      id: 6,
-      name: 'Nguyen Van A',
-      phone: '0123456789',
-      address: 'KTX Khu A, Khu pho 6',
-      province: 'TP Ho Chi Minh',
-      district: 'Quan Thu Duc',
-      ward: 'Phuong Linh Trung'
-    }, {
-      id: 7,
-      name: 'Nguyen Van A',
-      phone: '0123456789',
-      address: 'KTX Khu A, Khu pho 6',
-      province: 'TP Ho Chi Minh',
-      district: 'Quan Thu Duc',
-      ward: 'Phuong Linh Trung'
-    },
-    {
-      id: 2,
-      name: 'Nguyen Van A',
-      phone: '0123456789',
-      address: 'KTX Khu A, Khu pho 6',
-      province: 'TP Ho Chi Minh',
-      district: 'Quan Thu Duc',
-      ward: 'Phuong Linh Trung'
-    },
-    {
-      id: 3,
-      name: 'Nguyen Van A',
-      phone: '0123456789',
-      address: 'KTX Khu A, Khu pho 6',
-      province: 'TP Ho Chi Minh',
-      district: 'Quan Thu Duc',
-      ward: 'Phuong Linh Trung'
-    },
-    {
-      id: 4,
-      name: 'Nguyen Van A',
-      phone: '0123456789',
-      address: 'KTX Khu A, Khu pho 6',
-      province: 'TP Ho Chi Minh',
-      district: 'Quan Thu Duc',
-      ward: 'Phuong Linh Trung'
-    },
-    {
-      id: 5,
-      name: 'Nguyen Van A',
-      phone: '0123456789',
-      address: 'KTX Khu A, Khu pho 6',
-      province: 'TP Ho Chi Minh',
-      district: 'Quan Thu Duc',
-      ward: 'Phuong Linh Trung'
+      province: '79_Thanh pho Ho Chi Minh',
+      district: '769_Thanh pho Thu Duc',
+      ward: '26800_Phuong Linh Trung'
     },
   ]);
   const [currAddress, setCurrAddress] = useState();
@@ -79,6 +29,7 @@ const AddressBookModal = ({ ABM_isShowing, hide, setResult }) => {
 
   // Default address
   useEffect(() => {
+    setResult(addresses[0])
     setCurrAddress(addresses[0]);
   }, [])
 
@@ -97,52 +48,52 @@ const AddressBookModal = ({ ABM_isShowing, hide, setResult }) => {
         {address.name}, {address.phone}
       </p>
       <p className='mt-1'>
-        {address.address}, {address.ward}, {address.district}, {address.province}
+        {address.address}, {getProvinceName(address.ward)}, {getProvinceName(address.district)}, {getProvinceName(address.province)}
       </p>
     </div>
   }
 
-  // Full screen layer
-  return (<div className={`${ABM_isShowing ? 'opacity-100' : 'opacity-0 pointer-events-none'} flex items-center justify-center h-screen w-full bg-opacity-70 duration-300 transition-opacity fixed bg-gray-500`} onClick={() => hide()}>
+  // Show AAM 
+  const showAAM = () => {
+    toggle();
+    setIsABM(false);
+  }
 
-    {/* Add Address Modal */}
-    <div className={`${isShowing ? '' : 'opacity-0 pointer-events-none'} absolute`}
-      onClick={e => e.stopPropagation()}>
-      {< AddAddressModal AAM_isShowing={isShowing} hide={toggle} />}
-    </div>
+  // Full screen layer
+  return (isABM ? <div className={`${ABM_isShowing ? 'opacity-100' : 'opacity-0 pointer-events-none'} flex items-center justify-center h-screen w-full bg-opacity-70 duration-300 transition-opacity fixed bg-gray-500`} onClick={() => hide()}>
 
     {/* Address Book Modal */}
-    <div className={`${isShowing ? 'opacity-0 pointer-events-none' : ''} absolute`}>
-      <div className='w-[640px] max-h-[640px] address-modal' onClick={(e) => {
-        e.stopPropagation();
-      }}>
+    <div className='w-[640px] max-h-[640px] address-modal' onClick={(e) => {
+      e.stopPropagation();
+    }}>
 
-        {/* Close button */}
-        <div className='absolute top-7 right-7 hover:bg-gray-border transition duration-300 rounded-full cursor-pointer w-8 h-8 flex items-center justify-center'
-          onClick={() => { hide() }}>
-          {crossIcon}
-        </div>
+      {/* Close button */}
+      <div className='absolute top-7 right-7 hover:bg-gray-border transition duration-300 rounded-full cursor-pointer w-8 h-8 flex items-center justify-center'
+        onClick={() => { hide() }}>
+        {crossIcon}
+      </div>
 
-        {/* Title */}
-        <h1 className='font-extrabold text-[26px] mb-2 text-center'>ADDRESS BOOK</h1>
+      {/* Title */}
+      <h1 className='font-extrabold text-[26px] mb-2 text-center'>ADDRESS BOOK</h1>
 
-        {/* User's addresses */}
-        {addresses.map((address, index) => getAddressItems(address, index))}
+      {/* User's addresses */}
+      {addresses.map((address, index) => getAddressItems(address, index))}
 
-        {/* Fill the gap between User's addresses and Save button */}
-        <div className='flex-grow' />
+      {/* Fill the gap between User's addresses and Save button */}
+      <div className='flex-grow' />
 
-        {/* Add address button */}
-        <div className='flex justify-center mt-7'>
-          <button className='w-40 font-semibold text-13 bg-gray-border rounded-lg h-10 hover:bg-gray-500 hover:text-white duration-300 transition'
-            onClick={() => toggle()}
-          >
-            Add address
-          </button>
-        </div>
+      {/* Add address button */}
+      <div className='flex justify-center mt-7'>
+        <button className='w-40 font-semibold text-13 bg-gray-border rounded-lg h-10 hover:bg-gray-500 hover:text-white duration-300 transition'
+          onClick={() => showAAM()}
+        >
+          Add address
+        </button>
       </div>
     </div>
-  </div >
+  </div>
+    :
+    <AddAddressModal setIsABM={setIsABM} isShowing={isShowing} hide={toggle} hideParent={hide} />
   )
 }
 

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import removeAccents from '../utils/removeAccents';
 
 const provinceApi = axios.create({
@@ -27,7 +27,10 @@ const normalizeText = (data) => {
   })
 }
 
-const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected }) => {
+const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info, setInfo, result }) => {
+  const [isDistrictDone, setIsDistrictDone] = useState(false);
+  const [isWardDone, setIsWardDone] = useState(false);
+
   // Fetch province data
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -63,6 +66,7 @@ const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard,
         //dispatch(setDistrict(response.data.districts));
         setDistrict(normalizeText(response.data.districts));
         setWard([])
+        setIsDistrictDone(true);
       } catch (err) {
         handleApiCallError(err);
       }
@@ -88,6 +92,7 @@ const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard,
         setWardSelected(false);
         //dispatch(setWard(response.data.wards))
         setWard(normalizeText(response.data.wards));
+        setIsWardDone(true);
       } catch (err) {
         handleApiCallError(err);
       }
@@ -96,6 +101,27 @@ const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard,
     if (district)
       fetchWards();
   }, [district])
+
+  useEffect(() => {
+    if (result && info && isDistrictDone) {
+      setDistrictSelected(true);
+      setInfo((info) => ({
+        ...info,
+        district: result.district
+      }))
+
+    }
+  }, [isDistrictDone])
+
+  useEffect(() => {
+    if (result && info && isWardDone) {
+      setWardSelected(true);
+      setInfo((info) => ({
+        ...info,
+        ward: result.ward
+      }))
+    }
+  }, [isWardDone])
 }
 
 export default ProvinceGetter

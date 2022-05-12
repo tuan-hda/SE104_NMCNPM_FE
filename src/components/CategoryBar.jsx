@@ -2,7 +2,6 @@ import React from 'react'
 
 const CategoryBar = ({ currCategory, setCategory, categories, myRef }) => {
   const categoryClick = (c, i) => {
-    setCategory(c);
     myRef[i].scrollIntoView({
       behavior: 'smooth',
     })

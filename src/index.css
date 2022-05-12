@@ -58,3 +58,8 @@ a.font-bold.text-primary:hover {
 .address-modal {
   @apply flex flex-col justify-start  bg-white rounded-lg overflow-auto pt-8 pb-7 px-20 relative
 }
+
+.province-combobox {
+  @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
+  border-gray-border rounded-lg px-4
+}
