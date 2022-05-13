@@ -1,18 +1,9 @@
-import React,{useState} from 'react'
+import React from 'react'
 
 const CartProductThumbnail = ({itemData}) => {
-    const [quantity,setQuantity] = useState(1);
-
-    const handleAdd = () => {
-        setQuantity(+quantity+1)
-    }
-    const handleDecrease = () => {
-        if (quantity>1)
-            setQuantity(+quantity-1)
-    }
 
     return (
-        <div className='grid grid-cols-3 h-24 col-span-3 place-self-start'>
+        <div className='flex h-24 col-span-3 place-self-start gap-3'>
             {/* Product Image */}
             <div className='bg-gray-thumb rounded-lg w-[120px] h-[100px] grid place-content-center'>
                 <img src={itemData.image} alt='Product Thumbnail' className='h-[100px] object-contain self-center' />

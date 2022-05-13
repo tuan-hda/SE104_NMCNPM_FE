@@ -57,7 +57,7 @@ const OrdersContainer = () => {
 
   // handle when user click at orderID
   const handleClick = (orderID) => {
-    navigate('/profile/orders/' + orderID)
+    navigate('/profile/orders/' + orderID,{state:orderID})
   }
 
   return (

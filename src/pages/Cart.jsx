@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import { connect } from 'react-redux'
-import CartItem from '../components/CartItem'
+import CartItemList from '../components/CartItemList'
 
 const Cart = ({cart}) => {
 
@@ -16,28 +16,20 @@ const Cart = ({cart}) => {
     },[cart,subTotal,setSubTotal])
 
     return (
-        <div className='py-32 px-32 w-full h-full grid grid-cols-2'>
+        <div className='py-32 px-32 w-full h-full flex justify-between gap-32'>
+            {/* Left section */}
             <div>
                 {/* page Title */}
                 <h1 className='text-34 font-extrabold'>Cart</h1>
                 <div className='mt-8'>
-                    {/* Product List in Cart */}
-                    <div className='w-[800px]'>
-                        {/* List Property */}
-                        <div className='grid grid-cols-6 h-10 text-13 font-bold text-divider border-y-2 place-content-center place-items-center'>
-                            <h2 className='place-self-start col-span-3'>PRODUCT DETAILS</h2>
-                            <h2>QUANTITY</h2>
-                            <h2>TOTAL</h2>
-                            <h2 className=''>REMOVE</h2>
-                        </div>
-                        {/* Items */}
-                        {cart.map((item) => <CartItem itemData={item} key={item.id}/>)}
-                    </div>
+                    {/* Item list */}
+                    <CartItemList cart={cart} prop='w-[800px]' isEditable={true}/>
                 </div>
             </div>
         
+            {/* Right section */}
             {/* Order Summary */}
-            <div className=' bg-[#F5F5F6] w-[500px] h-full place-self-end rounded-xl'>
+            <div className=' bg-[#F5F5F6] flex-grow h-full place-self-end rounded-xl'>
                 <div className=' px-11 py-11'>
                     {/* Title */}
                         <h2 className=' font-semibold text-[24px] mb-10 h-16 border-b-[1px] border-[#C6BDBD]'>ORDER SUMMARY</h2>                    
