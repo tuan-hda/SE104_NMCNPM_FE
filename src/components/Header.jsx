@@ -38,7 +38,7 @@ const Header = ({cartItems}) => {
               <Link to="/menu">Menu</Link>
             </li>
             <li className='px-12 font-bold'>
-              <Link to="/">About</Link>
+              <Link to="/about">About</Link>
             </li>
             <li className='px-12 font-bold'>
               <Link to="/contact">Contact</Link>
