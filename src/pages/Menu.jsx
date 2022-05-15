@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CategoryBar from '../components/CategoryBar'
 import ProductContainer from '../components/ProductContainer'
 
@@ -8,6 +8,15 @@ const categories = ['Featured', 'Combos', 'Hamburgers', 'Chicken', 'Rice', 'Side
 const Menu = () => {
   // Create state: current selected category
   const [currCategory, setCategory] = useState('Featured');
+
+  const [isVisible, setIsVisible] = useState(categories.map((c, index) => index === 0))
+
+  useEffect(() => {
+    const index = isVisible.indexOf(true)
+    if (index !== -1)
+      setCategory(categories[index])
+    // console.log(isVisible)
+  }, [isVisible])
 
   // Create ref 
   const myRef = useRef([]);
@@ -19,7 +28,7 @@ const Menu = () => {
       </aside>
 
       <div className='w-full ml-[186px]'>
-        <ProductContainer categories={categories} myRef={myRef} />
+        <ProductContainer isVisible={isVisible} setIsVisible={setIsVisible} categories={categories} myRef={myRef} />
       </div>
     </div>
   )

@@ -268,7 +268,7 @@ const productByCategory = productData.reduce((arr, item) => {
   return arr;
 }, {});
 
-const ProductContainer = ({ categories, myRef }) => {
+const ProductContainer = ({ categories, myRef, isVisible, setIsVisible }) => {
   return (<div>
 
     <div>
@@ -277,6 +277,8 @@ const ProductContainer = ({ categories, myRef }) => {
           return <ProductsByCategory
             category={c}
             productData={productByCategory[c]}
+            isVisible={isVisible}
+            setIsVisible={setIsVisible}
             myRef={myRef}
             index={i}
           />

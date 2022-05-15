@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import AlertModal from '../components/AlertModal'
+import AlertModal from '../components/modals/AlertModal'
 import OrdersContainer from '../components/OrdersContainer'
 import PasswordContainer from '../components/PasswordContainer'
 import ProfileContainer from '../components/ProfileContainer'

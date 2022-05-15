@@ -77,5 +77,19 @@ a.font-bold.text-primary:hover {
 #carousel-1:checked ~ .control-1 ~ .carousel-indicators li:nth-child(1) .carousel-bullet,
 #carousel-2:checked ~ .control-2 ~ .carousel-indicators li:nth-child(2) .carousel-bullet,
 #carousel-3:checked ~ .control-3 ~ .carousel-indicators li:nth-child(3) .carousel-bullet {
-  color: #E16246; 
+  color: #E16246;
+}
+
+.auth-input-err {
+  @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
+  border-red-500 rounded-lg px-5 py-4
+}
+
+.address-modal {
+  @apply flex flex-col justify-start  bg-white rounded-lg overflow-auto pt-8 pb-7 px-20 relative
+}
+
+.province-combobox {
+  @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
+  border-gray-border rounded-lg px-4
 }
