@@ -7,8 +7,7 @@ import wardReducer from "./wardReducer";
 
 const allReducers = combineReducers({
   isLogged: loggedInReducer,
-  cart: cartReducer
-  isLogged: loggedInReducer,
+  cart: cartReducer,
   province: provinceReducer,
   district: districtReducer,
   ward: wardReducer
