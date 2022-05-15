@@ -46,3 +46,37 @@ export const validateInfo = (value) => {
 
   return error
 }
+
+export const validateDeliveryInfo = (value) => {
+  let error = {}
+
+}
+
+export const validateAddAddress = (value) => {
+  let error = {}
+  if (!value.name) {
+    error.name = 'Name required.'
+  }
+
+  if (!value.phone) {
+    error.phone = 'Phone required'
+  }
+
+  if (!value.address) {
+    error.address = 'Address required'
+  }
+
+  if (!value.province) {
+    error.province = 'Province required'
+  }
+
+  if (!value.district) {
+    error.district = 'District required'
+  }
+
+  if (!value.ward) {
+    error.ward = 'Ward required'
+  }
+
+  return error
+}

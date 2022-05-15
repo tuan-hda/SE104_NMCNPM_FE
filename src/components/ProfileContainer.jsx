@@ -1,9 +1,12 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setDistrict, setProvince, setWard } from '../actions'
 import DefaultAvatar from '../images/User-avatar.svg'
 import useModal from '../utils/useModal'
-import AlertModal from './AlertModal'
+import AlertModal from './modals/AlertModal'
 import GenderRadioButton from './GenderRadioButton'
+import ProvinceGetter from './ProvinceGetter'
 
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
 
@@ -18,10 +21,10 @@ const defaultAvatar = (style) => <svg
 </svg>
 
 
-// Create axios
-const provinceApi = axios.create({
-  baseURL: 'https://provinces.open-api.vn/api/'
-})
+// // Create axios
+// const provinceApi = axios.create({
+//   baseURL: 'https://provinces.open-api.vn/api/'
+// })
 
 // Create data for combobox
 const createComboboxData = data => {
@@ -30,16 +33,16 @@ const createComboboxData = data => {
   </option>)
 }
 
-// Handle call API error
-const handleApiCallError = err => {
-  if (err.response) {
-    console.log(err.response.data);
-    console.log(err.response.code);
-    console.log(err.response.headers);
-  } else {
-    console.log('Error: ' + err.message);
-  }
-}
+// // Handle call API error
+// const handleApiCallError = err => {
+//   if (err.response) {
+//     console.log(err.response.data);
+//     console.log(err.response.code);
+//     console.log(err.response.headers);
+//   } else {
+//     console.log('Error: ' + err.message);
+//   }
+// }
 
 const ProfileContainer = () => {
   const [detail, setDetail] = useState({
@@ -51,30 +54,23 @@ const ProfileContainer = () => {
     gender: '',
     dob: ''
   });
+
+  // Get province, district and ward state from store
+  // const province = useSelector((state) => state.province);
+  // const district = useSelector((state) => state.district);
+  // const ward = useSelector((state) => state.ward);
+
   const [province, setProvince] = useState([]);
   const [district, setDistrict] = useState([]);
+  const [ward, setWard] = useState([]);
   const [isDistrictSelected, setDistrictSelected] = useState(null);
   const [isWardSelected, setWardSelected] = useState(null);
-  const [ward, setWard] = useState([]);
   const { isShowing, toggle } = useModal();
+
+  const dispatch = useDispatch();
 
   // Get result of Modal
   const [modalResult, setModalResult] = useState(-1);
-
-  // Fetch province data
-  useEffect(() => {
-    const fetchProvinces = async () => {
-      try {
-        const response = await provinceApi.get('/p');
-        setProvince(response.data);
-      }
-      catch (err) {
-        handleApiCallError(err);
-      }
-    }
-
-    fetchProvinces();
-  }, [])
 
   // Delete user avatar if modalResult = 1
   useEffect(() => {
@@ -89,61 +85,82 @@ const ProfileContainer = () => {
     }
   }, [modalResult])
 
-  // Fetch district data after user choose province
-  useEffect(() => {
-    const fetchDistricts = async () => {
-      try {
-        const str = String(detail.province);
-        const code = str.substring(0, str.indexOf('_'));
-        const response = await provinceApi.get(`p/${code}`, {
-          params: {
-            depth: 2
-          }
-        })
+  ProvinceGetter({ province: detail.province, district: detail.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected })
 
-        setDistrictSelected(null);
-        setWardSelected(null);
-        setDistrict(response.data.districts);
-      } catch (err) {
-        handleApiCallError(err);
-      }
-    }
+  // // Fetch province data
+  // useEffect(() => {
+  //   const fetchProvinces = async () => {
+  //     try {
+  //       const response = await provinceApi.get('/p');
+  //       //dispatch(setProvince(response.data))
+  //       setProvince(response.data);
+  //     }
+  //     catch (err) {
+  //       handleApiCallError(err);
+  //     }
+  //   }
 
-    if (detail.province)
-      fetchDistricts();
-  }, [detail.province])
+  //   fetchProvinces();
+  // }, [])
 
-  // Fetch ward data after user choose district
-  useEffect(() => {
-    const fetchWards = async () => {
-      try {
-        const str = String(detail.district);
-        const code = str.substring(0, str.indexOf('_'));
-        const response = await provinceApi.get(`d/${code}`, {
-          params: {
-            depth: 2
-          }
-        })
 
-        setWardSelected(null);
-        setWard(response.data.wards);
-      } catch (err) {
-        handleApiCallError(err);
-      }
-    }
+  // // Fetch district data after user choose province
+  // useEffect(() => {
+  //   const fetchDistricts = async () => {
+  //     try {
+  //       const str = String(detail.province);
+  //       const code = str.substring(0, str.indexOf('_'));
+  //       const response = await provinceApi.get(`p/${code}`, {
+  //         params: {
+  //           depth: 2
+  //         }
+  //       })
 
-    if (detail.district)
-      fetchWards();
-  }, [detail.district])
+  //       setDistrictSelected(null);
+  //       setWardSelected(null);
+  //       //dispatch(setDistrict(response.data.districts));
+  //       setDistrict(response.data.districts);
+  //     } catch (err) {
+  //       handleApiCallError(err);
+  //     }
+  //   }
+
+  //   if (detail.province)
+  //     fetchDistricts();
+  // }, [detail.province])
+
+  // // Fetch ward data after user choose district
+  // useEffect(() => {
+  //   const fetchWards = async () => {
+  //     try {
+  //       const str = String(detail.district);
+  //       const code = str.substring(0, str.indexOf('_'));
+  //       const response = await provinceApi.get(`d/${code}`, {
+  //         params: {
+  //           depth: 2
+  //         }
+  //       })
+
+  //       setWardSelected(null);
+  //       //dispatch(setWard(response.data.wards))
+  //       setWard(response.data.wards);
+  //     } catch (err) {
+  //       handleApiCallError(err);
+  //     }
+  //   }
+
+  //   if (detail.district)
+  //     fetchWards();
+  // }, [detail.district])
 
   // Handle user's changes in input
   const handleChange = e => {
     if (e.target.name === 'district' && e.target.value !== 'default') {
-      setDistrictSelected(1);
+      setDistrictSelected(true);
     }
 
     if (e.target.name === 'ward' && e.target.value !== 'default') {
-      setWardSelected(1);
+      setWardSelected(true);
     }
 
     setDetail({
@@ -301,7 +318,7 @@ const ProfileContainer = () => {
             placeholder='Province'
             value={detail.province}
             onChange={handleChange}>
-            <option disabled value='default' />
+            <option disabled value='default' >Choose province</option>
             {createComboboxData(province)}
           </select>
 
@@ -312,7 +329,7 @@ const ProfileContainer = () => {
             placeholder='District'
             value={isDistrictSelected ? detail.district : 'default'}
             onChange={handleChange}>
-            <option value='default' disabled />
+            <option disabled value='default' >Choose district</option>
             {createComboboxData(district)}
           </select>
 
@@ -324,7 +341,7 @@ const ProfileContainer = () => {
             placeholder='Ward'
             value={isWardSelected ? detail.ward : 'default'}
             onChange={handleChange}>
-            <option value='default' disabled />
+            <option disabled value='default' >Choose ward</option>
             {createComboboxData(ward)}
           </select>
         </div>

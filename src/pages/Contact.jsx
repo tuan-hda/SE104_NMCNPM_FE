@@ -6,7 +6,7 @@ const divider = <div className='w-full border-[1px] border-gray-border mt-2' />
 const Contact = () => {
   return <div className='pt-10 px-32 flex justify-between'>
     {/* Contact. Including Phone, Live chat, Email, Store locator */}
-    <div className='w-full mr-32'>
+    <div className='flex-1 mr-32'>
       {/* Title */}
       <h1 className='text-34 font-extrabold'>CONTACT HAMBURSY</h1>
 
@@ -56,7 +56,7 @@ const Contact = () => {
     </div>
 
     {/* Contact hambursy image */}
-    <div className='  min-w-[328px] max-w-[328px] '>
+    <div className='w-[328px]'>
       <img
         className='rounded-lg h-full object-cover object-[-140px]'
         src={ContactImage}

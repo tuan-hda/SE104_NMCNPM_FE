@@ -29,7 +29,9 @@ const SignUp = () => {
   })
 
   // Validate information
-  const [error, setError] = useState({});
+  const [error, setError] = useState({
+    password: []
+  });
 
   const handleSubmit = (e) => {
     setError(validateInfo(detail));
@@ -66,7 +68,7 @@ const SignUp = () => {
           {/* Email */}
           <input
             type='text'
-            className='auth-input font-semibold'
+            className={`${error.email ? 'auth-input-err' : 'auth-input'} font-semibold`}
             placeholder='Email'
             value={detail.email}
             name='email'
@@ -76,7 +78,7 @@ const SignUp = () => {
           {/* Name */}
           <input
             type='text'
-            className='auth-input font-semibold'
+            className={`${error.name ? 'auth-input-err' : 'auth-input'} font-semibold`}
             placeholder='Name'
             value={detail.name}
             name='name'
@@ -86,7 +88,7 @@ const SignUp = () => {
           {/* Password */}
           <input
             type='password'
-            className='auth-input font-semibold'
+            className={`${error.password.length !== 0 ? 'auth-input-err' : 'auth-input'} font-semibold`}
             value={detail.password}
             name='password'
             onChange={changeDetail}
@@ -96,7 +98,7 @@ const SignUp = () => {
           {/* Confirm password */}
           <input
             type='password'
-            className='auth-input font-semibold'
+            className={`${error.confirmPassword ? 'auth-input-err' : 'auth-input'} font-semibold`}
             value={detail.confirmPassword}
             name='confirmPassword'
             onChange={changeDetail}

@@ -16,8 +16,10 @@ const AlertModal = ({ msg, isShowing, hide, setResult }) => {
   return <div
     className={`${!isShowing ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'} 
     duration-300 transition-opacity fixed top-0 left-0 w-screen h-screen flex justify-center
-    items-center bg-opacity-70 bg-gray-500 text-sm z-10`}>
-    <div className='bg-white rounded-md w-96 h-64 flex items-center justify-center relative'>
+    items-center bg-opacity-70 bg-gray-500 text-sm z-10`}
+    onClick={() => handleCancel()}>
+    <div className='bg-white rounded-md w-96 h-64 flex items-center justify-center relative'
+      onClick={(e) => { e.stopPropagation() }}>
       {/* Alert icon */}
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
         className='w-16 h-16 object-scale-down absolute top-6 fill-amber-600 opacity-60'><g id="_01_align_center" data-name="01 align center">
