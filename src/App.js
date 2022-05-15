@@ -11,6 +11,7 @@ import Purchase from './pages/Purchase';
 import ProductDetail from './pages/ProductDetail';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import Cart from './pages/Cart';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path='/profile/password' element={<Profile />} />
         <Route path='/profile/orders' element={<Profile />} />
         <Route path='/contact' element={<Contact />} />
+        <Route path= '/cart' element= {<Cart />} />
         <Route path='/purchase' element={<Purchase />} />
         <Route path='/test' element={<Test />} />
       </Routes>

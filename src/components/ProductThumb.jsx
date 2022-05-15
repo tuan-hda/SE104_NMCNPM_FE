@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom'
 // This component return a product detail including: 
 // product image, title, calories, price
 const ProductThumb = ({ product }) => {
+
+
   const handleOrderClick = (e) => {
-    e.preventDefault();
+    
   }
   
   //Convert product's title for product detail link
