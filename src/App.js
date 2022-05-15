@@ -8,6 +8,7 @@ import Profile from './pages/Profile';
 import Contact from './pages/Contact';
 import Test from './pages/Test'
 import Purchase from './pages/Purchase';
+import ProductDetail from './pages/ProductDetail';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -18,6 +19,7 @@ function App() {
       <Routes >
         <Route path='/' element={<Home />} />
         <Route path='/menu' element={<Menu />} />
+        <Route path='/product/:productName' element={<ProductDetail/>}/>
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/profile/detail' element={<Profile />} />
