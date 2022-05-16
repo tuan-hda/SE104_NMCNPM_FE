@@ -15,11 +15,11 @@ const CategoryBar = ({ currCategory, setCategory, categories }) => {
   return (
     <div className='w-32'>
       {/* Menu Title */}
-      <h1 className='text-34 font-extrabold'>MENU</h1>
+      <h1 className={`text-34 font-extrabold text-center md:text-left`}>MENU</h1>
 
       {/* Side category bar */}
       <nav>
-        <ul className='mt-5 space-y-7 text-md'>
+        <ul className={`mt-5 space-y-7 text-md text-center md:text-left`}>
           {categories.map((c, i) => <li
             className={currCategory === c ? 'cursor-pointer font-bold' : 'cursor-pointer hover:font-semibold'}
             key={i}

@@ -4,9 +4,9 @@ import ContactImage from '../images/ContactImage.jpg'
 const divider = <div className='w-full border-[1px] border-gray-border mt-2' />
 
 const Contact = () => {
-  return <div className='pt-10 px-32 flex justify-between'>
+  return <div className='pt-4 px-2 sm:px-8 md:px-16 xl:px-32  flex justify-between flex-col gap-y-10 lg:flex-row lg:gap-x-32'>
     {/* Contact. Including Phone, Live chat, Email, Store locator */}
-    <div className='flex-1 mr-32'>
+    <div className='flex-1'>
       {/* Title */}
       <h1 className='text-34 font-extrabold'>CONTACT HAMBURSY</h1>
 
@@ -56,9 +56,9 @@ const Contact = () => {
     </div>
 
     {/* Contact hambursy image */}
-    <div className='w-[328px]'>
+    <div className='w-full h-80 lg:w-[328px] lg:h-auto'>
       <img
-        className='rounded-lg h-full object-cover object-[-140px]'
+        className='rounded-lg h-full object-cover w-full object-bottom lg:object-[-140px]'
         src={ContactImage}
         alt='Contact Hambursy' />
     </div>

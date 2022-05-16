@@ -25,16 +25,21 @@ html, body {
 }
 
 .save-button {
-  @apply absolute right-0 bg-primary p-4 py-3 rounded-md text-white font-semibold text-sm 
+  @apply sm:absolute right-0 bg-primary p-4 py-3 rounded-md text-white font-semibold text-sm 
+  hover:bg-opacity-90 transition duration-300
+}
+
+.profile-save-button {
+   @apply bg-primary p-4 py-3 rounded-md text-white font-semibold text-sm 
   hover:bg-opacity-90 transition duration-300
 }
 
 .profile-input {
-  @apply outline-none border-[#C5C5C5] border-[1px] w-full rounded-lg px-5 ml-36 h-[45px] font-medium
+  @apply outline-none border-[#C5C5C5] border-[1px] sm:flex-1 rounded-lg px-5 h-[45px] font-medium
 }
 
 .province-input {
-  @apply outline-none border-[#C5C5C5] border-[1px] w-full block rounded-lg px-5 h-[45px] font-medium
+  @apply outline-none border-[#C5C5C5] border-[1px] block rounded-lg px-5 h-[45px] font-medium sm:flex-1
 }
 
 a.font-bold.text-primary {
@@ -92,4 +97,8 @@ a.font-bold.text-primary:hover {
 .province-combobox {
   @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
   border-gray-border rounded-lg px-4
+}
+
+.profile-div {
+  @apply flex flex-col sm:flex-row mt-6 justify-between text-sm sm:items-center gap-x-10 md:gap-x-24 lg:gap-x-32 gap-y-2
 }

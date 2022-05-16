@@ -33,7 +33,7 @@ const GenderRadioButton = ({ OnClick }) => {
   </div>
 
 
-  return (<div className='flex gap-10 ml-36 w-full font-medium'>
+  return (<div className='flex flex-1 flex-col md:flex-row gap-4 md:gap-10 font-medium'>
     {gender.map((g, i) => getRadioButton(g, i))}
   </div>)
 }

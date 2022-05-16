@@ -44,10 +44,10 @@ const SignUp = () => {
   }
 
   return (
-    <div className='py-8 bg-gray-auth text-13 font-semibold min-h-screen flex items-center'>
+    <div className='py-8 -mt-24 bg-gray-auth text-13 font-semibold min-h-screen flex justify-center items-center'>
 
-      <div className='mx-[450px] h-full py-8 bg-white rounded-xl flex flex-col justify-center
-        px-24 relative'>
+      <div className='h-full mx-4 sm:mx-20 md:mx-40 lg:mx-64 xl:mx-[420px] py-8 bg-white rounded-xl flex flex-col justify-center
+        px-4 sm:px-10 md:px-20 lg:px-24 relative'>
         {/* Close button */}
         <div className='absolute rounded-full cursor-pointer right-7 top-7
           transition duration-300 hover:bg-gray-200 w-8 h-8 flex justify-center items-center'>
@@ -147,7 +147,7 @@ const SignUp = () => {
           Already have an account? <Link to='/signin' className='underline'>Sign in</Link>
         </div>
       </div>
-    </div >
+    </div>
   )
 }
 

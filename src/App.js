@@ -15,12 +15,24 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Cart from './pages/Cart';
 
+const getHeader = () => {
+  if (window.location.pathname === '/signin' || window.location.pathname === '/signup')
+    return null;
+  return <Header />
+}
+
+const getFooter = () => {
+  if (window.location.pathname === '/signin' || window.location.pathname === '/signup')
+    return null;
+  return <Footer />
+}
+
 function App() {
   return (
     <div>
-      <Header />
-      <div className='w-full rounded-full mt-16'>
-        <Routes >
+      {getHeader()}
+      <div className={`w-full rounded-full mt-24`}>
+        <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/menu' element={<Menu />} />
           <Route path='/product/:productName' element={<ProductDetail />} />
@@ -37,7 +49,7 @@ function App() {
           <Route path='/test' element={<Test />} />
         </Routes>
       </div>
-      <Footer />
+      {getFooter()}
     </div>
   );
 }

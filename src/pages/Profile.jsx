@@ -44,7 +44,7 @@ const Profile = () => {
   }
 
   return (
-    <div className='pt-10 px-32'>
+    <div className='mx-4 px-2 sm:px-8 md:px-16 xl:px-32 '>
       {/* Alert Modal trigger whenever user click log out */}
       <AlertModal msg='Are you sure you want to log out?'
         isShowing={isShowing}
@@ -56,9 +56,9 @@ const Profile = () => {
       {/* Divider */}
       <div className='border-gray-border border-t-[1px] mt-8' />
 
-      <div className='mt-8 flex'>
+      <div className='mt-8 flex gap-36'>
         {/* Navigation Bar */}
-        <nav className='w-40'>
+        <nav className='w-40 lg:block hidden'>
           <ul className='space-y-5 text-15'>
             {/* Profile, Password, Orders */}
             {navbarData.map((d, i) => <li
@@ -80,11 +80,11 @@ const Profile = () => {
         </nav>
 
         {/* Container for profile/password/orders */}
-        <div className='ml-36 w-full'>
+        <div className='w-full'>
           {getCurrentContainer()}
         </div>
       </div>
-    </div >
+    </div>
   )
 }
 

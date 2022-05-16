@@ -198,7 +198,7 @@ const ProfileContainer = () => {
   return (
     <form className='mb-10' onSubmit={e => e.preventDefault()}>
       {/* Header of profile (Including avatar, title, description and Save button) */}
-      <div className='flex items-center relative'>
+      <div className='lg:flex-row flex-col flex items-center relative lg:gap-12'>
         {/* User's avatar goes here */}
         <div className='rounded-full shadow-circle w-[184px] h-[184px] flex justify-center items-center'>
           <div>
@@ -210,18 +210,20 @@ const ProfileContainer = () => {
         </div>
 
         {/* Including Title, description */}
-        <div className='ml-9'>
-          <h1 className='font-bold text-32'>Profile</h1>
-          <p className='text-sm mt-2'>Update your photo and personal details.</p>
-        </div>
+        <div className='flex justify-between items-center flex-1 w-full lg:mt-0 mt-4 lg:ml-9 lg:w-auto'>
+          <div className=''>
+            <h1 className='font-bold text-32'>Profile</h1>
+            <p className='text-sm mt-2'>Update your photo and personal details.</p>
+          </div>
 
-        <button className='save-button'
-          onClick={handleSubmit}>Save</button>
+          <button className='profile-save-button'
+            onClick={handleSubmit}>Save</button>
+        </div>
       </div>
 
       {/* Name */}
-      <div className='flex mt-16 justify-between text-sm items-center'>
-        <p className='min-w-[144px] font-semibold'>Your name</p>
+      <div className='profile-div'>
+        <p className='sm:w-24 w-full lg:w-36 font-semibold'>Your name</p>
 
         <input
           type='text'
@@ -234,8 +236,8 @@ const ProfileContainer = () => {
       {divider}
 
       {/* Email */}
-      <div className='flex mt-6 justify-between text-sm items-center'>
-        <p className='min-w-[144px] font-semibold'>Your email</p>
+      <div className='profile-div'>
+        <p className='sm:w-24 w-full lg:w-36 font-semibold'>Your email</p>
 
         <input
           type='text'
@@ -249,21 +251,24 @@ const ProfileContainer = () => {
       {divider}
 
       {/* Photo */}
-      <div className='flex mt-6 justify-between text-sm items-center'>
-        <p className='min-w-[144px] font-semibold'>Your photo</p>
+      <div className='profile-div'>
+        <p className='sm:w-24 w-full lg:w-36 font-semibold'>Your photo</p>
 
-        <div className='flex justify-between items-center w-full ml-36'>
+        <div className='flex justify-between items-center flex-1 gap-3 '>
           {/* User's current avatar */}
-          <div>
-            {detail.photo ? <img src={detail.photo} alt="User's ava"
-              className='w-20 h-20 rounded-full inline object-contain fill-gray-500' />
-              : defaultAvatar('w-20 h-20')
-            }
-            <span className='ml-3'>This will be displayed on your profile.</span>
+          <div className='flex gap-3 items-center'>
+            <div>
+              {detail.photo ? <img src={detail.photo} alt="User's ava"
+                className='w-20 h-20 rounded-full inline object-contain fill-gray-500' />
+                : defaultAvatar('w-20 h-20')
+              }
+
+            </div>
+            <span className=''>This will be displayed on your profile.</span>
           </div>
 
           {/* Button delete and button update */}
-          <div>
+          <div className='flex'>
             <button className='font-semibold hover:underline' type='button'
               onClick={toggle}>Delete</button>
             <AlertModal msg='Are you sure you want to delete your photo?' isShowing={isShowing}
@@ -279,8 +284,8 @@ const ProfileContainer = () => {
       {divider}
 
       {/* Your phone */}
-      <div className='flex mt-6 justify-between text-sm items-center'>
-        <p className='min-w-[144px] font-semibold'>Your phone</p>
+      <div className='profile-div'>
+        <p className='sm:w-24 w-full lg:w-36 font-semibold'>Your phone</p>
 
         <input
           type='text'
@@ -293,8 +298,8 @@ const ProfileContainer = () => {
       {divider}
 
       {/* Your address */}
-      <div className='flex mt-6 justify-between text-sm items-center'>
-        <p className='min-w-[144px] font-semibold'>Your address</p>
+      <div className='profile-div'>
+        <p className='sm:w-24 w-full lg:w-36 font-semibold'>Your address</p>
 
         <input
           type='text'
@@ -307,51 +312,60 @@ const ProfileContainer = () => {
       {divider}
 
       {/* Province */}
-      <div className='flex mt-6 justify-between text-sm items-center'>
-        <p className='font-semibold min-w-[144px]'>Province</p>
-        <div className='ml-36 w-full grid grid-cols-3 gap-8'>
-          {/* Province */}
-          <select
-            className='province-input'
-            name='province'
-            defaultValue={'default'}
-            placeholder='Province'
-            value={detail.province}
-            onChange={handleChange}>
-            <option disabled value='default' >Choose province</option>
-            {createComboboxData(province)}
-          </select>
+      <div className='profile-div'>
+        <p className='sm:w-24 w-full lg:w-36 font-semibold'>Province</p>
 
-          {/* District */}
-          <select
-            className='province-input'
-            name='district'
-            placeholder='District'
-            value={isDistrictSelected ? detail.district : 'default'}
-            onChange={handleChange}>
-            <option disabled value='default' >Choose district</option>
-            {createComboboxData(district)}
-          </select>
+        <select
+          className='province-input'
+          name='province'
+          defaultValue={'default'}
+          placeholder='Province'
+          value={detail.province}
+          onChange={handleChange}>
+          <option disabled value='default' >Choose province</option>
+          {createComboboxData(province)}
+        </select>
+      </div>
 
+      {divider}
 
-          {/* Ward */}
-          <select
-            className='province-input'
-            name='ward'
-            placeholder='Ward'
-            value={isWardSelected ? detail.ward : 'default'}
-            onChange={handleChange}>
-            <option disabled value='default' >Choose ward</option>
-            {createComboboxData(ward)}
-          </select>
-        </div>
+      {/* District */}
+      <div className='profile-div'>
+        <p className='sm:w-24 w-full lg:w-36 font-semibold'>District</p>
+
+        <select
+          className='province-input'
+          name='district'
+          placeholder='District'
+          value={isDistrictSelected ? detail.district : 'default'}
+          onChange={handleChange}>
+          <option disabled value='default' >Choose district</option>
+          {createComboboxData(district)}
+        </select>
+      </div>
+
+      {divider}
+
+      {/* Ward */}
+      <div className='profile-div'>
+        <p className='sm:w-24 w-full lg:w-36 font-semibold'>Ward</p>
+
+        <select
+          className='province-input'
+          name='ward'
+          placeholder='Ward'
+          value={isWardSelected ? detail.ward : 'default'}
+          onChange={handleChange}>
+          <option disabled value='default' >Choose ward</option>
+          {createComboboxData(ward)}
+        </select>
       </div>
 
       {divider}
 
       {/* Your gender */}
-      <div className='flex mt-6 justify-between text-sm items-center'>
-        <p className='min-w-[144px] font-semibold'>Gender</p>
+      <div className='profile-div'>
+        <p className='sm:w-24 w-full lg:w-36 font-semibold'>Gender</p>
 
         <GenderRadioButton
           OnClick={handleGenderSelect} />
@@ -361,8 +375,8 @@ const ProfileContainer = () => {
       {divider}
 
       {/* Your date of birth */}
-      <div className='flex mt-6 justify-between text-sm items-center'>
-        <p className='min-w-[144px] font-semibold'>Your date of birth</p>
+      <div className='profile-div'>
+        <p className='sm:w-24 w-full lg:w-36 font-semibold'>Your date of birth</p>
 
         <input
           type='date'

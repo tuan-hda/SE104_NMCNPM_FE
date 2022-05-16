@@ -7,9 +7,9 @@ const ProductThumb = ({ product }) => {
 
 
   const handleOrderClick = (e) => {
-    
+
   }
-  
+
   //Convert product's title for product detail link
   const convertedTitle = product.title.trim().replace(/\s+/g, '-').toLowerCase();
 
@@ -22,7 +22,7 @@ const ProductThumb = ({ product }) => {
       </div>
 
       {/* Title, calories, price and add to cart button */}
-      <div className='flex justify-between items-center mt-4'>
+      <div className='flex justify-between sm:items-center mt-4 flex-col sm:flex-row'>
         <div>
           <h2 className='font-semibold'>{product.title}</h2>
           <p className='mt-0.5'>Calories: {product.calories}</p>
@@ -30,8 +30,8 @@ const ProductThumb = ({ product }) => {
         </div>
 
         <button
-          className='p-2 bg-red-500 flex items-center rounded-md text-white 
-          font-medium hover:bg-red-600 transition duration-300'
+          className='p-3 sm:p-2 w-full mt-2 sm:mt-0 sm:w-fit bg-red-500 flex items-center rounded-md text-white 
+          font-medium hover:bg-red-600 transition duration-300 justify-center'
           onClick={handleOrderClick}>
           Order
         </button>
