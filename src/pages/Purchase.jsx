@@ -33,6 +33,9 @@ const Purchase = () => {
   const [isDistrictSelected, setDistrictSelected] = useState(false);
   const [isWardSelected, setWardSelected] = useState(false);
 
+  // Check if address is loaded from Address book
+  const [isAddressImported, setIsAddressImported] = useState(false);
+
   // ABM (Address Book Modal) is true by default, otherwise AAM (Add Address Modal) is true
   const [isABM, setIsABM] = useState(true);
 
@@ -40,7 +43,7 @@ const Purchase = () => {
 
   const { isShowing, toggle } = useModal();
 
-  ProvinceGetter({ province: deliveryInfo.province, district: deliveryInfo.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info: deliveryInfo, setInfo: setDeliveryInfo, result })
+  ProvinceGetter({ province: deliveryInfo.province, district: deliveryInfo.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info: deliveryInfo, setInfo: setDeliveryInfo, result, isAddressImported, setIsAddressImported })
 
   const handleChange = e => {
     if (e.target.name === 'phone') {
@@ -53,10 +56,23 @@ const Purchase = () => {
 
     if (e.target.name === 'province' && e.target.value !== 'default') {
       setProvinceSelected(true);
+      setDeliveryInfo({
+        ...deliveryInfo,
+        province: e.target.value,
+        district: '',
+        ward: ''
+      })
+      return
     }
 
     if (e.target.name === 'district' && e.target.value !== 'default') {
       setDistrictSelected(true);
+      setDeliveryInfo({
+        ...deliveryInfo,
+        district: e.target.value,
+        ward: ''
+      })
+      return
     }
 
     if (e.target.name === 'ward' && e.target.value !== 'ward') {
@@ -73,14 +89,18 @@ const Purchase = () => {
     toggle();
   }
 
+  // After close modal, set address
   useEffect(() => {
     if (!isShowing) {
       setIsABM(true)
       if (result) {
+        setIsAddressImported(true);
         setProvinceSelected(true)
         setDeliveryInfo(deliveryInfo => ({
           ...deliveryInfo,
-          province: result.province
+          province: result.province,
+          district: '',
+          ward: ''
         }))
       }
     }

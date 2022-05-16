@@ -103,7 +103,7 @@ const AddAddressModal = ({ hide, isShowing, setIsABM, hideParent }) => {
 
   return (
     <div className={`${isShowing ? 'opacity-100' : 'opacity-0 pointer-events-none'} flex items-center justify-center h-screen w-full bg-opacity-70 duration-300 transition-opacity fixed bg-gray-500`} onClick={() => { handleEscapeByClickOutside() }}>
-      <div className='address-modal w-[640px] text-13 font-semibold'>
+      <div className='address-modal w-[640px] text-13 font-semibold' onClick={(e) => e.stopPropagation()}>
         {/* Close button */}
         <div className='absolute top-7 right-7 hover:bg-gray-border transition duration-300 rounded-full cursor-pointer w-8 h-8 flex items-center justify-center'
           onClick={() => { setIsABM(true) }}>
