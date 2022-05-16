@@ -1,10 +1,15 @@
 import React from 'react'
 
-const CategoryBar = ({ currCategory, setCategory, categories, myRef }) => {
+const CategoryBar = ({ currCategory, setCategory, categories }) => {
   const categoryClick = (c, i) => {
-    myRef[i].scrollIntoView({
-      behavior: 'smooth',
+    var element = document.getElementById(`menu${i}`)
+    const headerOffset = 96;
+    var offsetTop = element.getBoundingClientRect().top + window.pageYOffset - headerOffset
+    window.scrollTo({
+      top: offsetTop,
+      behavior: 'smooth'
     })
+
   }
 
   return (

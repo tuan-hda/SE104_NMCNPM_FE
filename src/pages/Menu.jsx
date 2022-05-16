@@ -18,17 +18,14 @@ const Menu = () => {
     // console.log(isVisible)
   }, [isVisible])
 
-  // Create ref 
-  const myRef = useRef([]);
-
   return (
-    <div className='flex pt-10 px-32'>
-      <aside className='h-screen sticky top-10'>
-        <CategoryBar currCategory={currCategory} setCategory={setCategory} categories={categories} myRef={myRef} />
+    <div className='md:flex pt-10 px-2 md:px-16 xl:px-32 justify-between gap-x-10 sm:gap-x-20 lg:gap-x-32 xl:gap-x-44'>
+      <aside className='h-screen sticky top-24 hidden md:block'>
+        <CategoryBar currCategory={currCategory} setCategory={setCategory} categories={categories} />
       </aside>
 
-      <div className='w-full ml-[186px]'>
-        <ProductContainer isVisible={isVisible} setIsVisible={setIsVisible} categories={categories} myRef={myRef} />
+      <div className='w-full'>
+        <ProductContainer isVisible={isVisible} setIsVisible={setIsVisible} categories={categories} />
       </div>
     </div>
   )

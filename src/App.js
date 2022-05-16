@@ -17,25 +17,27 @@ import Cart from './pages/Cart';
 
 function App() {
   return (
-    <div className='w-full rounded-full'>
+    <div>
       <Header />
-      <Routes >
-        <Route path='/' element={<Home />} />
-        <Route path='/menu' element={<Menu />} />
-        <Route path='/product/:productName' element={<ProductDetail/>}/>
-        <Route path='/signin' element={<SignIn />} />
-        <Route path='/signup' element={<SignUp />} />
-        <Route path='/profile/detail' element={<Profile />} />
-        <Route path='/profile/password' element={<Profile />} />
-        <Route path='/profile/orders' element={<Profile />} />
-        <Route path='/profile/orders/:orderID' element= {<OrderDetail />} />
-        <Route path='/contact' element={<Contact />} />
-        <Route path= '/cart' element= {<Cart />} />
-        <Route path='/purchase' element={<Purchase />} />
-        <Route path= '/about' element={<About />} />
-        <Route path='/test' element={<Test />} />
-      </Routes>
-      <Footer/>
+      <div className='w-full rounded-full mt-16'>
+        <Routes >
+          <Route path='/' element={<Home />} />
+          <Route path='/menu' element={<Menu />} />
+          <Route path='/product/:productName' element={<ProductDetail />} />
+          <Route path='/signin' element={<SignIn />} />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='/profile/detail' element={<Profile />} />
+          <Route path='/profile/password' element={<Profile />} />
+          <Route path='/profile/orders' element={<Profile />} />
+          <Route path='/profile/orders/:orderID' element={<OrderDetail />} />
+          <Route path='/contact' element={<Contact />} />
+          <Route path='/cart' element={<Cart />} />
+          <Route path='/purchase' element={<Purchase />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/test' element={<Test />} />
+        </Routes>
+      </div>
+      <Footer />
     </div>
   );
 }
