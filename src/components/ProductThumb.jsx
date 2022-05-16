@@ -4,12 +4,17 @@ import { Link } from 'react-router-dom'
 // This component return a product detail including: 
 // product image, title, calories, price
 const ProductThumb = ({ product }) => {
+
+
   const handleOrderClick = (e) => {
-    e.preventDefault();
+    
   }
+  
+  //Convert product's title for product detail link
+  const convertedTitle = product.title.trim().replace(/\s+/g, '-').toLowerCase();
 
   return (<div className='text-13'>
-    <Link to='/detail/1'>
+    <Link to={`/product/${convertedTitle}`} state={product}>
 
       {/* Image */}
       <div className='bg-gray-thumb rounded-lg'>
