@@ -72,7 +72,7 @@ const SignIn = () => {
             onClick={e => e.preventDefault()}
             className='auth-input bg-primary text-white font-bold hover:bg-opacity-90
             transition duration-300 '>
-            Sign in
+            SIGN IN
           </button>
         </form>
 
@@ -103,10 +103,10 @@ const SignIn = () => {
           </button>
         </div>
 
-        {/* Create account | Forget password */}
+        {/* Create account | Forgot password */}
         <div className='flex underline justify-between mt-6'>
           <Link to='/signup'>Create account</Link>
-          <Link to='/forgetpassword'>Forget password</Link>
+          <Link to='/forgotpassword'>Forgot password</Link>
         </div>
       </div>
     </div >

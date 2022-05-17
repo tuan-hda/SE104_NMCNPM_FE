@@ -111,7 +111,7 @@ const SignUp = () => {
             onClick={handleSubmit}
             className='auth-input bg-primary text-white font-bold hover:bg-opacity-90
             transition duration-300 '>
-            Sign up
+            SIGN UP
           </button>
         </form>
 

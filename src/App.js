@@ -14,15 +14,18 @@ import OrderDetail from './pages/OrderDetail'
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Cart from './pages/Cart';
+import ForgotPassword from './pages/ForgotPassword';
+
+const excludeHeaderFooterPath = ['/signin', '/signup', '/forgotpassword'];
 
 const getHeader = () => {
-  if (window.location.pathname === '/signin' || window.location.pathname === '/signup')
+  if (excludeHeaderFooterPath.includes(window.location.pathname))
     return null;
   return <Header />
 }
 
 const getFooter = () => {
-  if (window.location.pathname === '/signin' || window.location.pathname === '/signup')
+  if (excludeHeaderFooterPath.includes(window.location.pathname))
     return null;
   return <Footer />
 }
@@ -38,6 +41,7 @@ function App() {
           <Route path='/product/:productName' element={<ProductDetail />} />
           <Route path='/signin' element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
+          <Route path='/forgotpassword' element={<ForgotPassword />} />
           <Route path='/profile/detail' element={<Profile />} />
           <Route path='/profile/password' element={<Profile />} />
           <Route path='/profile/orders' element={<Profile />} />

@@ -27,11 +27,14 @@ export const validateInfo = (value) => {
     if (password.length < 8)
       error.password = [...error.password, 'Must contain at least 8 characters.'];
 
-    if (/^[a-zA-Z]+$/.test(password))
+    if (!/^(?=.*[0-9])/.test(password))
       error.password = [...error.password, 'Must contain at least one number.'];
 
-    if (!isNaN(password))
-      error.password = [...error.password, 'Must contain at least one letter.'];
+    if (!/^(?=.*[A-Z])/.test(password))
+      error.password = [...error.password, 'Must contain at least one uppercase character.'];
+
+    if (!/^(?=.*[a-z])/.test(password))
+      error.password = [...error.password, 'Must contain at least one lowercase character.'];
   }
 
   // Confirm password validation
