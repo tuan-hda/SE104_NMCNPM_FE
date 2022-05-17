@@ -16,7 +16,7 @@ const SignIn = () => {
   }
 
   return (
-    <div className='-mt-24 py-4 min-h-screen bg-gray-auth text-13 font-semibold flex items-center justify-center'>
+    <div className='-mt-28 py-4 min-h-screen bg-gray-auth text-13 font-semibold flex items-center justify-center'>
 
       <div className='mx-4 sm:mx-20 md:mx-40 lg:mx-64 xl:mx-[420px] w-full h-full py-20 bg-white rounded-xl flex flex-col justify-center px-4 sm:px-10 md:px-20 lg:px-24 relative'>
         {/* Close button */}

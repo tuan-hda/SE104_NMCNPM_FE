@@ -96,6 +96,7 @@ const Purchase = () => {
       if (result) {
         setIsAddressImported(true);
         setProvinceSelected(true)
+        console.log(1);
         setDeliveryInfo(deliveryInfo => ({
           ...deliveryInfo,
           province: result.province,
@@ -106,19 +107,24 @@ const Purchase = () => {
     }
   }, [isShowing])
 
-  return (<div className='w-full h-full'>
+  return (<div className='w-full h-full '>
     <AddressBookModal isABM={isABM} setIsABM={setIsABM} ABM_isShowing={isShowing} hide={toggle} setResult={setResult} />
-    <div className='pt-10 px-32 flex justify-between gap-8'>
+    <div className='px-2 sm:px-8 md:px-16 xl:px-32 flex md:flex-row flex-col-reverse justify-between gap-8'>
+
+      {/* Small devices purchase button. This button is put at the top of the page because we're using flex-col-reverse here on small devices */}
+      <button className='md:hidden text-13 bg-primary text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300'>
+        Purchase
+      </button>
 
       {/* Left section */}
-      <div className='w-3/5'>
+      <div className='md:w-3/5'>
 
         {/* Delivery information */}
         <div>
           {/* Title and Address book */}
           <div className='justify-between flex'>
             <h1 className='text-32 font-extrabold'>DELIVERY INFORMATION</h1>
-            <button className='text-13 font-semibold hover:underline'
+            <button className='text-13 font-semibold hover:underline text-right'
               onClick={() => showModal()}>Address book</button>
           </div>
 
@@ -136,7 +142,7 @@ const Purchase = () => {
             {/* Address */}
             <input className='mt-4 delivery-input font-semibold' type='text' placeholder='Address' name='address' value={deliveryInfo.address} onChange={handleChange} />
 
-            <div className='flex justify-between gap-2'>
+            <div className='flex xl:flex-row flex-col justify-between gap-0 xl:gap-2'>
               {/* Province */}
               <select className={`mt-4 delivery-input font-semibold ${isProvinceSelected ? '' : 'text-black-placeholder'}`} type='text' placeholder='Province' name='province' value={deliveryInfo.province || 'default'} onChange={handleChange} >
                 <option value='default' disabled>Choose province</option>
@@ -182,7 +188,7 @@ const Purchase = () => {
       </div>
 
       {/* Vertical devider */}
-      <div className='min-h-full mb-6 border-l-[1px] border-gray-border' />
+      <div className='min-h-full border-l-[1px] border-gray-border' />
 
       {/* Right section */}
       <div className='flex-grow text-13'>
@@ -223,11 +229,10 @@ const Purchase = () => {
         </div>
 
         {/* Purchase button */}
-        <button className='bg-primary text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300'>
+        <button className='bg-primary hidden md:block text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300'>
           Purchase
         </button>
       </div>
-
     </div>
   </div>
   )

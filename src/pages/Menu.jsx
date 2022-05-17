@@ -22,12 +22,13 @@ const Menu = () => {
   }, [isVisible])
 
   return (
-    <div className='md:flex px-2 pt-4 md:pt-0 sm:px-8 md:px-16 xl:px-32 justify-between gap-x-10 sm:gap-x-20 lg:gap-x-32 xl:gap-x-44'>
+    <div className='md:flex px-2 pt-2 md:pt-0 sm:px-8 md:px-16 xl:px-32 justify-between gap-x-10 sm:gap-x-20 lg:gap-x-32 xl:gap-x-44'>
 
       <button className='text-white font-semibold fixed top-20 bg-black hover:black w-full left-0 hover:bg-gray-800 transition duration-300 pl-2 h-10 z-10 md:hidden'
         onClick={() => toggle(!isShowing)}>
         {isShowing ? 'CLOSE' : 'MENU'}
       </button>
+
 
       {/* Normal sidebar */}
       <aside className='h-screen sticky top-24 hidden md:block'>
@@ -35,8 +36,9 @@ const Menu = () => {
       </aside>
 
       {/* Sidebar on small devices */}
-      <aside className={`fixed md:hidden bg-opacity-40 left-0 w-full ${isShowing ? '' : '-translate-y-full'} z-0 justify-center transition-transform h-full flex duration-300`}>
-        <div className='bg-opacity-100 bg-white w-4/5 sm:w-3/5 h-fit flex justify-center p-5 rounded-lg shadow-2xl'>
+      <aside className={`fixed md:hidden  left-0 w-full ${isShowing ? '' : '-translate-y-full'} justify-center transition-transform h-full flex duration-300`}
+        onClick={() => { toggle(!isShowing) }}>
+        <div className='bg-opacity-100 border-[1px] bg-white w-4/5  sm:w-3/5 h-fit flex justify-center p-5 rounded-lg shadow-2xl' onClick={e => e.stopPropagation()}>
           <CategoryBar currCategory={currCategory} setCategory={setCategory} categories={categories} />
         </div>
       </aside>

@@ -44,7 +44,7 @@ const SignUp = () => {
   }
 
   return (
-    <div className='py-8 -mt-24 bg-gray-auth text-13 font-semibold min-h-screen flex justify-center items-center'>
+    <div className='py-8 -mt-28 bg-gray-auth text-13 font-semibold min-h-screen flex justify-center items-center'>
 
       <div className='h-full mx-4 sm:mx-20 md:mx-40 lg:mx-64 xl:mx-[420px] py-8 bg-white rounded-xl flex flex-col justify-center
         px-4 sm:px-10 md:px-20 lg:px-24 relative'>

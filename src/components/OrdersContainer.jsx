@@ -57,7 +57,7 @@ const OrdersContainer = () => {
 
   // handle when user click at orderID
   const handleClick = (orderID) => {
-    navigate('/profile/orders/' + orderID,{state:orderID})
+    navigate('/profile/orders/' + orderID, { state: orderID })
   }
 
   return (
@@ -68,39 +68,41 @@ const OrdersContainer = () => {
         <p className='mt-2 text-sm'>Your orders will be displayed here.</p>
       </div>
 
-      {/* Order list */}
-      <table className='text-sm mt-11 font-medium w-full'>
-        <thead>
-          <tr className='font-semibold text-left' height='40px'>
-            <th>Order ID</th>
-            <th>Purchase date</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Payment</th>
-          </tr>
-        </thead>
+      <div className='overflow-y-auto'>
+        {/* Order list */}
+        <table className='text-sm mt-11 font-medium md:w-full w-[640px] sm:w-[768px]'>
+          <thead>
+            <tr className='font-semibold text-left' height='40px'>
+              <th>Order ID</th>
+              <th>Purchase date</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Payment</th>
+            </tr>
+          </thead>
 
-        <tbody>
-          {
-            orderListData.map((o, i) => {
-              return <React.Fragment key={i} >
-                {divider}
-                <tr className='font-medium' height='40px'>
-                  <td
-                    className='text-[#1976D2] cursor-pointer hover:underline'
-                    onClick={() => handleClick(o.orderID)}>
-                    {'#' + o.orderID}
-                  </td>
-                  <td>{o.purchaseDate}</td>
-                  <td>{'$ ' + o.total}</td>
-                  <td className={getTextColor(o.status)}>{getDeliveryStatus(o.status)}</td>
-                  <td>{o.payment ? 'Paid' : 'Cash'}</td>
-                </tr>
-              </React.Fragment>
-            })
-          }
-        </tbody>
-      </table>
+          <tbody>
+            {
+              orderListData.map((o, i) => {
+                return <React.Fragment key={i} >
+                  {divider}
+                  <tr className='font-medium' height='40px'>
+                    <td
+                      className='text-[#1976D2] cursor-pointer hover:underline'
+                      onClick={() => handleClick(o.orderID)}>
+                      {'#' + o.orderID}
+                    </td>
+                    <td>{o.purchaseDate}</td>
+                    <td>{'$ ' + o.total}</td>
+                    <td className={getTextColor(o.status)}>{getDeliveryStatus(o.status)}</td>
+                    <td>{o.payment ? 'Paid' : 'Cash'}</td>
+                  </tr>
+                </React.Fragment>
+              })
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

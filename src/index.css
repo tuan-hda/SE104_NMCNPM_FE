@@ -25,7 +25,7 @@ html, body {
 }
 
 .save-button {
-  @apply sm:absolute right-0 bg-primary p-4 py-3 rounded-md text-white font-semibold text-sm 
+  @apply bg-primary p-4 py-3 rounded-md text-white font-semibold text-sm 
   hover:bg-opacity-90 transition duration-300
 }
 
@@ -35,7 +35,7 @@ html, body {
 }
 
 .profile-input {
-  @apply outline-none border-[#C5C5C5] border-[1px] sm:flex-1 rounded-lg px-5 h-[45px] font-medium
+  @apply outline-none border-[#C5C5C5] border-[1px] flex-1 rounded-lg px-5 min-h-[45px] font-medium
 }
 
 .province-input {
@@ -91,7 +91,7 @@ a.font-bold.text-primary:hover {
 }
 
 .address-modal {
-  @apply flex flex-col justify-start  bg-white rounded-lg overflow-auto pt-8 pb-7 px-20 relative
+  @apply flex flex-col justify-start  bg-white rounded-lg overflow-auto pt-8 pb-7  relative md:w-[640px] sm:w-[600px] max-h-[90%]  px-4 sm:px-10 md:px-14 lg:px-20 w-full mx-4 sm:mx-0 
 }
 
 .province-combobox {
@@ -101,4 +101,8 @@ a.font-bold.text-primary:hover {
 
 .profile-div {
   @apply flex flex-col sm:flex-row mt-6 justify-between text-sm sm:items-center gap-x-10 md:gap-x-24 lg:gap-x-32 gap-y-2
+}
+
+.address-modal-layer {
+  @apply flex items-center justify-center h-full top-10 w-full bg-opacity-70 duration-300 transition-opacity fixed bg-gray-500
 }

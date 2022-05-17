@@ -3,7 +3,7 @@ import React from 'react'
 const CategoryBar = ({ currCategory, setCategory, categories }) => {
   const categoryClick = (c, i) => {
     var element = document.getElementById(`menu${i}`)
-    const headerOffset = 96;
+    const headerOffset = 120;
     var offsetTop = element.getBoundingClientRect().top + window.pageYOffset - headerOffset
     window.scrollTo({
       top: offsetTop,

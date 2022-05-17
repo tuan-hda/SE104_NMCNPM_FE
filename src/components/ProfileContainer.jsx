@@ -1,7 +1,4 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setDistrict, setProvince, setWard } from '../actions'
 import DefaultAvatar from '../images/User-avatar.svg'
 import useModal from '../utils/useModal'
 import AlertModal from './modals/AlertModal'
@@ -10,9 +7,11 @@ import ProvinceGetter from './ProvinceGetter'
 
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
 
+
+
 // Define default user avatar
 const defaultAvatar = (style) => <svg
-  className={`rounded-full inline object-contain fill-gray-500 ${style}`}
+  className={`rounded-full inline object-cover fill-gray-500 ${style}`}
   xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512">
   <g>
     <circle cx="256" cy="128" r="128" />
@@ -66,8 +65,6 @@ const ProfileContainer = () => {
   const [isDistrictSelected, setDistrictSelected] = useState(null);
   const [isWardSelected, setWardSelected] = useState(null);
   const { isShowing, toggle } = useModal();
-
-  const dispatch = useDispatch();
 
   // Get result of Modal
   const [modalResult, setModalResult] = useState(-1);
@@ -254,27 +251,27 @@ const ProfileContainer = () => {
       <div className='profile-div'>
         <p className='sm:w-24 w-full lg:w-36 font-semibold'>Your photo</p>
 
-        <div className='flex justify-between items-center flex-1 gap-3 '>
+        <div className='flex justify-between flex-1 items-center gap-3 '>
           {/* User's current avatar */}
-          <div className='flex gap-3 items-center'>
+          <div className='flex items-center gap-2'>
             <div>
               {detail.photo ? <img src={detail.photo} alt="User's ava"
-                className='w-20 h-20 rounded-full inline object-contain fill-gray-500' />
+                className='w-20 aspect-square rounded-full inline object-cover fill-gray-500' />
                 : defaultAvatar('w-20 h-20')
               }
 
             </div>
-            <span className=''>This will be displayed on your profile.</span>
+            <span>This will be displayed on your profile.</span>
           </div>
 
           {/* Button delete and button update */}
-          <div className='flex'>
+          <div className='flex sm:flex-row sm:gap-4 gap-2 flex-col'>
             <button className='font-semibold hover:underline' type='button'
               onClick={toggle}>Delete</button>
             <AlertModal msg='Are you sure you want to delete your photo?' isShowing={isShowing}
               hide={toggle} setResult={setModalResult} />
 
-            <label className='ml-4 font-semibold hover:underline cursor-pointer' htmlFor='photo'>Update</label>
+            <label className='font-semibold hover:underline cursor-pointer' htmlFor='photo'>Update</label>
             <input className='hidden' type='file' onChange={handlePhotoChange} id='photo'
               accept='image/*' />
           </div>

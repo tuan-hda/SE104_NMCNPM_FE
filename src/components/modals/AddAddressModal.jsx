@@ -102,8 +102,8 @@ const AddAddressModal = ({ hide, isShowing, setIsABM, hideParent }) => {
   }
 
   return (
-    <div className={`${isShowing ? 'opacity-100' : 'opacity-0 pointer-events-none'} flex items-center justify-center h-screen w-full bg-opacity-70 duration-300 transition-opacity fixed bg-gray-500`} onClick={() => { handleEscapeByClickOutside() }}>
-      <div className='address-modal w-[640px] text-13 font-semibold' onClick={(e) => e.stopPropagation()}>
+    <div className={`${isShowing ? 'opacity-100' : 'opacity-0 pointer-events-none'} address-modal-layer `} onClick={() => { handleEscapeByClickOutside() }}>
+      <div className='address-modal' onClick={(e) => e.stopPropagation()}>
         {/* Close button */}
         <div className='absolute top-7 right-7 hover:bg-gray-border transition duration-300 rounded-full cursor-pointer w-8 h-8 flex items-center justify-center'
           onClick={() => { setIsABM(true) }}>
@@ -114,7 +114,7 @@ const AddAddressModal = ({ hide, isShowing, setIsABM, hideParent }) => {
         <h1 className='font-extrabold text-[26px] text-center mb-4'>ADD ADDRESS</h1>
 
         {/* Name + Phone */}
-        <div className='flex justify-between gap-8 mt-4'>
+        <div className='flex sm:flex-row flex-col justify-between gap-4 mt-4 text-13'>
           <div className='flex-1'>
             <input className='auth-input text-13 font-semibold' placeholder='Name' name='name' value={address.name} onChange={handleChange} />
             <p className='text-red-500 ml-4 mt-1'>{error.name}</p>
@@ -126,7 +126,7 @@ const AddAddressModal = ({ hide, isShowing, setIsABM, hideParent }) => {
         </div>
 
         {/* Address + Province */}
-        <div className='flex justify-between gap-8 mt-4'>
+        <div className='flex sm:flex-row flex-col justify-between gap-4 mt-4 text-13'>
           <div className='flex-1'>
             <input className='auth-input text-13 font-semibold' placeholder='Address' name='address' value={address.address} onChange={handleChange} />
             <p className='text-red-500 ml-4 mt-1'>{error.address}</p>
@@ -145,7 +145,7 @@ const AddAddressModal = ({ hide, isShowing, setIsABM, hideParent }) => {
         </div>
 
         {/* District + Ward */}
-        <div className='flex justify-between gap-8 mt-4'>
+        <div className='flex sm:flex-row flex-col justify-between gap-4 mt-4 text-13'>
           <div className='flex-1'>
             <select
               className={`province-combobox text-13 font-semibold ${isDistrictSelected ? '' : 'text-black-placeholder'}`}
@@ -172,9 +172,9 @@ const AddAddressModal = ({ hide, isShowing, setIsABM, hideParent }) => {
 
         {/* Button Cancel + Save */}
         <div className='flex justify-center mt-8 gap-2'>
-          <button className='font-semibold bg-gray-button rounded-lg h-9 w-24 hover:bg-gray-500 hover:text-white transition duration-300'
+          <button className='font-semibold bg-gray-button rounded-lg h-9 w-24 hover:bg-gray-500 hover:text-white transition duration-300 text-13'
             onClick={() => setIsABM(true)}>Cancel</button>
-          <button className='font-semibold bg-primary rounded-lg h-9 w-24 text-white hover:bg-opacity-80 transition duration-300' onClick={() => handleSave()}>Save</button>
+          <button className='font-semibold bg-primary rounded-lg h-9 w-24 text-white hover:bg-opacity-80 transition duration-300 text-13' onClick={() => handleSave()}>Save</button>
         </div>
       </div>
     </div>

@@ -39,7 +39,7 @@ const PasswordContainer = () => {
   return (
     <form className='mb-10' onSubmit={e => e.preventDefault()}>
       {/* Header (including Title, description and save button) */}
-      <div className='flex items-center relative'>
+      <div className='flex items-center relative justify-between'>
         {/* Including Title, description */}
         <div>
           <h1 className='font-bold text-32'>Password</h1>
@@ -51,7 +51,7 @@ const PasswordContainer = () => {
 
       {/* Old password */}
       <div className='flex mt-12 justify-between text-sm items-center'>
-        <p className='min-w-[144px] font-semibold'>Old password</p>
+        <p className='w-36 font-semibold'>Old password</p>
 
         <input
           type='password'
@@ -67,7 +67,7 @@ const PasswordContainer = () => {
 
       {/* New password */}
       <div className='flex mt-6 justify-between text-sm items-center'>
-        <p className='min-w-[144px] font-semibold'>New password</p>
+        <p className='w-36 font-semibold'>New password</p>
 
         <input
           type='password'
@@ -86,7 +86,7 @@ const PasswordContainer = () => {
 
       {/* Confirm password */}
       <div className='flex mt-6 justify-between text-sm items-center'>
-        <p className='min-w-[144px] font-semibold'>Confirm password</p>
+        <p className='w-36 font-semibold'>Confirm password</p>
 
         <input
           type='password'

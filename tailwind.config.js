@@ -15,7 +15,7 @@ module.exports = {
       },
       colors: {
         primary: "#E16246",
-        secondary:"#E83434",
+        secondary: "#E83434",
         divider: "#ABABAB",
         'gray-thumb': '#F8F7F5',
         'gray-auth': '#F2F2F2',
@@ -23,6 +23,7 @@ module.exports = {
         'black-placeholder': '#595959',
         'blue-facebook': '#1877F2',
         'blue-nav': '#F3F4F8',
+        'blue-hover': '#ccd2ea',
         'gray-rdo': '#C5C5C5',
         'gray-button': '#E5E7EB'
       },

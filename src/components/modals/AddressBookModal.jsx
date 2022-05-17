@@ -29,7 +29,6 @@ const AddressBookModal = ({ isABM, setIsABM, ABM_isShowing, hide, setResult }) =
 
   // Default address
   useEffect(() => {
-    setResult(addresses[0])
     setCurrAddress(addresses[0]);
   }, [])
 
@@ -60,10 +59,10 @@ const AddressBookModal = ({ isABM, setIsABM, ABM_isShowing, hide, setResult }) =
   }
 
   // Full screen layer
-  return (isABM ? <div className={`${ABM_isShowing ? 'opacity-100' : 'opacity-0 pointer-events-none'} flex items-center justify-center h-screen w-full bg-opacity-70 duration-300 transition-opacity fixed bg-gray-500`} onClick={() => hide()}>
+  return (isABM ? <div className={`${ABM_isShowing ? 'opacity-100' : 'opacity-0 pointer-events-none'} address-modal-layer`} onClick={() => hide()}>
 
     {/* Address Book Modal */}
-    <div className='w-[640px] max-h-[640px] address-modal' onClick={(e) => {
+    <div className='address-modal' onClick={(e) => {
       e.stopPropagation();
     }}>
 
