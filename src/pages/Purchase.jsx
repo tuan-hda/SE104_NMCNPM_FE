@@ -43,7 +43,7 @@ const Purchase = () => {
 
   const { isShowing, toggle } = useModal();
 
-  ProvinceGetter({ province: deliveryInfo.province, district: deliveryInfo.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info: deliveryInfo, setInfo: setDeliveryInfo, result, isAddressImported, setIsAddressImported })
+  ProvinceGetter({ province: deliveryInfo.province, district: deliveryInfo.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info: deliveryInfo, setInfo: setDeliveryInfo, result, setResult, isAddressImported, setIsAddressImported })
 
   const handleChange = e => {
     if (e.target.name === 'phone') {
@@ -96,16 +96,26 @@ const Purchase = () => {
       if (result) {
         setIsAddressImported(true);
         setProvinceSelected(true)
-        console.log(1);
         setDeliveryInfo(deliveryInfo => ({
           ...deliveryInfo,
           province: result.province,
-          district: '',
-          ward: ''
+          district: result.district,
+          ward: result.ward
         }))
       }
     }
   }, [isShowing])
+
+  useEffect(() => {
+    if (result) {
+      setDeliveryInfo(deliveryInfo => ({
+        ...deliveryInfo,
+        name: result.name,
+        phone: result.phone,
+        address: result.address
+      }))
+    }
+  }, [result])
 
   return (<div className='w-full h-full '>
     <AddressBookModal isABM={isABM} setIsABM={setIsABM} ABM_isShowing={isShowing} hide={toggle} setResult={setResult} />
