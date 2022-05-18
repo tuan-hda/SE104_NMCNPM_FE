@@ -27,11 +27,7 @@ const normalizeText = (data) => {
   })
 }
 
-const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info, setInfo, result, setResult, isAddressImported, setIsAddressImported }) => {
-  // Last five parameters are optional
-  const [isDistrictDone, setIsDistrictDone] = useState(false);
-  const [isWardDone, setIsWardDone] = useState(false);
-
+const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info, setInfo, result, isAddressImported, setIsAddressImported }) => {
   // Fetch province data
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -51,7 +47,6 @@ const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard,
 
   // Fetch district data after user choose province
   useEffect(() => {
-    setIsDistrictDone(isDistrictDone => false)
     const fetchDistricts = async () => {
       try {
         const str = String(province);
@@ -63,12 +58,19 @@ const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard,
         })
 
         //console.log(1)
-        setDistrictSelected(false);
+        if (!result || !result.district)
+          setDistrictSelected(false);
+        else {
+          setDistrictSelected(true)
+          setInfo((prevInfo) => ({
+            ...prevInfo,
+            district: result.district
+          }))
+        }
         setWardSelected(false);
         //dispatch(setDistrict(response.data.districts));
         setDistrict(normalizeText(response.data.districts));
         setWard([])
-        setIsDistrictDone(isDistrictDone => true);
       } catch (err) {
         handleApiCallError(err);
       }
@@ -80,7 +82,6 @@ const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard,
 
   // Fetch ward data after user choose district
   useEffect(() => {
-    setIsWardDone(isWardDone => false)
     const fetchWards = async () => {
       try {
         const str = String(district);
@@ -93,9 +94,17 @@ const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard,
 
         //console.log(2);
         setWardSelected(false);
+        if (!result || !result.ward)
+          setWardSelected(false);
+        else {
+          setWardSelected(true)
+          setInfo((prevInfo) => ({
+            ...prevInfo,
+            ward: result.ward
+          }))
+        }
         //dispatch(setWard(response.data.wards))
         setWard(normalizeText(response.data.wards));
-        setIsWardDone(isWardDone => true);
       } catch (err) {
         handleApiCallError(err);
       }
@@ -106,21 +115,21 @@ const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard,
   }, [district])
 
   // This sets district received from Addressbook
-  useEffect(() => {
-    //console.log('isDistrictDone ' + isDistrictDone)
-    if (result && info && isDistrictDone && isAddressImported) {
-      setDistrictSelected(true);
-    }
-  }, [isDistrictDone])
+  // useEffect(() => {
+  //   //console.log('isDistrictDone ' + isDistrictDone)
+  //   if (result && info && isDistrictDone && isAddressImported) {
+  //     setDistrictSelected(true);
+  //   }
+  // }, [isDistrictDone])
 
   // This sets ward received from Addressbook
-  useEffect(() => {
-    //  console.log('isWardDone ' + isWardDone)
-    if (result && info && isWardDone && isAddressImported) {
-      setWardSelected(true);
-      setIsAddressImported(false)
-    }
-  }, [isWardDone])
+  // useEffect(() => {
+  //   //  console.log('isWardDone ' + isWardDone)
+  //   if (result && info && isWardDone && isAddressImported) {
+  //     setWardSelected(true);
+  //     setIsAddressImported(false)
+  //   }
+  // }, [isWardDone])
 }
 
 export default ProvinceGetter

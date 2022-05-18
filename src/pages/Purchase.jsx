@@ -33,8 +33,6 @@ const Purchase = () => {
   const [isDistrictSelected, setDistrictSelected] = useState(false);
   const [isWardSelected, setWardSelected] = useState(false);
 
-  // Check if address is loaded from Address book
-  const [isAddressImported, setIsAddressImported] = useState(false);
 
   // ABM (Address Book Modal) is true by default, otherwise AAM (Add Address Modal) is true
   const [isABM, setIsABM] = useState(true);
@@ -43,7 +41,7 @@ const Purchase = () => {
 
   const { isShowing, toggle } = useModal();
 
-  ProvinceGetter({ province: deliveryInfo.province, district: deliveryInfo.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info: deliveryInfo, setInfo: setDeliveryInfo, result, setResult, isAddressImported, setIsAddressImported })
+  ProvinceGetter({ province: deliveryInfo.province, district: deliveryInfo.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info: deliveryInfo, setInfo: setDeliveryInfo, result })
 
   const handleChange = e => {
     if (e.target.name === 'phone') {
@@ -87,6 +85,7 @@ const Purchase = () => {
 
   const showModal = () => {
     toggle();
+    setResult()
   }
 
   // After close modal, set address
@@ -94,13 +93,10 @@ const Purchase = () => {
     if (!isShowing) {
       setIsABM(true)
       if (result) {
-        setIsAddressImported(true);
         setProvinceSelected(true)
         setDeliveryInfo(deliveryInfo => ({
           ...deliveryInfo,
           province: result.province,
-          district: result.district,
-          ward: result.ward
         }))
       }
     }
@@ -117,12 +113,16 @@ const Purchase = () => {
     }
   }, [result])
 
+  const handlePurchase = (e) => {
+    e.preventDefault()
+  }
+
   return (<div className='w-full h-full '>
     <AddressBookModal isABM={isABM} setIsABM={setIsABM} ABM_isShowing={isShowing} hide={toggle} setResult={setResult} />
-    <div className='px-2 sm:px-8 md:px-16 xl:px-32 flex md:flex-row flex-col-reverse justify-between gap-8'>
+    <form className='px-2 sm:px-8 md:px-16 xl:px-32 flex md:flex-row flex-col-reverse justify-between gap-8'>
 
       {/* Small devices purchase button. This button is put at the top of the page because we're using flex-col-reverse here on small devices */}
-      <button className='md:hidden text-13 bg-primary text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300'>
+      <button className='md:hidden text-13 bg-primary text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300' type='submit' onClick={handlePurchase}>
         Purchase
       </button>
 
@@ -239,11 +239,11 @@ const Purchase = () => {
         </div>
 
         {/* Purchase button */}
-        <button className='bg-primary hidden md:block text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300'>
+        <button className='bg-primary hidden md:block text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300' type='submit' onClick={handlePurchase}>
           Purchase
         </button>
       </div>
-    </div>
+    </form>
   </div>
   )
 }

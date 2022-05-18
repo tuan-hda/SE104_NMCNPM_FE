@@ -21,8 +21,20 @@ const AddressBookModal = ({ isABM, setIsABM, ABM_isShowing, hide, setResult }) =
       district: '769_Thanh pho Thu Duc',
       ward: '26800_Phuong Linh Trung'
     },
+    {
+      id: 2,
+      name: 'Nguyen Van A',
+      phone: '0123456789',
+      address: 'KTX Khu A, Khu pho 6',
+      province: '79_Thanh pho Ho Chi Minh',
+      district: '769_Thanh pho Thu Duc',
+      ward: '26800_Phuong Linh Trung'
+    },
   ]);
   const [currAddress, setCurrAddress] = useState();
+
+  // Specify which address is being edited, default is none
+  const [currEditAddress, setCurrEditAddress] = useState()
 
   // React hook for Add Address Modal
   const { isShowing, toggle } = useModal();
@@ -39,15 +51,26 @@ const AddressBookModal = ({ isABM, setIsABM, ABM_isShowing, hide, setResult }) =
     hide();
   }
 
+  const handleAddressEdit = (e, index) => {
+    e.stopPropagation();
+    setCurrEditAddress(addresses[index])
+    toggle()
+    setIsABM(false)
+  }
+
   // Get Address item
   const getAddressItems = (address, index) => {
-    return <div key={index} className={`text-13 cursor-pointer  transition duration-300 font-medium mt-4 px-6 py-5 border-[1px] border-gray-border rounded-lg ${currAddress && currAddress.id === addresses[index].id ? 'bg-primary text-white' : 'hover:bg-gray-100'}`}
+    return <div key={index} className={`text-13 mt-4 pl-6 pr-20 pt-5 pb-6 cursor-pointer transition duration-300 font-medium border-[1px] border-gray-border rounded-lg relative group ${currAddress && currAddress.id === addresses[index].id ? 'bg-primary text-white' : 'hover:bg-gray-100'}`}
       onClick={() => handleSelectAddress(index)}>
       <p>
         {address.name}, {address.phone}
       </p>
       <p className='mt-1'>
         {address.address}, {getProvinceName(address.ward)}, {getProvinceName(address.district)}, {getProvinceName(address.province)}
+      </p>
+      <p className='text-black hover:font-bold hidden group-hover:block absolute bottom-4 right-4'
+        onClick={(e) => handleAddressEdit(e, index)}>
+        Edit
       </p>
     </div>
   }
@@ -84,15 +107,14 @@ const AddressBookModal = ({ isABM, setIsABM, ABM_isShowing, hide, setResult }) =
       {/* Add address button */}
       <div className='flex justify-center mt-7'>
         <button className='w-40 font-semibold text-13 bg-gray-border rounded-lg h-10 hover:bg-gray-500 hover:text-white duration-300 transition'
-          onClick={() => showAAM()}
-        >
+          onClick={() => showAAM()}>
           Add address
         </button>
       </div>
     </div>
   </div>
     :
-    <AddAddressModal setIsABM={setIsABM} isShowing={isShowing} hide={toggle} hideParent={hide} />
+    <AddAddressModal setIsABM={setIsABM} isShowing={isShowing} hide={toggle} hideParent={hide} currEditAddress={currEditAddress} setCurrEditAddress={setCurrEditAddress} />
   )
 }
 

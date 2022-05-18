@@ -69,7 +69,7 @@ const SignIn = () => {
           {/* Button sign in */}
           <button
             type='submit'
-            onClick={e => e.preventDefault()}
+            onClick={(e) => { e.preventDefault(); }}
             className='auth-input bg-primary text-white font-bold hover:bg-opacity-90
             transition duration-300 '>
             SIGN IN

@@ -99,10 +99,15 @@ a.font-bold.text-primary:hover {
   border-gray-border rounded-lg px-4
 }
 
+.province-combobox-err {
+  @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
+  border-red-500 rounded-lg px-4
+}
+
 .profile-div {
   @apply flex flex-col sm:flex-row mt-6 justify-between text-sm sm:items-center gap-x-10 md:gap-x-24 lg:gap-x-32 gap-y-2
 }
 
 .address-modal-layer {
-  @apply flex items-center justify-center h-full top-10 w-full bg-opacity-70 duration-300 transition-opacity fixed bg-gray-500
+  @apply flex items-center justify-center h-full top-0 z-20 w-full bg-opacity-70 duration-300 transition-opacity fixed bg-gray-500
 }

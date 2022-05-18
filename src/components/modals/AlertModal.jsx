@@ -15,8 +15,7 @@ const AlertModal = ({ msg, isShowing, hide, setResult }) => {
 
   return <div
     className={`${!isShowing ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'} 
-    duration-300 transition-opacity fixed top-0 left-0 w-screen h-screen flex justify-center
-    items-center bg-opacity-70 bg-gray-500 text-sm z-10`}
+    address-modal-layer left-0`}
     onClick={() => handleCancel()}>
     <div className='bg-white rounded-md w-96 h-64 flex items-center justify-center relative'
       onClick={(e) => { e.stopPropagation() }}>
