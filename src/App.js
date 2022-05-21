@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import './App.css';
 import Home from './pages/Home'
 import SignIn from './pages/SignIn';
@@ -15,8 +15,10 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Cart from './pages/Cart';
 import ForgotPassword from './pages/ForgotPassword';
+import StoreLocator from './pages/StoreLocator';
+import { useEffect, useReducer } from 'react';
 
-const excludeHeaderFooterPath = ['/signin', '/signup', '/forgotpassword'];
+const excludeHeaderFooterPath = ['/signin', '/signup', '/forgotpassword', '/storelocator'];
 
 const getHeader = () => {
   if (excludeHeaderFooterPath.includes(window.location.pathname))
@@ -31,6 +33,13 @@ const getFooter = () => {
 }
 
 function App() {
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    forceUpdate()
+  }, [navigate])
+
   return (
     <div>
       {getHeader()}
@@ -51,6 +60,7 @@ function App() {
           <Route path='/purchase' element={<Purchase />} />
           <Route path='/about' element={<About />} />
           <Route path='/test' element={<Test />} />
+          <Route path='/storelocator' element={<StoreLocator />} />
         </Routes>
       </div>
       {getFooter()}

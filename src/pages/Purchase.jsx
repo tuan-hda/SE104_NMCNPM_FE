@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
 import AddressBookModal from '../components/modals/AddressBookModal';
 import OrderSuccessModal from '../components/modals/OrderSuccessModal';
 import PaymentMethodRadioButton from '../components/PaymentMethodRadioButton';
 import ProvinceGetter from '../components/ProvinceGetter';
 import useModal from '../utils/useModal'
-import { validateDeliveryInfo, validateInfo } from '../utils/validateInfo';
+import { validateDeliveryInfo } from '../utils/validateInfo';
 
 // Create data for combobox
 const createComboboxData = data => {
@@ -45,8 +44,6 @@ const Purchase = () => {
 
   const { isShowing, toggle } = useModal();
   const { isShowing: isSuccessShowing, toggle: toggleSuccessShowing } = useModal()
-
-  const navigate = useNavigate()
 
   ProvinceGetter({ province: deliveryInfo.province, district: deliveryInfo.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info: deliveryInfo, setInfo: setDeliveryInfo, result })
 

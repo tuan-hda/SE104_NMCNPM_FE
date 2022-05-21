@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import ContactImage from '../images/ContactImage.jpg'
 
 const divider = <div className='w-full border-[1px] border-gray-border mt-2' />
@@ -49,7 +50,7 @@ const Contact = () => {
 
         {divider}
 
-        <p className='mt-2'>You can locate our stores <a target='blank' href='https://www.facebook.com/hdatdragon2849/' className='font-bold text-primary'>here</a>. </p>
+        <p className='mt-2'>You can locate our stores <Link to='/storelocator' className='font-bold text-primary'>here</Link>. </p>
 
       </div>
 
