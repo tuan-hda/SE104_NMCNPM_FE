@@ -20,7 +20,7 @@ html, body {
 }
 
 .auth-input {
-  @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
+  @apply outline-1 outline-black border-[1px] w-full h-12 placeholder-black-placeholder
   border-gray-border rounded-lg px-5 py-4
 }
 
@@ -51,8 +51,13 @@ a.font-bold.text-primary:hover {
 }
 
 .delivery-input {
-  @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
+  @apply outline-1 outline-black border-[1px] w-full h-12 placeholder-black-placeholder
   border-gray-border rounded-lg px-5
+}
+
+.delivery-input-err {
+  @apply outline-1 outline-black border-[1px] w-full h-12 placeholder-black-placeholder
+  border-red-500 rounded-lg px-5
 }
 
 .carousel-open:checked + .carousel-item {
@@ -86,21 +91,17 @@ a.font-bold.text-primary:hover {
 }
 
 .auth-input-err {
-  @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
+  @apply outline-1 outline-black border-[1px] w-full h-12 placeholder-black-placeholder
   border-red-500 rounded-lg px-5 py-4
 }
 
-.address-modal {
-  @apply flex flex-col justify-start  bg-white rounded-lg overflow-auto pt-8 pb-7  relative md:w-[640px] sm:w-[600px] max-h-[90%]  px-4 sm:px-10 md:px-14 lg:px-20 w-full mx-4 sm:mx-0 
-}
-
 .province-combobox {
-  @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
+  @apply outline-1 outline-black border-[1px] w-full h-12 placeholder-black-placeholder
   border-gray-border rounded-lg px-4
 }
 
 .province-combobox-err {
-  @apply outline-0 border-[1px] w-full h-12 placeholder-black-placeholder
+  @apply outline-1 outline-black border-[1px] w-full h-12 placeholder-black-placeholder
   border-red-500 rounded-lg px-4
 }
 
@@ -110,4 +111,12 @@ a.font-bold.text-primary:hover {
 
 .address-modal-layer {
   @apply flex items-center justify-center h-full top-0 z-20 w-full bg-opacity-70 duration-300 transition-opacity fixed bg-gray-500
+}
+
+.order-success-modal {
+  @apply address-modal sm:w-[400px] sm:px-10 !important;
+}
+
+.address-modal {
+  @apply flex flex-col justify-start bg-white rounded-lg overflow-auto pt-8 pb-7  relative md:w-[640px] sm:w-[600px] max-h-[90%]  px-4 sm:px-10 md:px-14 lg:px-20 w-full mx-4 sm:mx-0 
 }

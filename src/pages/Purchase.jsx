@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import AddressBookModal from '../components/modals/AddressBookModal';
+import OrderSuccessModal from '../components/modals/OrderSuccessModal';
 import PaymentMethodRadioButton from '../components/PaymentMethodRadioButton';
 import ProvinceGetter from '../components/ProvinceGetter';
 import useModal from '../utils/useModal'
+import { validateDeliveryInfo, validateInfo } from '../utils/validateInfo';
 
 // Create data for combobox
 const createComboboxData = data => {
@@ -33,6 +36,7 @@ const Purchase = () => {
   const [isDistrictSelected, setDistrictSelected] = useState(false);
   const [isWardSelected, setWardSelected] = useState(false);
 
+  const [error, setError] = useState({})
 
   // ABM (Address Book Modal) is true by default, otherwise AAM (Add Address Modal) is true
   const [isABM, setIsABM] = useState(true);
@@ -40,6 +44,9 @@ const Purchase = () => {
   const [result, setResult] = useState()
 
   const { isShowing, toggle } = useModal();
+  const { isShowing: isSuccessShowing, toggle: toggleSuccessShowing } = useModal()
+
+  const navigate = useNavigate()
 
   ProvinceGetter({ province: deliveryInfo.province, district: deliveryInfo.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info: deliveryInfo, setInfo: setDeliveryInfo, result })
 
@@ -113,17 +120,31 @@ const Purchase = () => {
     }
   }, [result])
 
-  const handlePurchase = (e) => {
+  const handleCheckout = (e) => {
     e.preventDefault()
+
+    const err = validateDeliveryInfo(deliveryInfo)
+    setError(err);
+
+    // If validation return false then break the function
+    if (Object.keys(err).length !== 0) {
+      return
+    }
+
+    console.log(isSuccessShowing)
+    toggleSuccessShowing()
   }
 
-  return (<div className='w-full h-full '>
+  return (<div className='w-full h-full' onSubmit={(e) => e.preventDefault()}>
     <AddressBookModal isABM={isABM} setIsABM={setIsABM} ABM_isShowing={isShowing} hide={toggle} setResult={setResult} />
+
+    <OrderSuccessModal isShowing={isSuccessShowing} />
+
     <form className='px-2 sm:px-8 md:px-16 xl:px-32 flex md:flex-row flex-col-reverse justify-between gap-8'>
 
       {/* Small devices purchase button. This button is put at the top of the page because we're using flex-col-reverse here on small devices */}
-      <button className='md:hidden text-13 bg-primary text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300' type='submit' onClick={handlePurchase}>
-        Purchase
+      <button className='md:hidden text-13 bg-primary text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300' type='submit' onClick={handleCheckout}>
+        Check out
       </button>
 
       {/* Left section */}
@@ -135,46 +156,59 @@ const Purchase = () => {
           <div className='justify-between flex'>
             <h1 className='text-32 font-extrabold'>DELIVERY INFORMATION</h1>
             <button className='text-13 font-semibold hover:underline text-right'
-              onClick={() => showModal()}>Address book</button>
+              onClick={() => { showModal() }}>Address book</button>
           </div>
 
           {/* Information input */}
           <div className='mt-9 text-13'>
             {/* Name */}
-            <input className='delivery-input font-semibold' type='text' placeholder='Name' name='name' value={deliveryInfo.name} onChange={handleChange} />
+            <input className={`${error.name ? 'delivery-input-err' : 'delivery-input'} font-semibold`} type='text' placeholder='Name' name='name' value={deliveryInfo.name} onChange={handleChange} />
+            <span className='ml-4 text-red-500'>{error.name}</span>
 
             {/* Phone */}
-            <input className='mt-4 delivery-input font-semibold' type='text' placeholder='Phone' name='phone' value={deliveryInfo.phone} onChange={handleChange} />
+            <input className={`mt-4 ${error.phone ? 'delivery-input-err' : 'delivery-input'} font-semibold`} type='text' placeholder='Phone' name='phone' value={deliveryInfo.phone} onChange={handleChange} />
+            <span className='ml-4 text-red-500'>{error.phone}</span>
 
             {/* Email */}
-            <input className='mt-4 delivery-input font-semibold' type='email' placeholder='Email' name='email' value={deliveryInfo.email} onChange={handleChange} />
+            <input className={`mt-4 ${error.email ? 'delivery-input-err' : 'delivery-input'} font-semibold`} type='email' placeholder='Email' name='email' value={deliveryInfo.email} onChange={handleChange} />
+            <span className='ml-4 text-red-500'>{error.email}</span>
 
             {/* Address */}
-            <input className='mt-4 delivery-input font-semibold' type='text' placeholder='Address' name='address' value={deliveryInfo.address} onChange={handleChange} />
+            <input className={`mt-4 ${error.address ? 'delivery-input-err' : 'delivery-input'} font-semibold`} type='text' placeholder='Address' name='address' value={deliveryInfo.address} onChange={handleChange} />
+            <span className='ml-4 text-red-500'>{error.address}</span>
 
             <div className='flex xl:flex-row flex-col justify-between gap-0 xl:gap-2'>
               {/* Province */}
-              <select className={`mt-4 delivery-input font-semibold ${isProvinceSelected ? '' : 'text-black-placeholder'}`} type='text' placeholder='Province' name='province' value={deliveryInfo.province || 'default'} onChange={handleChange} >
-                <option value='default' disabled>Choose province</option>
-                {createComboboxData(province)}
-              </select>
+              <div className='flex-1'>
+                <select className={`mt-4 ${error.province ? 'delivery-input-err' : 'delivery-input'} font-semibold ${isProvinceSelected ? '' : 'text-black-placeholder'}`} type='text' placeholder='Province' name='province' value={deliveryInfo.province || 'default'} onChange={handleChange} >
+                  <option value='default' disabled>Choose province</option>
+                  {createComboboxData(province)}
+                </select>
+                <span className='ml-4 text-red-500'>{error.province}</span>
+              </div>
 
               {/* District */}
-              <select className={`mt-4 delivery-input font-semibold ${isDistrictSelected ? '' : 'text-black-placeholder'}`} type='text' placeholder='District' name='district' value={isDistrictSelected ? deliveryInfo.district : 'default'} onChange={handleChange} >
-                <option value='default' disabled>Choose district</option>
-                {createComboboxData(district)}
-              </select>
+              <div className='flex-1'>
+                <select className={`mt-4 ${error.district ? 'delivery-input-err' : 'delivery-input'} font-semibold ${isDistrictSelected ? '' : 'text-black-placeholder'}`} type='text' placeholder='District' name='district' value={isDistrictSelected ? deliveryInfo.district : 'default'} onChange={handleChange} >
+                  <option value='default' disabled>Choose district</option>
+                  {createComboboxData(district)}
+                </select>
+                <span className='ml-4 text-red-500'>{error.district}</span>
+              </div>
 
               {/* Ward */}
-              <select className={`mt-4 delivery-input font-semibold ${isWardSelected ? '' : 'text-black-placeholder'}`} type='text' placeholder='Ward' name='ward' value={isWardSelected ? deliveryInfo.ward : 'default'} onChange={handleChange}>
-                <option value='default' disabled>Choose ward</option>
-                {createComboboxData(ward)}
-              </select>
+              <div className='flex-1'>
+                <select className={`mt-4 ${error.ward ? 'delivery-input-err' : 'delivery-input'} font-semibold ${isWardSelected ? '' : 'text-black-placeholder'}`} type='text' placeholder='Ward' name='ward' value={isWardSelected ? deliveryInfo.ward : 'default'} onChange={handleChange}>
+                  <option value='default' disabled>Choose ward</option>
+                  {createComboboxData(ward)}
+                </select>
+                <span className='ml-4 text-red-500'>{error.name}</span>
+              </div>
 
             </div>
 
             {/* Note */}
-            <input className='mt-4 delivery-input font-semibold' type='text' placeholder='Note (optional)' name='note' value={deliveryInfo.note} onChange={handleChange} />
+            <input className={`mt-4 delivery-input font-semibold`} type='text' placeholder='Note (optional)' name='note' value={deliveryInfo.note} onChange={handleChange} />
           </div>
 
           {/* Save address in address book checkbox */}
@@ -206,7 +240,7 @@ const Purchase = () => {
         <h1 className='text-32 font-extrabold mb-5'>CART</h1>
 
         {/* Voucher */}
-        <input type='text' placeholder='Voucher' className='mt-4 delivery-input font-semibold' name='voucher' value={voucher} onChange={(e) => { setVoucher(e.target.value) }} />
+        <input type='text' placeholder='Voucher' className={`mt-4 delivery-input font-semibold`} name='voucher' value={voucher} onChange={(e) => { setVoucher(e.target.value) }} />
 
         {/* Divider */}
         <div className='border-t-[1px] border-gray-border mt-4' />
@@ -239,8 +273,8 @@ const Purchase = () => {
         </div>
 
         {/* Purchase button */}
-        <button className='bg-primary hidden md:block text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300' type='submit' onClick={handlePurchase}>
-          Purchase
+        <button className='bg-primary hidden md:block text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300' type='submit' onClick={handleCheckout}>
+          Check out
         </button>
       </div>
     </form>

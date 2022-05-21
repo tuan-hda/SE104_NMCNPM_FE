@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CategoryBar = ({ currCategory, setCategory, categories }) => {
+const CategoryBar = ({ currCategory, categories, hide }) => {
   const categoryClick = (c, i) => {
     var element = document.getElementById(`menu${i}`)
     const headerOffset = 120;
@@ -9,7 +9,10 @@ const CategoryBar = ({ currCategory, setCategory, categories }) => {
       top: offsetTop,
       behavior: 'smooth'
     })
-
+    // Hide if category bar is showing (on small devices)
+    if (hide) {
+      hide()
+    }
   }
 
   return (

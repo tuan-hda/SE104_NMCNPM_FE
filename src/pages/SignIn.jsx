@@ -18,7 +18,7 @@ const SignIn = () => {
   return (
     <div className='-mt-28 py-4 min-h-screen bg-gray-auth text-13 font-semibold flex items-center justify-center'>
 
-      <div className='mx-4 sm:mx-20 md:mx-40 lg:mx-64 xl:mx-[420px] w-full h-full py-20 bg-white rounded-xl flex flex-col justify-center px-4 sm:px-10 md:px-20 lg:px-24 relative'>
+      <div className='w-[90%] md:w-4/6 lg:w-3/5 xl:w-2/5 h-full py-20 bg-white rounded-xl flex flex-col justify-center px-4 sm:px-10 md:px-20 lg:px-24 relative'>
         {/* Close button */}
         <div className='absolute rounded-full cursor-pointer right-7 top-7
           transition duration-300 hover:bg-gray-200 w-8 h-8 flex justify-center items-center'>

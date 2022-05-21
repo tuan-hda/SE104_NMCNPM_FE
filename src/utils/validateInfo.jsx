@@ -51,8 +51,19 @@ export const validateInfo = (value) => {
 }
 
 export const validateDeliveryInfo = (value) => {
-  let error = {}
+  let error = validateAddAddress(value)
 
+  // Email validation
+  if (!value.email) {
+    error.email = 'Email required.'
+  } else if (!String(value.email)
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    )) {
+    error.email = 'Email is invalid.'
+  }
+
+  return error;
 }
 
 export const validateAddAddress = (value) => {

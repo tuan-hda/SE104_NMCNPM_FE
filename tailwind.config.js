@@ -24,6 +24,7 @@ module.exports = {
         'blue-facebook': '#1877F2',
         'blue-nav': '#F3F4F8',
         'blue-hover': '#ccd2ea',
+        'blue-primary': '#1976D2',
         'gray-rdo': '#C5C5C5',
         'gray-button': '#E5E7EB'
       },

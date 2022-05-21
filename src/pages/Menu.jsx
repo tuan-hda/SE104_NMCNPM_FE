@@ -32,14 +32,14 @@ const Menu = () => {
 
       {/* Normal sidebar */}
       <aside className='h-screen sticky top-24 hidden md:block'>
-        <CategoryBar currCategory={currCategory} setCategory={setCategory} categories={categories} />
+        <CategoryBar currCategory={currCategory} categories={categories} />
       </aside>
 
       {/* Sidebar on small devices */}
       <aside className={`fixed md:hidden  left-0 w-full ${isShowing ? '' : '-translate-y-full'} justify-center transition-transform h-full flex duration-300`}
         onClick={() => { toggle(!isShowing) }}>
         <div className='bg-opacity-100 border-[1px] bg-white w-4/5  sm:w-3/5 h-fit flex justify-center p-5 rounded-lg shadow-2xl' onClick={e => e.stopPropagation()}>
-          <CategoryBar currCategory={currCategory} setCategory={setCategory} categories={categories} />
+          <CategoryBar currCategory={currCategory} categories={categories} hide={toggle} />
         </div>
       </aside>
 
