@@ -49,10 +49,11 @@ const Purchase = () => {
 
   const handleChange = e => {
     if (e.target.name === 'phone') {
-      setDeliveryInfo({
-        ...deliveryInfo,
-        [e.target.name]: e.target.value.replace(/[^0-9]/, '')
-      })
+      if (e.target.value === '' || /^[0-9\b]+$/.test(e.target.value))
+        setDeliveryInfo({
+          ...deliveryInfo,
+          [e.target.name]: e.target.value
+        })
       return;
     }
 
@@ -163,7 +164,7 @@ const Purchase = () => {
             <span className='ml-4 text-red-500'>{error.name}</span>
 
             {/* Phone */}
-            <input className={`mt-4 ${error.phone ? 'delivery-input-err' : 'delivery-input'} font-semibold`} type='text' placeholder='Phone' name='phone' value={deliveryInfo.phone} onChange={handleChange} />
+            <input className={`mt-4 ${error.phone ? 'delivery-input-err' : 'delivery-input'} font-semibold`} type='text' placeholder='Phone' name='phone' value={deliveryInfo.phone} onChange={handleChange} maxLength={10} />
             <span className='ml-4 text-red-500'>{error.phone}</span>
 
             {/* Email */}
