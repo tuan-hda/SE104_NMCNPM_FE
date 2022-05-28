@@ -15,6 +15,10 @@ const Menu = () => {
   const [isShowing, toggle] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+  useEffect(() => {
     const index = isVisible.indexOf(true)
     if (index !== -1)
       setCategory(categories[index])

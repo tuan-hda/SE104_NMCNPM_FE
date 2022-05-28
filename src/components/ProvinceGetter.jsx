@@ -27,6 +27,10 @@ const normalizeText = (data) => {
   })
 }
 
+// Sort by name
+const sortByName = (data) => data.sort((a, b) => a.name.localeCompare(b.name))
+
+
 const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info, setInfo, result, isAddressImported, setIsAddressImported }) => {
   // Fetch province data
   useEffect(() => {
@@ -34,7 +38,7 @@ const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard,
       try {
         const response = await provinceApi.get('/p');
         //dispatch(setProvince(response.data))
-        setProvince(normalizeText(response.data));
+        setProvince(sortByName(normalizeText(response.data)));
       }
       catch (err) {
         handleApiCallError(err);
@@ -69,7 +73,7 @@ const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard,
         }
         setWardSelected(false);
         //dispatch(setDistrict(response.data.districts));
-        setDistrict(normalizeText(response.data.districts));
+        setDistrict(sortByName(normalizeText(response.data.districts)));
         setWard([])
       } catch (err) {
         handleApiCallError(err);
@@ -104,7 +108,7 @@ const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard,
           }))
         }
         //dispatch(setWard(response.data.wards))
-        setWard(normalizeText(response.data.wards));
+        setWard(sortByName(normalizeText(response.data.wards)));
       } catch (err) {
         handleApiCallError(err);
       }
