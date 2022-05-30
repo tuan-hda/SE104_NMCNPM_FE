@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import GoogleIcon from '../images/GoogleIcon.svg'
 import FacebookIcon from '../images/FacebookIcon.png'
 import CrossIcon from '../images/CrossIcon.svg'
 import { validateInfo } from '../utils/validateInfo'
+import { useDispatch, useSelector } from 'react-redux'
+import { signupInitiate } from '../actions'
 
 const showError = (text, isPassword = false) => {
   if (isPassword && text && Array.isArray(text)) {
@@ -33,17 +35,43 @@ const SignUp = () => {
     password: []
   });
 
+  const navigate = useNavigate()
+
+  const { loading, currentUser } = useSelector(state => state.user)
+
+  const dispatch = useDispatch()
+
   const handleSubmit = (e) => {
-    setError(validateInfo(detail));
     e.preventDefault();
+
+    const err = validateInfo(detail)
+    setError(err);
+
+    if (!err.email && !err.name && err.password.length === 0 && !err.confirmPassword) {
+      dispatch(signupInitiate(detail.email, detail.password, detail.name))
+      setDetail({
+        email: '',
+        name: '',
+        password: '',
+        confirmPassword: ''
+      })
+    }
   }
+
+  // Navigate to homepage if signed up successfully
+  useEffect(() => {
+    if (currentUser)
+      navigate('/')
+  }, [currentUser, navigate])
 
   // Change detail state when user typ
   const changeDetail = (e) => {
     setDetail({ ...detail, [e.target.name]: e.target.value })
   }
 
-  return (
+  return ((loading || currentUser) ?
+    <div></div>
+    :
     <div className='py-8 -mt-28 bg-gray-auth text-13 font-semibold min-h-screen flex justify-center items-center'>
 
       <div className='h-full w-[90%] md:w-4/6 lg:w-3/5 xl:w-2/5  py-8 bg-white rounded-xl flex flex-col justify-center

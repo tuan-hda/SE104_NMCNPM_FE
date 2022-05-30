@@ -1,14 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { logoutInitiate } from '../actions'
 
 // This is a test component
 // You can write any function or feature here to test it
 // On deployment, delete
 
 const Test = () => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const handleClick = () => {
+    dispatch(logoutInitiate())
+    navigate('/')
+  }
+
   return (
-    <div id='' className='w-20 h-20 bg-orange-50 address-item-parent'>
-      <p className='address-item-child'>a</p>
-    </div>
+    <button onClick={() => handleClick()}>Sign out</button>
   )
 }
 

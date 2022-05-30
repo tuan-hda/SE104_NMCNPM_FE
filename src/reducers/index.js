@@ -1,16 +1,10 @@
-import loggedInReducer from "./loggedInReducer";
 import cartReducer from "./cartReducer";
 import { combineReducers } from 'redux'
-import provinceReducer from "./provinceReducer";
-import districtReducer from "./districtReducer";
-import wardReducer from "./wardReducer";
+import authReducer from "./authReducer";
 
 const allReducers = combineReducers({
-  isLogged: loggedInReducer,
   cart: cartReducer,
-  province: provinceReducer,
-  district: districtReducer,
-  ward: wardReducer
+  user: authReducer
 })
 
 export default allReducers

@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ContactImage from '../images/ContactImage.jpg'
 
 const divider = <div className='w-full border-[1px] border-gray-border mt-2' />
 
 const Contact = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   return <div className='pt-4 px-2 sm:px-8 md:px-16 xl:px-32  flex justify-between flex-col gap-y-10 lg:flex-row lg:gap-x-32'>
     {/* Contact. Including Phone, Live chat, Email, Store locator */}
     <div className='flex-1'>

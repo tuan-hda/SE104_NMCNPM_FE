@@ -1,32 +1,95 @@
-export const signin = () => {
-  return {
-    type: 'SIGN_IN'
-  }
+import { auth } from '../firebase'
+import * as types from './actionTypes'
+
+// SIGN UP
+
+const signupStart = () => ({
+  type: types.SIGN_UP_START
+})
+
+const signupSuccess = (user) => ({
+  type: types.SIGN_UP_SUCCESS,
+  payload: user
+})
+
+const signupFail = err => ({
+  type: types.SIGN_UP_FAIL,
+  payload: err
+})
+
+export const signupInitiate = (email, password, name) => dispatch => {
+  dispatch(signupStart())
+  auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(({ user }) => {
+      // Add name to profile
+      user
+        .updateProfile({
+          displayName: name
+        })
+        .then(() => dispatch(signupSuccess(user)))
+    })
+    .catch((err) => {
+      dispatch(signupFail(err.message))
+    })
 }
 
-export const signout = () => {
-  return {
-    type: 'SIGN_OUT'
-  }
+
+// SIGN IN
+
+const signinStart = () => ({
+  type: types.SIGN_IN_START
+})
+
+const signinSuccess = (user) => ({
+  type: types.SIGN_IN_SUCCESS,
+  payload: user
+})
+
+const signinFail = err => ({
+  type: types.SIGN_IN_FAIL,
+  payload: err
+})
+
+export const signinInitiate = (email, password) => dispatch => {
+  dispatch(signinStart())
+  auth
+    .signInWithEmailAndPassword(email, password)
+    .then(({ user }) => {
+      dispatch(signinSuccess(user))
+    })
+    .catch((err) => {
+      dispatch(signinFail(err.message))
+    })
 }
 
-export const setProvince = (data) => {
-  return {
-    type: 'SET_PROVINCE',
-    payload: data
-  }
-}
+// Set user from local storage
 
-export const setDistrict = (data) => {
-  return {
-    type: 'SET_DISTRICT',
-    payload: data
-  }
-}
+export const setUser = user => ({
+  type: types.SET_USER,
+  payload: user
+})
 
-export const setWard = (data) => {
-  return {
-    type: 'SET_WARD',
-    payload: data
-  }
+
+// LOG OUT
+
+const logoutStart = () => ({
+  type: types.LOG_OUT_START
+})
+
+const logoutSuccess = () => ({
+  type: types.LOG_OUT_SUCCESS
+})
+
+const logoutFail = err => ({
+  type: types.LOG_OUT_FAIL,
+  payload: err
+})
+
+export const logoutInitiate = () => dispatch => {
+  dispatch(logoutStart())
+  auth
+    .signOut()
+    .then(() => dispatch(logoutSuccess))
+    .catch((err) => dispatch(logoutFail(err)))
 }
