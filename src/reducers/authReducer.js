@@ -12,6 +12,8 @@ const authReducer = (state = initialState, action) => {
     case types.SIGN_UP_START:
     case types.SIGN_IN_START:
     case types.LOG_OUT_START:
+    case types.GOOGLE_SIGN_IN_START:
+    case types.FACEBOOK_SIGN_IN_START:
       return {
         ...state,
         loading: true
@@ -19,6 +21,8 @@ const authReducer = (state = initialState, action) => {
 
     case types.SIGN_UP_SUCCESS:
     case types.SIGN_IN_SUCCESS:
+    case types.GOOGLE_SIGN_IN_SUCCESS:
+    case types.FACEBOOK_SIGN_IN_SUCCESS:
       return {
         loading: false,
         currentUser: action.payload,
@@ -28,6 +32,8 @@ const authReducer = (state = initialState, action) => {
     case types.SIGN_UP_FAIL:
     case types.SIGN_IN_FAIL:
     case types.LOG_OUT_FAIL:
+    case types.GOOGLE_SIGN_IN_FAIL:
+    case types.FACEBOOK_SIGN_IN_FAIL:
       return {
         ...state,
         loading: false,

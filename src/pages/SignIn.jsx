@@ -4,7 +4,8 @@ import GoogleIcon from '../images/GoogleIcon.svg'
 import FacebookIcon from '../images/FacebookIcon.png'
 import CrossIcon from '../images/CrossIcon.svg'
 import { useDispatch, useSelector } from 'react-redux'
-import { signinInitiate, signupInitiate } from '../actions'
+import { facebookSigninInitiate, googleSigninInitiate, signinInitiate } from '../actions'
+import LoadingScreen from '../components/LoadingScreen'
 
 // Show alert if error
 const showError = (text) => {
@@ -57,6 +58,16 @@ const SignIn = () => {
     dispatch(signinInitiate(detail.email, detail.password))
   }
 
+  // Sign in with Google
+  const handleGoogle = () => {
+    dispatch(googleSigninInitiate())
+  }
+
+  // Sign in with Facebook
+  const handleFacebook = () => {
+    dispatch(facebookSigninInitiate())
+  }
+
   // Navigate to homepage if signed in successfully
   useEffect(() => {
     // Clear input
@@ -69,10 +80,38 @@ const SignIn = () => {
       navigate('/')
   }, [currentUser, navigate])
 
-  return ((loading || currentUser) ?
-    <div></div>
-    :
+  useEffect(() => {
+    if (!error) {
+      setError({
+        email: '',
+        password: ''
+      })
+    } else if (error.includes('auth/user-not-found') || error.includes('auth/invalid-email')) {
+      setError((previousState) => ({
+        ...previousState,
+        email: 'Wrong email or password.',
+        password: ' '
+      }))
+    } else if (error.includes('auth/wrong-password')) {
+      setError((previousState) => ({
+        ...previousState,
+        email: 'Wrong email or password.',
+        password: ' '
+      }))
+    } else if (error.includes('auth/too-many-requests')) {
+      setError((previousState) => ({
+        ...previousState,
+        email: 'Too many requests. Try again later.',
+        password: ' '
+      }))
+    }
+  }, [error])
+
+  if (currentUser)
+    return <LoadingScreen loading={true} />
+  return (
     <div className='-mt-28 py-4 min-h-screen bg-gray-auth text-13 font-semibold flex items-center justify-center'>
+      <LoadingScreen loading={loading} />
 
       <div className='w-[90%] md:w-4/6 lg:w-3/5 xl:w-2/5 h-full py-20 bg-white rounded-xl flex flex-col justify-center px-4 sm:px-10 md:px-20 lg:px-24 relative'>
         {/* Close button */}
@@ -143,7 +182,8 @@ const SignIn = () => {
 
         {/* Sign in with Google | Sign in with Facebook */}
         <div>
-          <button className='flex mt-6 gap-2 justify-center items-center auth-input font-bold transition duration-300 hover:bg-gray-100'>
+          <button className='flex mt-6 gap-2 justify-center items-center auth-input font-bold transition duration-300 hover:bg-gray-100'
+            onClick={() => handleGoogle()} >
             <img
               src={GoogleIcon}
               alt='Google Icon'
@@ -151,8 +191,8 @@ const SignIn = () => {
             Sign in with Google
           </button>
 
-          <button className='text-center mt-2 auth-input font-bold bg-blue-facebook transition duration-300
-           hover:bg-opacity-90 text-white flex gap-2 justify-center items-center'>
+          <button className='text-center mt-2 auth-input font-bold bg-blue-facebook transition duration-300 hover:bg-opacity-90 text-white flex gap-2 justify-center items-center'
+            onClick={() => handleFacebook()}>
             <img
               src={FacebookIcon}
               alt='Facebook Icon'

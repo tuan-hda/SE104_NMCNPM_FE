@@ -1,5 +1,6 @@
 import { auth } from '../firebase'
 import * as types from './actionTypes'
+import { googleAuthProvider, facebookAuthProvider } from '../firebase'
 
 // SIGN UP
 
@@ -92,4 +93,61 @@ export const logoutInitiate = () => dispatch => {
     .signOut()
     .then(() => dispatch(logoutSuccess))
     .catch((err) => dispatch(logoutFail(err)))
+}
+
+
+// GOOGLE SIGN IN
+
+const googleSigninStart = () => ({
+  type: types.GOOGLE_SIGN_IN_START
+})
+
+const googleSigninSuccess = (user) => ({
+  type: types.GOOGLE_SIGN_IN_SUCCESS,
+  payload: user
+})
+
+const googleSigninFail = err => ({
+  type: types.GOOGLE_SIGN_IN_FAIL,
+  payload: err
+})
+
+export const googleSigninInitiate = () => dispatch => {
+  dispatch(googleSigninStart())
+  auth
+    .signInWithPopup(googleAuthProvider)
+    .then(({ user }) => {
+      dispatch(googleSigninSuccess(user))
+    })
+    .catch((err) => {
+      dispatch(googleSigninFail(err.message))
+    })
+}
+
+// FACEBOOK SIGN IN
+
+const facebookSigninStart = () => ({
+  type: types.FACEBOOK_SIGN_IN_START
+})
+
+const facebookSigninSuccess = (user) => ({
+  type: types.FACEBOOK_SIGN_IN_SUCCESS,
+  payload: user
+})
+
+const facebookSigninFail = err => ({
+  type: types.FACEBOOK_SIGN_IN_FAIL,
+  payload: err
+})
+
+export const facebookSigninInitiate = () => dispatch => {
+  dispatch(facebookSigninStart())
+  auth
+    .signInWithPopup(facebookAuthProvider)
+    .then(({ user }) => {
+      dispatch(facebookSigninSuccess(user))
+    })
+    .catch((err) => {
+      dispatch(facebookSigninFail(err.message))
+    })
 }

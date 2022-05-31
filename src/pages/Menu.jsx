@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import CategoryBar from '../components/CategoryBar'
 import ProductContainer from '../components/ProductContainer'
 
@@ -6,14 +7,14 @@ import ProductContainer from '../components/ProductContainer'
 const categories = ['Featured', 'Combos', 'Hamburger', 'Chicken', 'Rice', 'Sides', 'Desserts', 'Drinks']
 //const categories = ['Featured', 'Combos', 'Hamburger', 'Chicken', 'Sides', 'Drinks']
 
-const Menu = () => {
+const Menu = ({ searchValue }) => {
   // Create state: current selected category
   const [currCategory, setCategory] = useState('Featured');
-
   const [isVisible, setIsVisible] = useState(categories.map((c, index) => index === 0))
-
   // Control sidebar in small device
   const [isShowing, toggle] = useState(false);
+
+  const [searchParams,] = useSearchParams()
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -50,7 +51,12 @@ const Menu = () => {
 
       {/* This contains lists of products */}
       <div className='w-full mt-4 md:mt-0'>
-        <ProductContainer isVisible={isVisible} setIsVisible={setIsVisible} categories={categories} />
+
+        {searchValue && <h1 className='text-32 font-extrabold text-center underline mb-10'>
+          SEARCH RESULTS FOR '{searchParams.get('name').toUpperCase()}'
+        </h1>}
+
+        <ProductContainer isVisible={isVisible} setIsVisible={setIsVisible} categories={categories} searchValue={searchValue} />
       </div>
     </div>
   )

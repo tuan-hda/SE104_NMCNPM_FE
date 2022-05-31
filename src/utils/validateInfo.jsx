@@ -50,6 +50,9 @@ export const validateInfo = (value) => {
   return error
 }
 
+
+// VALIDATE DELIVERY INFO
+
 export const validateDeliveryInfo = (value) => {
   let error = validateAddAddress(value)
 
@@ -73,23 +76,25 @@ export const validateAddAddress = (value) => {
   }
 
   if (!value.phone) {
-    error.phone = 'Phone required'
+    error.phone = 'Phone required.'
+  } else if (value.phone.length < 9) {
+    error.phone = 'At least 9 numbers.'
   }
 
   if (!value.address) {
-    error.address = 'Address required'
+    error.address = 'Address required.'
   }
 
   if (!value.province) {
-    error.province = 'Province required'
+    error.province = 'Province required.'
   }
 
   if (!value.district) {
-    error.district = 'District required'
+    error.district = 'District required.'
   }
 
   if (!value.ward) {
-    error.ward = 'Ward required'
+    error.ward = 'Ward required.'
   }
 
   return error

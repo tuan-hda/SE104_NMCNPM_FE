@@ -48,44 +48,57 @@ const Purchase = () => {
   ProvinceGetter({ province: deliveryInfo.province, district: deliveryInfo.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info: deliveryInfo, setInfo: setDeliveryInfo, result })
 
   const handleChange = e => {
-    if (e.target.name === 'phone') {
-      if (e.target.value === '' || /^[0-9\b]+$/.test(e.target.value))
+    const key = e.target.name
+    const value = e.target.value
+
+    if (key === 'phone') {
+      if (value === '' || /^[0-9\b]+$/.test(value))
         setDeliveryInfo({
           ...deliveryInfo,
-          [e.target.name]: e.target.value
+          [key]: value
         })
       return;
     }
 
-    if (e.target.name === 'province' && e.target.value !== 'default') {
+    if (key === 'province' && value !== 'default') {
       setProvinceSelected(true);
       setDeliveryInfo({
         ...deliveryInfo,
-        province: e.target.value,
+        province: value,
         district: '',
         ward: ''
       })
       return
     }
 
-    if (e.target.name === 'district' && e.target.value !== 'default') {
+    if (key === 'district' && value !== 'default') {
       setDistrictSelected(true);
       setDeliveryInfo({
         ...deliveryInfo,
-        district: e.target.value,
+        district: value,
         ward: ''
       })
       return
     }
 
-    if (e.target.name === 'ward' && e.target.value !== 'ward') {
+    if (key === 'ward' && value !== 'ward') {
       setWardSelected(true);
     }
 
     setDeliveryInfo({
       ...deliveryInfo,
-      [e.target.name]: e.target.value
+      [key]: value
     })
+
+    // Realtime validation
+    const err = validateDeliveryInfo({
+      [key]: value
+    })
+
+    setError((previousState) => ({
+      ...previousState,
+      [key]: err[key]
+    }))
   }
 
   const showModal = () => {
@@ -200,7 +213,7 @@ const Purchase = () => {
                   <option value='default' disabled>Choose ward</option>
                   {createComboboxData(ward)}
                 </select>
-                <span className='ml-4 text-red-500'>{error.name}</span>
+                <span className='ml-4 text-red-500'>{error.ward}</span>
               </div>
 
             </div>

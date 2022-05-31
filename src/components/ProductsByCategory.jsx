@@ -29,6 +29,8 @@ const ProductsByCategory = ({ category, productData, index, isVisible, setIsVisi
           return <ProductThumb key={i} product={p} />
         })}
       </div>
+
+      {!productData.length && <div className=' mb-[445px]'></div>}
     </div>
   )
 }

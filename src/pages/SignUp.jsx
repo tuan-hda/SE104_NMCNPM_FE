@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import CrossIcon from '../images/CrossIcon.svg'
 import GoogleIcon from '../images/GoogleIcon.svg'
 import FacebookIcon from '../images/FacebookIcon.png'
-import CrossIcon from '../images/CrossIcon.svg'
 import { validateInfo } from '../utils/validateInfo'
 import { useDispatch, useSelector } from 'react-redux'
-import { signupInitiate } from '../actions'
+import { facebookSigninInitiate, googleSigninInitiate, signupInitiate } from '../actions'
+import LoadingScreen from '../components/LoadingScreen'
+import api from '../api/appApi'
+import * as routes from '../api/apiRoutes'
 
 const showError = (text, isPassword = false) => {
   if (isPassword && text && Array.isArray(text)) {
@@ -31,13 +34,13 @@ const SignUp = () => {
   })
 
   // Validate information
-  const [error, setError] = useState({
+  const [infoError, setError] = useState({
     password: []
   });
 
   const navigate = useNavigate()
 
-  const { loading, currentUser } = useSelector(state => state.user)
+  const { currentUser, loading, error } = useSelector(state => state.user)
 
   const dispatch = useDispatch()
 
@@ -49,30 +52,95 @@ const SignUp = () => {
 
     if (!err.email && !err.name && err.password.length === 0 && !err.confirmPassword) {
       dispatch(signupInitiate(detail.email, detail.password, detail.name))
+      setDetail((previousState) => ({
+        ...previousState,
+        password: '',
+        confirmPassword: ''
+      }))
+    }
+  }
+
+  // Sign in with Google
+  const handleGoogle = () => {
+    dispatch(googleSigninInitiate())
+  }
+
+  // Sign in with Facebook
+  const handleFacebook = () => {
+    dispatch(facebookSigninInitiate())
+  }
+
+  const createNewAccount = async (email, name) => {
+    try {
+      await api.post(routes.SIGN_UP, routes.getSignupBody(email, name))
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data)
+        console.log(err.response.status)
+        console.log(err.response.headers)
+      } else {
+        console.log(err.message)
+      }
+    }
+  }
+
+  // Navigate to homepage if signed up successfully
+  useEffect(() => {
+    if (error) {
+      if (error.includes('auth/email-already-in-use')) {
+        setError((previousState) => ({
+          ...previousState,
+          email: 'Email already exists.'
+        }))
+      }
+      return
+    }
+
+    if (currentUser) {
+      console.log(currentUser.email)
+      console.log(currentUser.displayName)
+      //createNewAccount(currentUser.email, currentUser.displayName)
       setDetail({
         email: '',
         name: '',
         password: '',
         confirmPassword: ''
       })
-    }
-  }
-
-  // Navigate to homepage if signed up successfully
-  useEffect(() => {
-    if (currentUser)
       navigate('/')
-  }, [currentUser, navigate])
+    }
+  }, [currentUser, navigate, error])
 
   // Change detail state when user typ
   const changeDetail = (e) => {
-    setDetail({ ...detail, [e.target.name]: e.target.value })
+    const key = e.target.name
+    const value = e.target.value
+
+    setDetail({ ...detail, [key]: value })
+
+    let err
+    if (key === 'confirmPassword') {
+      err = validateInfo({
+        password: detail.password,
+        [key]: value
+      })
+    } else {
+      err = validateInfo({
+        [key]: value
+      })
+    }
+
+    setError((previousState) => ({
+      ...previousState,
+      [key]: err[key]
+    }))
   }
 
-  return ((loading || currentUser) ?
-    <div></div>
-    :
+  if (currentUser)
+    return <LoadingScreen loading={true} />
+
+  return (
     <div className='py-8 -mt-28 bg-gray-auth text-13 font-semibold min-h-screen flex justify-center items-center'>
+      <LoadingScreen loading={loading} />
 
       <div className='h-full w-[90%] md:w-4/6 lg:w-3/5 xl:w-2/5  py-8 bg-white rounded-xl flex flex-col justify-center
         px-4 sm:px-10 md:px-20 lg:px-24 relative'>
@@ -96,42 +164,42 @@ const SignUp = () => {
           {/* Email */}
           <input
             type='text'
-            className={`${error.email ? 'auth-input-err' : 'auth-input'} font-semibold`}
+            className={`${infoError.email ? 'auth-input-err' : 'auth-input'} font-semibold`}
             placeholder='Email'
             value={detail.email}
             name='email'
             onChange={changeDetail} />
-          {showError(error.email)}
+          {showError(infoError.email)}
 
           {/* Name */}
           <input
             type='text'
-            className={`${error.name ? 'auth-input-err' : 'auth-input'} font-semibold`}
+            className={`${infoError.name ? 'auth-input-err' : 'auth-input'} font-semibold`}
             placeholder='Name'
             value={detail.name}
             name='name'
             onChange={changeDetail} />
-          {showError(error.name)}
+          {showError(infoError.name)}
 
           {/* Password */}
           <input
             type='password'
-            className={`${error.password.length !== 0 ? 'auth-input-err' : 'auth-input'} font-semibold`}
+            className={`${infoError.password.length !== 0 ? 'auth-input-err' : 'auth-input'} font-semibold`}
             value={detail.password}
             name='password'
             onChange={changeDetail}
             placeholder='Password' />
-          {showError(error.password, true)}
+          {showError(infoError.password, true)}
 
           {/* Confirm password */}
           <input
             type='password'
-            className={`${error.confirmPassword ? 'auth-input-err' : 'auth-input'} font-semibold`}
+            className={`${infoError.confirmPassword ? 'auth-input-err' : 'auth-input'} font-semibold`}
             value={detail.confirmPassword}
             name='confirmPassword'
             onChange={changeDetail}
             placeholder='Confirm Password' />
-          {showError(error.confirmPassword)}
+          {showError(infoError.confirmPassword)}
 
           {/* Button sign up */}
           <button
@@ -149,10 +217,10 @@ const SignUp = () => {
           <span>or</span>
           <span className='border-t-[0.5px] border-gray-border w-[45%]' />
         </div>
-
         {/* Sign up with Google | Sign up with Facebook */}
         <div>
-          <button className='flex mt-6 gap-2 justify-center items-center auth-input font-bold transition duration-300 hover:bg-gray-100'>
+          <button className='flex mt-6 gap-2 justify-center items-center auth-input font-bold transition duration-300 hover:bg-gray-100'
+            onClick={() => handleGoogle()}>
             <img
               src={GoogleIcon}
               alt='Google Icon'
@@ -160,8 +228,8 @@ const SignUp = () => {
             Sign up with Google
           </button>
 
-          <button className='text-center mt-2 auth-input font-bold bg-blue-facebook transition duration-300
-           hover:bg-opacity-90 text-white flex gap-2 justify-center items-center'>
+          <button className='text-center mt-2 auth-input font-bold bg-blue-facebook transition duration-300 hover:bg-opacity-90 text-white flex gap-2 justify-center items-center'
+            onClick={() => handleFacebook()}>
             <img
               src={FacebookIcon}
               alt='Facebook Icon'
@@ -180,3 +248,4 @@ const SignUp = () => {
 }
 
 export default SignUp
+

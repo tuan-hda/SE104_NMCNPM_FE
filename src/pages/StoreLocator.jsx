@@ -19,7 +19,6 @@ const StoreLocator = () => {
     try {
       const result = await api.get(routes.GET_RESTAURANT, routes.getRestaurantParams('ALL'))
       setBranches(result.data.restaurants)
-      console.log(result.data.restaurants)
     } catch (err) {
       if (err.response) {
         console.log(err.response.data)
