@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import './App.css';
 import Home from './pages/Home'
 import SignIn from './pages/SignIn';
@@ -20,8 +20,10 @@ import { useEffect, useReducer } from 'react';
 import PrivateRoute from './components/PrivateRoute';
 import NotFound from './pages/NotFound';
 import { auth } from './firebase';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setUser } from './actions';
+import api from './api/appApi'
+import axios from 'axios';
 
 const excludeHeaderFooterPath = ['/signin', '/signup', '/forgotpassword', '/storelocator'];
 

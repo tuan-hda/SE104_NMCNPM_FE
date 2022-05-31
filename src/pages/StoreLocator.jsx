@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import LocationPin from '../images/location-pin.png'
@@ -6,82 +6,71 @@ import { Icon } from 'leaflet'
 import { Link } from 'react-router-dom';
 import { useMapEvents } from 'react-leaflet/hooks'
 import Menu from '../images/menu-burger.svg'
-
-const position = [10.762622, 106.660172]
-
-const branches = [
-  {
-    pos: position,
-    name: 'Chi nhánh Phạm Văn Đồng',
-    address: '12 Phạm Văn Đồng, Quan 10, TP Ho Chi Minh'
-  },
-  {
-    pos: [10.762622, 107.660172],
-    name: 'Chi nhánh Phạm Văn Đồng',
-    address: '20 Phạm Văn Đồng, Quan 1, TP Ho Chi Minh'
-  },
-  {
-    pos: [10.769622, 106.660172],
-    name: 'Chi nhánh Phạm Văn Đồng',
-    address: 'KTX Khu A, phuong Linh Trung, quan Thu Duc, TP HCM'
-  },
-  {
-    pos: position,
-    name: 'Chi nhánh Phạm Văn Đồng',
-    address: '12 Phạm Văn Đồng, Quan 10, TP Ho Chi Minh'
-  },
-  {
-    pos: [10.762622, 107.660172],
-    name: 'Chi nhánh Phạm Văn Đồng',
-    address: '20 Phạm Văn Đồng, Quan 1, TP Ho Chi Minh'
-  },
-  {
-    pos: [10.769622, 106.660172],
-    name: 'Chi nhánh Phạm Văn Đồng',
-    address: 'KTX Khu A, phuong Linh Trung, quan Thu Duc, TP HCM'
-  },
-  {
-    pos: position,
-    name: 'Chi nhánh Phạm Văn Đồng',
-    address: '12 Phạm Văn Đồng, Quan 10, TP Ho Chi Minh'
-  },
-  {
-    pos: [10.762622, 107.660172],
-    name: 'Chi nhánh Phạm Văn Đồng',
-    address: '20 Phạm Văn Đồng, Quan 1, TP Ho Chi Minh'
-  },
-  {
-    pos: [10.769622, 106.660172],
-    name: 'Chi nhánh Phạm Văn Đồng',
-    address: 'KTX Khu A, phuong Linh Trung, quan Thu Duc, TP HCM'
-  }
-]
-
-const BranchChoose = ({ location }) => {
-  const map = useMapEvents({})
-  if (location.pos === undefined)
-    return
-  map.flyTo(location.pos, 13);
-}
+import api from '../api/appApi'
+import * as routes from '../api/apiRoutes'
 
 const StoreLocator = () => {
   const [location, setLocation] = useState({})
   const [isShowing, toggle] = useState(true)
+  const [branches, setBranches] = useState([])
+  const [loading, setLoading] = useState(true)
 
+  const fetchLocation = async () => {
+    try {
+      const result = await api.get(routes.GET_RESTAURANT, routes.getRestaurantParams('ALL'))
+      setBranches(result.data.restaurants)
+      console.log(result.data.restaurants)
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data)
+        console.log(err.response.status)
+        console.log(err.response.headers)
+      } else {
+        console.log(err.message)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchLocation()
+  }, [])
+
+  // Change current branch
   const chooseBranch = (index) => {
     setLocation(branches[index])
   }
 
-  return (
+  // Fly the map after choose branch
+  const BranchChoose = ({ location }) => {
+    const map = useMapEvents({})
+    if (location.latitude === undefined || location.longitude === undefined)
+      return
+    map.flyTo(getLocation(location), 13);
+  }
+
+  // Get location from marker / branch
+  const getLocation = marker => {
+    return [marker.longitude, marker.latitude]
+  }
+
+  // Get open / close time
+  const getOpenTime = branch => branch.openData.fromHour + ':' + (branch.openData.fromMin === 0 ? '00' : branch.openData.fromMin)
+  const getCloseTime = branch => branch.openData.toHour + ':' + (branch.openData.toMin === 0 ? '00' : branch.openData.toMin)
+
+  return (loading ?
+    null
+    :
     <div className='-mt-28 relative text-sm'>
-      <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
-        <BranchChoose location={location} setLocation={setLocation} />
+      <MapContainer center={getLocation(branches[0])} zoom={13} scrollWheelZoom={false}>
+        <BranchChoose location={location} />
 
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {branches.map((marker, index) => <Marker position={marker.pos}
+        {branches.map((marker, index) => <Marker position={getLocation(marker)}
           key={index}
           icon={new Icon({
             iconUrl: LocationPin,
@@ -89,9 +78,12 @@ const StoreLocator = () => {
             iconAnchor: [41, 41]
           })}>
           <Popup>
-            Branch {marker.name}
+            Branch {marker.resAddress}
+            <br />
+            Open from {getOpenTime(marker)} to {getCloseTime(marker)}
           </Popup>
         </Marker>)}
+
 
       </MapContainer>
 
@@ -111,7 +103,7 @@ const StoreLocator = () => {
             {/* Address */}
             <p className='p-4 cursor-pointer hover:bg-gray-300 rounded-md transition duration-300'
               onClick={() => chooseBranch(index)}>
-              {branch.address}
+              {branch.resAddress}
             </p>
 
             {/* Divider */}
@@ -125,7 +117,7 @@ const StoreLocator = () => {
           GO BACK
         </Link>
       </div>
-    </div>
+    </div >
   )
 }
 

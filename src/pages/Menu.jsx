@@ -3,7 +3,8 @@ import CategoryBar from '../components/CategoryBar'
 import ProductContainer from '../components/ProductContainer'
 
 // category tuple
-const categories = ['Featured', 'Combos', 'Hamburgers', 'Chicken', 'Rice', 'Sides', 'Desserts', 'Drinks']
+const categories = ['Featured', 'Combos', 'Hamburger', 'Chicken', 'Rice', 'Sides', 'Desserts', 'Drinks']
+//const categories = ['Featured', 'Combos', 'Hamburger', 'Chicken', 'Sides', 'Drinks']
 
 const Menu = () => {
   // Create state: current selected category
