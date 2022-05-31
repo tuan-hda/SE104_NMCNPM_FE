@@ -40,12 +40,6 @@ const getFooter = () => {
   return <Footer />
 }
 
-const getPrivateRoute = (element) => {
-  return <PrivateRoute>
-    {element}
-  </PrivateRoute>
-}
-
 function App() {
   const [_, forceUpdate] = useReducer((x) => x + 1, 0);
   const navigate = useNavigate()
@@ -54,6 +48,12 @@ function App() {
   useEffect(() => {
     forceUpdate()
   }, [navigate])
+
+  const getPrivateRoute = (element) => {
+    return <PrivateRoute>
+      {element}
+    </PrivateRoute>
+  }
 
   useEffect(() => {
     const unsubcribe = auth.onAuthStateChanged(state => {
