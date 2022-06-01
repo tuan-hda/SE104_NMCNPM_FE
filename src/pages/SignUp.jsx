@@ -74,11 +74,11 @@ const SignUp = () => {
     try {
       const token = await currentUser.getIdToken()
 
-      // await api.post(
-      //   routes.SIGN_UP,
-      //   routes.getSignupBody(currentUser.email, currentUser.name),
-      //   routes.getAccessTokenHeader(token)
-      // )
+      await api.post(
+        routes.SIGN_UP,
+        routes.getSignupBody(currentUser.email, currentUser.name),
+        routes.getAccessTokenHeader(token)
+      )
     } catch (err) {
       if (err.response) {
         console.log(err.response.data)
