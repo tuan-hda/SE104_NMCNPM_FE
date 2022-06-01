@@ -22,16 +22,13 @@ const ProductContainer = ({ categories, myRef, isVisible, setIsVisible, searchVa
   const fetchMenu = async () => {
     try {
       let result
+
       if (!searchValue) {
         result = await api.get(routes.GET_ITEM, routes.getItemParams('ALL'))
       } else {
         const searchName = searchParams.get('name')
         result = await api.get(routes.SEARCH_ITEM, routes.getSearchBody(searchName))
-        console.log(result.data)
       }
-
-      setProduct(result.data.items)
-
       // Split product list by category
       let productByCategoryList = {}
       productByCategoryList = productByCategory(result.data.items)
@@ -61,7 +58,7 @@ const ProductContainer = ({ categories, myRef, isVisible, setIsVisible, searchVa
   )
 
   return (<div>
-    {Object.keys(product) !== 0 &&
+    {product && Object.keys(product) !== 0 &&
       categories.map((c, i) => {
         return <ProductsByCategory
           category={c}
