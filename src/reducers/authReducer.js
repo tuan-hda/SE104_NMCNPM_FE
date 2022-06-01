@@ -15,6 +15,7 @@ const authReducer = (state = initialState, action) => {
     case types.GOOGLE_SIGN_IN_START:
     case types.FACEBOOK_SIGN_IN_START:
     case types.RESET_PASSWORD_START:
+    case types.CHANGE_PASSWORD_START:
       return {
         ...state,
         message: '',
@@ -38,6 +39,7 @@ const authReducer = (state = initialState, action) => {
     case types.GOOGLE_SIGN_IN_FAIL:
     case types.FACEBOOK_SIGN_IN_FAIL:
     case types.RESET_PASSWORD_FAIL:
+    case types.CHANGE_PASSWORD_FAIL:
       return {
         ...state,
         loading: false,
@@ -68,6 +70,14 @@ const authReducer = (state = initialState, action) => {
         error: null,
         message: 'Email sent. Check your email for furthur instructions.'
       }
+
+    case types.CHANGE_PASSWORD_SUCCESS:
+      return ({
+        ...state,
+        loading: false,
+        error: null,
+        message: 'Password changed.'
+      })
 
     default:
       return state

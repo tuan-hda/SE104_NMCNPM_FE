@@ -89,26 +89,26 @@ const SignIn = () => {
     } else if (error.includes('auth/user-not-found') || error.includes('auth/invalid-email')) {
       setError((previousState) => ({
         ...previousState,
-        email: 'Wrong email or password.',
-        password: ' '
+        password: 'Wrong email or password.',
+        email: ' '
       }))
     } else if (error.includes('auth/wrong-password')) {
       setError((previousState) => ({
         ...previousState,
-        email: 'Wrong email or password.',
-        password: ' '
+        password: 'Wrong email or password.',
+        email: ' '
       }))
     } else if (error.includes('auth/too-many-requests')) {
       setError((previousState) => ({
         ...previousState,
-        email: 'Too many requests. Try again later.',
-        password: ' '
+        password: 'Too many requests. Try again later.',
+        email: ' '
       }))
     } else {
       setError((previousState) => ({
         ...previousState,
-        email: 'Sign in failed.',
-        password: ' '
+        password: 'Sign in failed.',
+        email: ' '
       }))
     }
   }, [error])

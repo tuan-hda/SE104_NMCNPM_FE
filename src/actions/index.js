@@ -177,3 +177,28 @@ export const resetPasswordInitiate = email => dispatch => {
       dispatch(resetPasswordFail(err.message))
     })
 }
+
+// CHANGE PASSWORD
+
+const changePasswordStart = () => ({
+  type: types.CHANGE_PASSWORD_START
+})
+
+const changePasswordSuccess = () => ({
+  type: types.CHANGE_PASSWORD_SUCCESS
+})
+
+const changePasswordFail = (err) => ({
+  type: types.CHANGE_PASSWORD_FAIL,
+  payload: err
+})
+
+export const changePasswordInitiate = (currentUser, newPassword) => dispatch => {
+  dispatch(changePasswordStart())
+  currentUser
+    .updatePassword(newPassword)
+    .then(() => dispatch(changePasswordSuccess()))
+    .catch(err => {
+      dispatch(changePasswordFail(err.message))
+    })
+}

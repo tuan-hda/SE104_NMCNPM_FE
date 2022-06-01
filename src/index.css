@@ -39,7 +39,11 @@ html, body {
 }
 
 .province-input {
-  @apply outline-none border-[#C5C5C5] border-[1px] block rounded-lg px-5 h-[45px] font-medium sm:flex-1
+  @apply border-[#C5C5C5] border-[1px] block rounded-lg px-5 h-[45px] font-medium sm:flex-1
+}
+
+.profile-input-err {
+  @apply border-red-500 border-[1px] block rounded-lg px-5 h-[45px] font-medium sm:flex-1
 }
 
 a.font-bold.text-primary {

@@ -82,6 +82,7 @@ const ForgotPasswordFindPassword = ({ returnLogin }) => {
           onChange={e => setEmail(e.target.value)} />
         <div className='text-red-500 mt-1 ml-3 font-normal'>{err}</div>
 
+        {/* Success message */}
         {!err && message && <div className='text-black font-normal bg-[#47AC40] border-[1px] border-[#47AC40] p-4 rounded-md bg-opacity-50 mt-4'>{message}</div>}
       </div>
 
