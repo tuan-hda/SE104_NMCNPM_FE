@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import appApi from '../../api/appApi';
 import { validateAddAddress } from '../../utils/validateInfo';
 import ProvinceGetter from '../ProvinceGetter';
+import * as routes from '../../api/apiRoutes'
+import { useSelector } from 'react-redux';
 
 // Create data for combobox
 const createComboboxData = data => {
@@ -34,6 +37,8 @@ const AddAddressModal = ({ hide, isShowing, setIsABM, hideParent, currEditAddres
   const [isWardSelected, setWardSelected] = useState(false);
 
   const [error, setError] = useState({})
+
+  const { currentUser } = useSelector(state => state.user)
 
   ProvinceGetter({ province: address.province, district: address.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, result: currEditAddress, setInfo: setAddress })
 
@@ -106,6 +111,30 @@ const AddAddressModal = ({ hide, isShowing, setIsABM, hideParent, currEditAddres
     hide()
     setCurrEditAddress() // reset current edit address
     setIsABM(true);
+
+    addAddress()
+  }
+
+  // Add address to database
+  const addAddress = async () => {
+    try {
+      const token = await currentUser.getIdToken()
+
+      await appApi.post(
+        routes.ADD_ADDRESS,
+        routes.getAddAddressBody(
+          address.address,
+          address.province,
+          address.district,
+          address.ward,
+          address.name,
+          address.phone
+        ),
+        routes.getAccessTokenHeader(token)
+      )
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleEscapeByClickOutside = () => {

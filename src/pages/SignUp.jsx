@@ -77,7 +77,7 @@ const SignUp = () => {
       // await api.post(
       //   routes.SIGN_UP,
       //   routes.getSignupBody(currentUser.email, currentUser.name),
-      //   routes.getSignupHeader(token)
+      //   routes.getAccessTokenHeader(token)
       // )
     } catch (err) {
       if (err.response) {
