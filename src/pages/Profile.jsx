@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { logoutInitiate } from '../actions'
 import AlertModal from '../components/modals/AlertModal'
 import OrdersContainer from '../components/OrdersContainer'
 import PasswordContainer from '../components/PasswordContainer'
@@ -26,7 +28,10 @@ const Profile = () => {
   const { isShowing, toggle } = useModal()
   const [initNav, setNav] = useState('')
   const [isNavShowing, toggleNav] = useState(false);
+  const [res, setRes] = useState()
   const navigate = useNavigate();
+
+  const dispatch = useDispatch()
 
   // Get current nav based on URL
   useEffect(() => {
@@ -53,12 +58,18 @@ const Profile = () => {
     }
   }
 
+  if (!isNaN(res) && res === 1) {
+    dispatch(logoutInitiate())
+    navigate('/')
+  }
+
   return (
     <div className='px-2 sm:px-8 md:px-16 xl:px-32 '>
       {/* Alert Modal trigger whenever user click log out */}
       <AlertModal msg='Are you sure you want to log out?'
         isShowing={isShowing}
-        hide={toggle} />
+        hide={toggle}
+        setResult={setRes} />
 
       <div className='flex justify-between items-center'>
         {/* Title */}
@@ -98,8 +109,6 @@ const Profile = () => {
       <div className='border-gray-border border-t-[1px] mt-8' />
 
       <div className='mt-8 lg:flex gap-36'>
-
-
 
 
         {/* Navigation Bar */}

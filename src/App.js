@@ -22,8 +22,6 @@ import NotFound from './pages/NotFound';
 import { auth } from './firebase';
 import { useDispatch } from 'react-redux';
 import { setUser } from './actions';
-import api from './api/appApi'
-import axios from 'axios';
 
 const excludeHeaderFooterPath = ['/signin', '/signup', '/forgotpassword', '/storelocator'];
 
@@ -41,7 +39,7 @@ const getFooter = () => {
 }
 
 function App() {
-  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -56,9 +54,10 @@ function App() {
   }
 
   useEffect(() => {
-    const unsubcribe = auth.onAuthStateChanged(state => {
-      if (state)
-        dispatch(setUser(state))
+    const unsubcribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        dispatch(setUser(user))
+      }
       else
         dispatch(setUser(null))
     })

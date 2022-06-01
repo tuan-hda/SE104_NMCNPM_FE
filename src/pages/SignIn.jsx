@@ -104,14 +104,27 @@ const SignIn = () => {
         email: 'Too many requests. Try again later.',
         password: ' '
       }))
+    } else {
+      setError((previousState) => ({
+        ...previousState,
+        email: 'Sign in failed.',
+        password: ' '
+      }))
     }
   }, [error])
 
-  if (currentUser)
+  useEffect(() => {
+    setError({
+      email: '',
+      password: ''
+    })
+  }, [])
+
+  if (loading)
     return <LoadingScreen loading={true} />
+
   return (
     <div className='-mt-28 py-4 min-h-screen bg-gray-auth text-13 font-semibold flex items-center justify-center'>
-      <LoadingScreen loading={loading} />
 
       <div className='w-[90%] md:w-4/6 lg:w-3/5 xl:w-2/5 h-full py-20 bg-white rounded-xl flex flex-col justify-center px-4 sm:px-10 md:px-20 lg:px-24 relative'>
         {/* Close button */}
@@ -151,17 +164,6 @@ const SignIn = () => {
             placeholder='Password' />
           {showError(err.password)}
 
-          {/* Stay signed in */}
-          <div className='flex items-center gap-2'>
-            <input
-              type='checkbox'
-              id='staySignedIn'
-              className='w-4 h-4 accent-primary' />
-
-            <label htmlFor='staySignedIn' className='font-semibold cursor-pointer'>
-              Stay signed in
-            </label>
-          </div>
 
           {/* Button sign in */}
           <button

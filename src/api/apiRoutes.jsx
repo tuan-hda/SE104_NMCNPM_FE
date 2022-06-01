@@ -28,3 +28,31 @@ export const getSignupBody = (email, name) => ({
   email: email,
   name: name
 })
+export const getSignupHeader = token => ({
+  headers: {
+    Authorization: 'Bearer ' + token
+  }
+})
+
+// GET PROFILE
+export const GET_PROFILE = 'get-all-users'
+export const getProfileId = id => ({
+  params: {
+    id: id
+  }
+})
+
+// EDIT PROFILE
+export const EDIT_PROFILE = 'edit-user'
+export const getEditProfileBody = (id, name, dob, phoneNumber, gender, avatar, detail, province, district, ward) => ({
+  id: id,
+  name: name,
+  dob: dob,
+  phoneNumber: phoneNumber,
+  gender: gender,
+  avatar: avatar,
+  detail: detail,
+  province: province,
+  district: district,
+  ward: ward
+})

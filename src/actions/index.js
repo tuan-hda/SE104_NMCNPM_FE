@@ -2,6 +2,35 @@ import { auth } from '../firebase'
 import * as types from './actionTypes'
 import { googleAuthProvider, facebookAuthProvider } from '../firebase'
 
+// SIGN IN
+
+const signinStart = () => ({
+  type: types.SIGN_IN_START
+})
+
+const signinSuccess = (user) => ({
+  type: types.SIGN_IN_SUCCESS,
+  payload: user
+})
+
+const signinFail = err => ({
+  type: types.SIGN_IN_FAIL,
+  payload: err
+})
+
+export const signinInitiate = (email, password) => dispatch => {
+  dispatch(signinStart())
+  auth
+    .signInWithEmailAndPassword(email, password)
+    .then(({ user }) => {
+      dispatch(signinSuccess(user))
+    })
+    .catch((err) => {
+      dispatch(signinFail(err.message))
+    })
+}
+
+
 // SIGN UP
 
 const signupStart = () => ({
@@ -35,34 +64,6 @@ export const signupInitiate = (email, password, name) => dispatch => {
     })
 }
 
-
-// SIGN IN
-
-const signinStart = () => ({
-  type: types.SIGN_IN_START
-})
-
-const signinSuccess = (user) => ({
-  type: types.SIGN_IN_SUCCESS,
-  payload: user
-})
-
-const signinFail = err => ({
-  type: types.SIGN_IN_FAIL,
-  payload: err
-})
-
-export const signinInitiate = (email, password) => dispatch => {
-  dispatch(signinStart())
-  auth
-    .signInWithEmailAndPassword(email, password)
-    .then(({ user }) => {
-      dispatch(signinSuccess(user))
-    })
-    .catch((err) => {
-      dispatch(signinFail(err.message))
-    })
-}
 
 // Set user from local storage
 
@@ -149,5 +150,30 @@ export const facebookSigninInitiate = () => dispatch => {
     })
     .catch((err) => {
       dispatch(facebookSigninFail(err.message))
+    })
+}
+
+// RESET PASSWORD
+
+const resetPasswordStart = () => ({
+  type: types.RESET_PASSWORD_START
+})
+
+const resetPasswordSuccess = () => ({
+  type: types.RESET_PASSWORD_SUCCESS
+})
+
+const resetPasswordFail = (err) => ({
+  type: types.RESET_PASSWORD_FAIL,
+  payload: err
+})
+
+export const resetPasswordInitiate = email => dispatch => {
+  dispatch(resetPasswordStart())
+  auth
+    .sendPasswordResetEmail(email)
+    .then(() => dispatch(resetPasswordSuccess()))
+    .catch((err) => {
+      dispatch(resetPasswordFail(err.message))
     })
 }

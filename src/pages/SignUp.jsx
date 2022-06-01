@@ -70,9 +70,15 @@ const SignUp = () => {
     dispatch(facebookSigninInitiate())
   }
 
-  const createNewAccount = async (email, name) => {
+  const createNewAccount = async () => {
     try {
-      await api.post(routes.SIGN_UP, routes.getSignupBody(email, name))
+      const token = await currentUser.getIdToken()
+
+      // await api.post(
+      //   routes.SIGN_UP,
+      //   routes.getSignupBody(currentUser.email, currentUser.name),
+      //   routes.getSignupHeader(token)
+      // )
     } catch (err) {
       if (err.response) {
         console.log(err.response.data)
@@ -99,7 +105,7 @@ const SignUp = () => {
     if (currentUser) {
       console.log(currentUser.email)
       console.log(currentUser.displayName)
-      //createNewAccount(currentUser.email, currentUser.displayName)
+      createNewAccount()
       setDetail({
         email: '',
         name: '',
@@ -135,13 +141,11 @@ const SignUp = () => {
     }))
   }
 
-  if (currentUser)
+  if (loading)
     return <LoadingScreen loading={true} />
 
   return (
     <div className='py-8 -mt-28 bg-gray-auth text-13 font-semibold min-h-screen flex justify-center items-center'>
-      <LoadingScreen loading={loading} />
-
       <div className='h-full w-[90%] md:w-4/6 lg:w-3/5 xl:w-2/5  py-8 bg-white rounded-xl flex flex-col justify-center
         px-4 sm:px-10 md:px-20 lg:px-24 relative'>
         {/* Close button */}

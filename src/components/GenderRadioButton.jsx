@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 
 const gender = ['Male', 'Female', 'Other']
 
-const GenderRadioButton = ({ OnClick }) => {
-  const [currGender, setGender] = useState(null);
-
+const GenderRadioButton = ({ OnClick, currGender, setDetail }) => {
   const handleClick = value => {
     OnClick(value);
-    setGender(value);
+    setDetail((previousState) => ({
+      ...previousState,
+      gender: value
+    }));
   }
 
   const getRdoStyle = value => {

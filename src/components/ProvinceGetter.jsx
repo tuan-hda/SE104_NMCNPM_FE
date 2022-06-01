@@ -31,7 +31,7 @@ const normalizeText = (data) => {
 const sortByName = (data) => data.sort((a, b) => a.name.localeCompare(b.name))
 
 
-const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info, setInfo, result, isAddressImported, setIsAddressImported }) => {
+const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info, setInfo, result, setResult }) => {
   // Fetch province data
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -106,6 +106,9 @@ const ProvinceGetter = ({ province, district, setProvince, setDistrict, setWard,
             ...prevInfo,
             ward: result.ward
           }))
+          if (setResult) {
+            setResult()
+          }
         }
         //dispatch(setWard(response.data.wards))
         setWard(sortByName(normalizeText(response.data.wards)));

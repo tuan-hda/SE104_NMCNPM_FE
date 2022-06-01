@@ -4,10 +4,12 @@ import useModal from '../utils/useModal'
 import AlertModal from './modals/AlertModal'
 import GenderRadioButton from './GenderRadioButton'
 import ProvinceGetter from './ProvinceGetter'
+import * as routes from '../api/apiRoutes'
+import api from '../api/appApi'
+import { storage } from '../firebase'
+import LoadingScreen from './LoadingScreen'
 
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
-
-
 
 // Define default user avatar
 const defaultAvatar = (style) => <svg
@@ -65,9 +67,13 @@ const ProfileContainer = () => {
   const [isDistrictSelected, setDistrictSelected] = useState(null);
   const [isWardSelected, setWardSelected] = useState(null);
   const { isShowing, toggle } = useModal();
-
+  const [loading, setLoading] = useState(false)
   // Get result of Modal
   const [modalResult, setModalResult] = useState(-1);
+  // Province, District and Ward fetched from API
+  const [addr, setAddr] = useState({})
+  // Store upload image of user temporarily
+  const [image, setImage] = useState()
 
   // Delete user avatar if modalResult = 1
   useEffect(() => {
@@ -82,7 +88,7 @@ const ProfileContainer = () => {
     }
   }, [modalResult])
 
-  ProvinceGetter({ province: detail.province, district: detail.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected })
+  ProvinceGetter({ province: detail.province, district: detail.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, setInfo: setDetail, result: addr, setResult: setAddr })
 
   // // Fetch province data
   // useEffect(() => {
@@ -175,11 +181,17 @@ const ProfileContainer = () => {
   }
 
   const handleSubmit = e => {
+    setLoading(true)
     e.preventDefault();
+    if (image)
+      handleUploadImage()
+    else
+      updateProfile(detail.photo)
   }
 
   // Handle when user update photo
   const handlePhotoChange = e => {
+    setImage(e.target.files[0])
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
@@ -192,8 +204,109 @@ const ProfileContainer = () => {
     reader.readAsDataURL(e.target.files[0]);
   }
 
+  const handleUploadImage = () => {
+    const task = storage.ref(`images/${image.name}`).put(image)
+    task.on(
+      "state_changed",
+      snapshot => { },
+      error => {
+        console.log(error)
+      },
+      () => {
+        storage
+          .ref('images')
+          .child(image.name)
+          .getDownloadURL()
+          .then((url) => {
+            setDetail((previousState) => ({
+              ...previousState,
+              photo: url
+            }))
+            updateProfile(url)
+          })
+      }
+    )
+  }
+
+  // Update profile. We need a photoUrl parameter here since we need the result from
+  // uploading user's avatar
+  const updateProfile = async (photoUrl) => {
+    try {
+      await api.put(routes.EDIT_PROFILE, routes.getEditProfileBody(
+        1,
+        detail.name,
+        detail.dob,
+        detail.phone,
+        detail.gender,
+        photoUrl,
+        detail.address,
+        detail.province,
+        detail.district,
+        detail.ward
+      ))
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data)
+        console.log(err.response.headers)
+        console.log(err.response.status)
+      } else {
+        console.log(err.message)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fetch data from api in first render
+  const fetchProfile = async () => {
+    setLoading(true)
+    try {
+      const result = await api.get(routes.GET_PROFILE, routes.getProfileId(1))
+      setProfile(result.data.users)
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data)
+        console.log(err.response.headers)
+        console.log(err.response.status)
+      } else {
+        console.log(err.message)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Set profile using fetched data
+  // We will only set province. District and ward needed to be set inside ProvinceGetter.
+  // To do that, i create here an 'addr' state. This will contain temporary information about
+  // district and ward. Then pass it to ProvinceGetter and let that component handles the rest
+  const setProfile = data => {
+    setDetail((previousState) => ({
+      ...previousState,
+      name: data.name,
+      dob: data.dob.substring(0, 10),
+      email: data.email,
+      photo: data.avatar,
+      phone: data.phoneNumber,
+      gender: data.gender,
+      address: data.Addresses.detail,
+      province: data.Addresses.province
+    }))
+
+    setAddr({
+      district: data.Addresses.district,
+      ward: data.Addresses.ward
+    })
+  }
+
+  useEffect(() => {
+    fetchProfile()
+  }, [])
+
   return (
     <form className='mb-10' onSubmit={e => e.preventDefault()}>
+      {loading && <LoadingScreen loading={true} />}
+
       {/* Header of profile (Including avatar, title, description and Save button) */}
       <div className='lg:flex-row flex-col flex items-center relative lg:gap-12'>
         {/* User's avatar goes here */}
@@ -365,7 +478,9 @@ const ProfileContainer = () => {
         <p className='sm:w-24 w-full lg:w-36 font-semibold'>Gender</p>
 
         <GenderRadioButton
-          OnClick={handleGenderSelect} />
+          OnClick={handleGenderSelect}
+          currGender={detail.gender}
+          setDetail={setDetail} />
       </div>
 
 

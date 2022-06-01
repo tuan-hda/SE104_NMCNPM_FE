@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import firebase from "firebase/compat/app";
 import 'firebase/compat/auth'
-
+import 'firebase/compat/storage'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -17,8 +17,8 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
 const facebookAuthProvider = new firebase.auth.FacebookAuthProvider()
-
+const storage = firebase.storage()
 
 export const auth = app.auth()
-export { googleAuthProvider, facebookAuthProvider }
+export { storage, googleAuthProvider, facebookAuthProvider }
 export default app

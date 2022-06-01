@@ -1,10 +1,10 @@
-import { type } from '@testing-library/user-event/dist/type'
 import * as types from '../actions/actionTypes'
 
 const initialState = {
-  loading: false,
+  loading: true,
   currentUser: null,
-  error: null
+  error: null,
+  message: ''
 }
 
 const authReducer = (state = initialState, action) => {
@@ -14,8 +14,10 @@ const authReducer = (state = initialState, action) => {
     case types.LOG_OUT_START:
     case types.GOOGLE_SIGN_IN_START:
     case types.FACEBOOK_SIGN_IN_START:
+    case types.RESET_PASSWORD_START:
       return {
         ...state,
+        message: '',
         loading: true
       }
 
@@ -26,7 +28,8 @@ const authReducer = (state = initialState, action) => {
       return {
         loading: false,
         currentUser: action.payload,
-        error: null
+        error: null,
+        message: '',
       }
 
     case types.SIGN_UP_FAIL:
@@ -34,24 +37,36 @@ const authReducer = (state = initialState, action) => {
     case types.LOG_OUT_FAIL:
     case types.GOOGLE_SIGN_IN_FAIL:
     case types.FACEBOOK_SIGN_IN_FAIL:
+    case types.RESET_PASSWORD_FAIL:
       return {
         ...state,
         loading: false,
-        error: action.payload
+        error: action.payload,
+        message: '',
       }
 
     case types.SET_USER:
       return {
         loading: false,
         error: null,
-        currentUser: action.payload
+        currentUser: action.payload,
+        message: '',
       }
 
     case types.LOG_OUT_SUCCESS:
       return {
         loading: false,
         error: null,
-        currentUser: null
+        currentUser: null,
+        message: ''
+      }
+
+    case types.RESET_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        message: 'Email sent. Check your email for furthur instructions.'
       }
 
     default:
