@@ -8,6 +8,7 @@ import * as routes from '../api/apiRoutes'
 import api from '../api/appApi'
 import { storage } from '../firebase'
 import LoadingScreen from './LoadingScreen'
+import { useSelector } from 'react-redux'
 
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
 
@@ -74,6 +75,8 @@ const ProfileContainer = () => {
   const [addr, setAddr] = useState({})
   // Store upload image of user temporarily
   const [image, setImage] = useState()
+
+  const { currentUser } = useSelector(state => state.user)
 
   // Delete user avatar if modalResult = 1
   useEffect(() => {
@@ -232,18 +235,23 @@ const ProfileContainer = () => {
   // uploading user's avatar
   const updateProfile = async (photoUrl) => {
     try {
-      await api.put(routes.EDIT_PROFILE, routes.getEditProfileBody(
-        1,
-        detail.name,
-        detail.dob,
-        detail.phone,
-        detail.gender,
-        photoUrl,
-        detail.address,
-        detail.province,
-        detail.district,
-        detail.ward
-      ))
+      const token = await currentUser.getIdToken()
+
+      await api.put(
+        routes.EDIT_PROFILE,
+        routes.getEditProfileBody(
+          1,
+          detail.name,
+          detail.dob,
+          detail.phone,
+          detail.gender,
+          photoUrl,
+          detail.address,
+          detail.province,
+          detail.district,
+          detail.ward
+        ),
+        routes.getAccessTokenHeader(token))
     } catch (err) {
       if (err.response) {
         console.log(err.response.data)
@@ -261,7 +269,8 @@ const ProfileContainer = () => {
   const fetchProfile = async () => {
     setLoading(true)
     try {
-      const result = await api.get(routes.GET_PROFILE, routes.getProfileId(1))
+      const token = await currentUser.getIdToken();
+      const result = await api.get(routes.GET_PROFILE, routes.getAccessTokenHeader(token))
       setProfile(result.data.users)
     } catch (err) {
       if (err.response) {

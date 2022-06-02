@@ -18,7 +18,7 @@ const ProductThumb = ({ product }) => {
 
           {/* Image */}
           <div className='bg-gray-thumb rounded-lg'>
-            <img src={product.itemImage} alt='Product Thumbnail' className='w-full object-contain' />
+            <img src={product.itemImage} alt={product.itemName} className='w-full object-contain' />
           </div>
 
           {/* Title, calories, price and add to cart button */}
