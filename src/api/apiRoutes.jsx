@@ -35,7 +35,7 @@ export const getAccessTokenHeader = token => ({
 })
 
 // GET PROFILE
-export const GET_PROFILE = 'get-all-users'
+export const GET_PROFILE = 'get-user'
 export const getProfileId = id => ({
   params: {
     id: id
