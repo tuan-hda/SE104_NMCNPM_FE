@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { resetPasswordInitiate } from '../actions';
+import { resetError, resetPasswordInitiate } from '../actions';
 import CrossIcon from '../images/CrossIcon.svg'
 import LoadingScreen from './LoadingScreen'
 
@@ -15,6 +15,7 @@ const ForgotPasswordFindPassword = ({ returnLogin }) => {
 
   useEffect(() => {
     setError('')
+    dispatch(resetError())
   }, [])
 
   // Prevent user from resetting password if already logged in

@@ -458,7 +458,7 @@ const ProfileContainer = () => {
           placeholder='District'
           value={isDistrictSelected ? detail.district : 'default'}
           onChange={handleChange}>
-          <option disabled value='default' >Choose district</option>
+          <option disabled value='default'>Choose district</option>
           {createComboboxData(district)}
         </select>
       </div>
@@ -507,7 +507,7 @@ const ProfileContainer = () => {
           onChange={handleChange} />
       </div>
 
-    </form >
+    </form>
   )
 }
 
