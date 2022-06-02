@@ -272,6 +272,7 @@ const ProfileContainer = () => {
       const token = await currentUser.getIdToken();
       const result = await api.get(routes.GET_PROFILE, routes.getAccessTokenHeader(token))
       setProfile(result.data.users)
+      console.log(result.data.users)
     } catch (err) {
       if (err.response) {
         console.log(err.response.data)
@@ -288,12 +289,12 @@ const ProfileContainer = () => {
   // Set profile using fetched data
   // We will only set province. District and ward needed to be set inside ProvinceGetter.
   // To do that, i create here an 'addr' state. This will contain temporary information about
-  // district and ward. Then pass it to ProvinceGetter and let that component handles the rest
+  // district and ward. Then pass it to ProvinceGetter and let that component handle the rest
   const setProfile = data => {
     setDetail((previousState) => ({
       ...previousState,
       name: data.name,
-      dob: data.dob.substring(0, 10),
+      dob: data.dob ? data.dob.substring(0, 10) : null,
       email: data.email,
       photo: data.avatar,
       phone: data.phoneNumber,
