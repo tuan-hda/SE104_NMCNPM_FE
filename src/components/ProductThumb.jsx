@@ -17,7 +17,7 @@ const ProductThumb = ({ product }) => {
         <Link to={`/product/${product.id}`} state={product}>
 
           {/* Image */}
-          <div className='bg-gray-thumb rounded-lg'>
+          <div className='bg-gray-thumb rounded-lg aspect-square'>
             <img src={product.itemImage} alt='Product Thumbnail' className='w-full object-contain' />
           </div>
 

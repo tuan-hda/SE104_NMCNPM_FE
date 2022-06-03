@@ -56,3 +56,18 @@ export const getEditProfileBody = (id, name, dob, phoneNumber, gender, avatar, d
   district: district,
   ward: ward
 })
+
+// GET FEATURED ITEM
+export const GET_FEATURED_ITEM = 'get-featured-item'
+
+// ADD ITEM TO CART
+export const ADD_ITEM_TO_CART = 'add-item-to-cart'
+export const getAddCartBody = (itemID, number) => ({
+  itemID: itemID,
+  number: number
+})
+export const getCartHeader = token => ({
+  headers: {
+    Authorization: 'Bearer ' + token
+  }
+})

@@ -21,7 +21,7 @@ const Home = () => {
             </div>
 
             {/* Start Order Now */}
-            <div className='relative mt-20'>
+            <div className='relative mt-24'>
                 <img src={OrderNowBanner} alt="Start Order Now" />
                 {/* Start Order Now Button */}
                 <button className='absolute bottom-[75px] right-72 items-center bg-white text-[26px] text-secondary font-bold rounded-[22px] w-70 h-20 px-10'>

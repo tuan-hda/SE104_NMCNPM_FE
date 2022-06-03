@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import Search from '../components/Search'
 import Logo from './Logo'
 import cartIcon from '../images/Cart.png'
+import profileIcon from '../images/profileIcon.png'
+
 
 const Header = ({ cartItems }) => {
   // const [nav,setNav] = useState(false)
   // const handleClick = () => setNav(!nav)
 
   const [cartCount, setCartCount] = useState(0);
-
+  const [isNavShowing, toggleNav] = useState(false);
+  const { currentUser } = useSelector(state => state.user)
 
   useEffect(() => {
     let count = 0;
@@ -20,8 +23,6 @@ const Header = ({ cartItems }) => {
     console.log(cartItems)
     setCartCount(count);
   }, [cartItems, cartCount])
-
-
 
   return (
     <div className='w-screen h-[80px] bg-[#F8F8F8] fixed top-0 z-20'>
@@ -51,9 +52,35 @@ const Header = ({ cartItems }) => {
           Start Order
         </button>
         {/* Sign in Button */}
-        <button className='font-semibold'>
-          Sign in
-        </button>
+        {currentUser ? 
+        <div 
+        className='flex items-start relative'
+        >
+          <Link to="/profile/detail" 
+          className='font-semibold'
+          >
+            <img src={profileIcon} 
+            alt='Profile' 
+            className='w-8'
+            onMouseEnter={() => toggleNav(!isNavShowing)}
+            /> 
+          </Link>
+          <nav 
+          className={`${isNavShowing ? 'opacity-100' : 'opacity-0 pointer-events-none'} lg:mb-0 mb-10 absolute top-12 right-0 z-10 shadow-md border-[1px] transition-opacity rounded-lg bg-white p-3 w-32`}
+          onMouseLeave={() => toggleNav(!isNavShowing)}>
+            <ul className='space-y-1'>
+              {/* Log out button */}
+              <li
+                className={'cursor-pointer px-3 py-2 transition duration-300 rounded-md text-red-500 hover:font-semibold'}>
+                Log out
+              </li>
+            </ul>
+          </nav>
+        </div>
+        : <Link to="/signin" className='font-semibold'>
+          <h2>Sign in</h2>
+        </Link>
+        }
         {/* Divider */}
         |
         {/* Cart Button */}

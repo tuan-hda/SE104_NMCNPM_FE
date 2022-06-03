@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { addToCart } from '../actions/cart-actions';
 import { useLocation } from 'react-router-dom';
 import AddIcon from '../images/addIcon.svg'
@@ -28,27 +28,27 @@ const ProductDetail = ({addToCart}) => {
             setQuantity(+quantity-1)
     }
 
-    const addToCart = async (photoUrl) => {
-        try {
-            const token = await currentUser.getIdToken()
+    // const addToCart = async (photoUrl) => {
+    //     try {
+    //         const token = await currentUser.getIdToken()
 
-            await api.post(
-              routes.ADD_ITEM_TO_CART,
-              routes.getAddCartBody(product., currentUser.name),
-              routes.getSignupHeader(token)
-            )
-        } catch (err) {
-          if (err.response) {
-            console.log(err.response.data)
-            console.log(err.response.headers)
-            console.log(err.response.status)
-          } else {
-            console.log(err.message)
-          }
-        } finally {
-          setLoading(false)
-        }
-      }
+    //         await api.post(
+    //           routes.ADD_ITEM_TO_CART,
+    //           routes.getAddCartBody(product.name, currentUser.name),
+    //           routes.getSignupHeader(token)
+    //         )
+    //     } catch (err) {
+    //       if (err.response) {
+    //         console.log(err.response.data)
+    //         console.log(err.response.headers)
+    //         console.log(err.response.status)
+    //       } else {
+    //         console.log(err.message)
+    //       }
+    //     } finally {
+    //       setLoading(false)
+    //     }
+    //   }
 
     return (
         <div className='grid grid-cols-2 pt-48 px-32 gap-10 justify-between'>
