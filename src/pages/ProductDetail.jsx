@@ -43,7 +43,7 @@ const ProductDetail = ({addToCart}) => {
             await api.post(
               routes.ADD_ITEM_TO_CART,
               routes.getAddCartBody(product.id, quantity),
-              routes.getAddCartHeader(token)
+              routes.getSignupHeader(token)
             )
 
             addToCart({product,quantity})
