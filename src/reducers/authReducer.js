@@ -79,6 +79,12 @@ const authReducer = (state = initialState, action) => {
         message: 'Password changed.'
       })
 
+    case types.RESET_ERROR:
+      return ({
+        ...state,
+        error: null
+      })
+
     default:
       return state
   }

@@ -202,3 +202,7 @@ export const changePasswordInitiate = (currentUser, newPassword) => dispatch => 
       dispatch(changePasswordFail(err.message))
     })
 }
+
+export const resetError = () => ({
+  type: types.RESET_ERROR
+})

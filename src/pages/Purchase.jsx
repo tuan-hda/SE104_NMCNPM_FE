@@ -5,6 +5,9 @@ import PaymentMethodRadioButton from '../components/PaymentMethodRadioButton';
 import ProvinceGetter from '../components/ProvinceGetter';
 import useModal from '../utils/useModal'
 import { validateDeliveryInfo } from '../utils/validateInfo';
+import * as routes from '../api/apiRoutes'
+import { useSelector } from 'react-redux';
+import appApi from '../api/appApi';
 
 // Create data for combobox
 const createComboboxData = data => {
@@ -44,6 +47,8 @@ const Purchase = () => {
 
   const { isShowing, toggle } = useModal();
   const { isShowing: isSuccessShowing, toggle: toggleSuccessShowing } = useModal()
+
+  const { currentUser } = useSelector(state => state.user)
 
   ProvinceGetter({ province: deliveryInfo.province, district: deliveryInfo.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, info: deliveryInfo, setInfo: setDeliveryInfo, result })
 
@@ -144,6 +149,45 @@ const Purchase = () => {
 
     console.log(isSuccessShowing)
     toggleSuccessShowing()
+
+    checkout()
+  }
+
+  const checkout = async () => {
+    try {
+      const token = await currentUser.getIdToken()
+
+      await appApi.put(
+        routes.PURCHASE,
+        routes.getPurchaseBody(
+          currMethod,
+          deliveryInfo.phone,
+          deliveryInfo.address,
+          deliveryInfo.province,
+          deliveryInfo.district,
+          deliveryInfo.ward,
+          deliveryInfo.note
+        ),
+        routes.getAccessTokenHeader(token)
+      )
+
+      if (saveAddress) {
+        await appApi.post(
+          routes.ADD_ADDRESS,
+          routes.getAddAddressBody(
+            deliveryInfo.address,
+            deliveryInfo.province,
+            deliveryInfo.district,
+            deliveryInfo.ward,
+            deliveryInfo.name,
+            deliveryInfo.phone
+          ),
+          routes.getAccessTokenHeader(token)
+        )
+      }
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (<div className='w-full h-full' onSubmit={(e) => e.preventDefault()}>

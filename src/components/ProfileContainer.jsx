@@ -8,6 +8,7 @@ import * as routes from '../api/apiRoutes'
 import api from '../api/appApi'
 import { storage } from '../firebase'
 import LoadingScreen from './LoadingScreen'
+import { useSelector } from 'react-redux'
 
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
 
@@ -74,6 +75,8 @@ const ProfileContainer = () => {
   const [addr, setAddr] = useState({})
   // Store upload image of user temporarily
   const [image, setImage] = useState()
+
+  const { currentUser } = useSelector(state => state.user)
 
   // Delete user avatar if modalResult = 1
   useEffect(() => {
@@ -232,18 +235,23 @@ const ProfileContainer = () => {
   // uploading user's avatar
   const updateProfile = async (photoUrl) => {
     try {
-      await api.put(routes.EDIT_PROFILE, routes.getEditProfileBody(
-        1,
-        detail.name,
-        detail.dob,
-        detail.phone,
-        detail.gender,
-        photoUrl,
-        detail.address,
-        detail.province,
-        detail.district,
-        detail.ward
-      ))
+      const token = await currentUser.getIdToken()
+
+      await api.put(
+        routes.EDIT_PROFILE,
+        routes.getEditProfileBody(
+          1,
+          detail.name,
+          detail.dob,
+          detail.phone,
+          detail.gender,
+          photoUrl,
+          detail.address,
+          detail.province,
+          detail.district,
+          detail.ward
+        ),
+        routes.getAccessTokenHeader(token))
     } catch (err) {
       if (err.response) {
         console.log(err.response.data)
@@ -261,8 +269,10 @@ const ProfileContainer = () => {
   const fetchProfile = async () => {
     setLoading(true)
     try {
-      const result = await api.get(routes.GET_PROFILE, routes.getProfileId(1))
+      const token = await currentUser.getIdToken();
+      const result = await api.get(routes.GET_PROFILE, routes.getAccessTokenHeader(token))
       setProfile(result.data.users)
+      console.log(result.data.users)
     } catch (err) {
       if (err.response) {
         console.log(err.response.data)
@@ -279,12 +289,12 @@ const ProfileContainer = () => {
   // Set profile using fetched data
   // We will only set province. District and ward needed to be set inside ProvinceGetter.
   // To do that, i create here an 'addr' state. This will contain temporary information about
-  // district and ward. Then pass it to ProvinceGetter and let that component handles the rest
+  // district and ward. Then pass it to ProvinceGetter and let that component handle the rest
   const setProfile = data => {
     setDetail((previousState) => ({
       ...previousState,
       name: data.name,
-      dob: data.dob.substring(0, 10),
+      dob: data.dob ? data.dob.substring(0, 10) : null,
       email: data.email,
       photo: data.avatar,
       phone: data.phoneNumber,
@@ -449,7 +459,7 @@ const ProfileContainer = () => {
           placeholder='District'
           value={isDistrictSelected ? detail.district : 'default'}
           onChange={handleChange}>
-          <option disabled value='default' >Choose district</option>
+          <option disabled value='default'>Choose district</option>
           {createComboboxData(district)}
         </select>
       </div>
@@ -498,7 +508,7 @@ const ProfileContainer = () => {
           onChange={handleChange} />
       </div>
 
-    </form >
+    </form>
   )
 }
 

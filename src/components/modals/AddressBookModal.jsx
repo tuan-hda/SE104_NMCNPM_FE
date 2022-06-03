@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import appApi from '../../api/appApi';
 import useModal from '../../utils/useModal';
 import AddAddressModal from './AddAddressModal';
+import * as routes from '../../api/apiRoutes'
+import { hambursyLoader } from '../LoadingScreen'
 
 const crossIcon = <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512.021 512.021" className='w-4 h-4 ' >
   <g>
@@ -31,6 +34,38 @@ const AddressBookModal = ({ isABM, setIsABM, ABM_isShowing, hide, setResult }) =
       ward: '26800_Phuong Linh Trung'
     },
   ]);
+  const [loading, setLoading] = useState(false)
+
+
+  // Fetch addresses of user
+  const fetchAddresses = async () => {
+    try {
+      const result = await appApi.get(routes.GET_ADDRESSES, routes.getAddressParams(1))
+      const addressData = result.data.addresses.map((a, i) => {
+        return {
+          ...a,
+          address: a.detail,
+          name: a.User.name,
+          phone: a.User.phoneNumber
+        }
+      })
+      setAddresses(addressData)
+      console.log(result)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fetch data each time open the modal
+  useEffect(() => {
+    if (ABM_isShowing) {
+      setLoading(true)
+      fetchAddresses()
+    }
+  }, [ABM_isShowing])
+
   const [currAddress, setCurrAddress] = useState();
 
   // Specify which address is being edited, default is none
@@ -83,7 +118,9 @@ const AddressBookModal = ({ isABM, setIsABM, ABM_isShowing, hide, setResult }) =
 
   // Full screen layer
   return (isABM ? <div className={`${ABM_isShowing ? 'opacity-100' : 'opacity-0 pointer-events-none'} address-modal-layer`} onClick={() => hide()}>
-
+    {loading && <div className='absolute top-[50%] z-20'>
+      {hambursyLoader}
+    </div>}
     {/* Address Book Modal */}
     <div className='address-modal' onClick={(e) => {
       e.stopPropagation();

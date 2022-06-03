@@ -73,7 +73,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/menu' element={<Menu />} />
           <Route path='/menu/search' element={<Menu searchValue={1} />} />
-          <Route path='/product/:productName' element={<ProductDetail />} />
+          <Route path='/menu/product/:productName' element={<ProductDetail />} />
           <Route path='/signin' element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/forgotpassword' element={<ForgotPassword />} />

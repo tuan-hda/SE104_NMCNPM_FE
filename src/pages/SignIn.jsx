@@ -4,7 +4,7 @@ import GoogleIcon from '../images/GoogleIcon.svg'
 import FacebookIcon from '../images/FacebookIcon.png'
 import CrossIcon from '../images/CrossIcon.svg'
 import { useDispatch, useSelector } from 'react-redux'
-import { facebookSigninInitiate, googleSigninInitiate, signinInitiate } from '../actions'
+import { facebookSigninInitiate, googleSigninInitiate, resetError, signinInitiate } from '../actions'
 import LoadingScreen from '../components/LoadingScreen'
 
 // Show alert if error
@@ -37,22 +37,27 @@ const SignIn = () => {
   const handleNormalSignin = (e) => {
     e.preventDefault()
 
-    const err = {
-      email: '',
-      password: ''
-    }
-
     // Validate info (not empty field is enough)
 
-    if (!detail.email)
-      err.email = 'Email required'
+    let isValid = true
 
-    if (!detail.password)
-      err.password = 'Password required'
+    if (!detail.email) {
+      isValid = false
+      setError({
+        ...err,
+        email: 'Email required.'
+      })
+    }
 
-    setError(err)
+    if (!detail.password) {
+      isValid = false
+      setError({
+        ...err,
+        password: 'Password required.'
+      })
+    }
 
-    if (err.email || err.password)
+    if (!isValid)
       return
 
     dispatch(signinInitiate(detail.email, detail.password))
@@ -118,7 +123,8 @@ const SignIn = () => {
       email: '',
       password: ''
     })
-  }, [])
+    dispatch(resetError())
+  }, [dispatch])
 
   if (loading)
     return <LoadingScreen loading={true} />

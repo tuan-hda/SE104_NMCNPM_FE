@@ -28,14 +28,14 @@ export const getSignupBody = (email, name) => ({
   email: email,
   name: name
 })
-export const getSignupHeader = token => ({
+export const getAccessTokenHeader = token => ({
   headers: {
     Authorization: 'Bearer ' + token
   }
 })
 
 // GET PROFILE
-export const GET_PROFILE = 'get-all-users'
+export const GET_PROFILE = 'get-user'
 export const getProfileId = id => ({
   params: {
     id: id
@@ -55,6 +55,38 @@ export const getEditProfileBody = (id, name, dob, phoneNumber, gender, avatar, d
   province: province,
   district: district,
   ward: ward
+})
+
+
+// GET ADDRESSES
+export const GET_ADDRESSES = 'get-address'
+export const getAddressParams = id => ({
+  params: {
+    userId: id
+  }
+})
+
+// ADD ADDRESS
+export const ADD_ADDRESS = 'add-address'
+export const getAddAddressBody = (detail, province, district, ward, name, phoneNumber) => ({
+  detail: detail,
+  province: province,
+  district: district,
+  ward: ward,
+  name: name,
+  phoneNumber: phoneNumber
+})
+
+// PURCHASE
+export const PURCHASE = 'purchase'
+export const getPurchaseBody = (payment, phoneNumber, address, province, district, ward, note) => ({
+  payment: payment,
+  phoneNumber: phoneNumber,
+  address: address,
+  province: province,
+  district: district,
+  ward: ward,
+  note: note
 })
 
 // GET FEATURED ITEM
