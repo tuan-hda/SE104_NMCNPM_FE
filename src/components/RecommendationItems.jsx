@@ -48,7 +48,7 @@ const RecommendationItems = () => {
     >
         {/* Scroll Items */}
         <div
-        className="w-max grid grid-cols-4 gap-x-16 mb-14"
+        className="w-max flex gap-x-16 mb-14"
         >
           
             {/* Product Thumbs */}
