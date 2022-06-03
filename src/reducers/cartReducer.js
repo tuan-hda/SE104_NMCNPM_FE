@@ -29,9 +29,6 @@ const cartReducer = (state = INITIAL_STATE,action) => {
                 cartItems: state.cartItems.filter(item => item.id !== action.payload.id)
             }
         case 'ADJUST_QTY':
-            console.log('id:')
-            console.log(action.payload.item.id)
-            console.log('value: ',action.payload.value)
             return {
                 ...state,
                 cartItems: state.cartItems.map((item) =>

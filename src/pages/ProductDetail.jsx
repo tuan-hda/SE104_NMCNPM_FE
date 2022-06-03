@@ -4,9 +4,12 @@ import { addToCart } from '../actions/cart-actions';
 import { useLocation } from 'react-router-dom';
 import AddIcon from '../images/addIcon.svg'
 import MinusIcon from '../images/minusIcon.svg'
+import api from '../api/appApi'
+import * as routes from '../api/apiRoutes'
 
 const ProductDetail = ({addToCart}) => {
     const [quantity,setQuantity] = useState(1);
+    const { currentUser, loading, error } = useSelector(state => state.user)
     
     //Retrieve product from ProductThumb (Link)
     const location= useLocation();
@@ -24,6 +27,28 @@ const ProductDetail = ({addToCart}) => {
         if (quantity>1)
             setQuantity(+quantity-1)
     }
+
+    const addToCart = async (photoUrl) => {
+        try {
+            const token = await currentUser.getIdToken()
+
+            await api.post(
+              routes.ADD_ITEM_TO_CART,
+              routes.getAddCartBody(product., currentUser.name),
+              routes.getSignupHeader(token)
+            )
+        } catch (err) {
+          if (err.response) {
+            console.log(err.response.data)
+            console.log(err.response.headers)
+            console.log(err.response.status)
+          } else {
+            console.log(err.message)
+          }
+        } finally {
+          setLoading(false)
+        }
+      }
 
     return (
         <div className='grid grid-cols-2 pt-48 px-32 gap-10 justify-between'>
