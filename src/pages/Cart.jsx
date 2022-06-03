@@ -16,7 +16,7 @@ const Cart = ({cart}) => {
     },[cart,subTotal,setSubTotal])
 
     return (
-        <div className='py-32 px-32 w-full h-full flex justify-between gap-32'>
+        <div className='py-10 px-32 w-full h-full flex justify-between gap-32'>
             {/* Left section */}
             <div>
                 {/* page Title */}

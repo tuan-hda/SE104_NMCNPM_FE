@@ -13,6 +13,7 @@ const cartReducer = (state = INITIAL_STATE,action) => {
             const inCart = state.cartItems.find((item) => 
                 item.id === product.id ? true : false                    
             )
+            
             return {
                 ...state,
                 cartItems : inCart   

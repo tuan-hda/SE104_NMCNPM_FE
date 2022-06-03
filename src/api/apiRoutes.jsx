@@ -66,8 +66,6 @@ export const getAddCartBody = (itemID, number) => ({
   itemID: itemID,
   number: number
 })
-export const getCartHeader = token => ({
-  headers: {
-    Authorization: 'Bearer ' + token
-  }
-})
+
+//DISPLAY CART ITEM
+export const DISPLAY_CART_ITEM = 'display-cart'
