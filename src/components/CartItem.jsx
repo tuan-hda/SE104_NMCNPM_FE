@@ -13,17 +13,17 @@ const CartItem = ({itemData,removeFromCart, adjustQty,isEditable}) => {
   const { currentUser} = useSelector(state => state.user)
 
   const onChangeHandler = (e) => {
-    adjustQty(itemData,e.target.value)
-    setQuantity(e.target.value);
+    adjustQty(quantity,+e.target.value)
+    setQuantity(+e.target.value);
   }
   
   const handleIncrease = () => {
-    adjustQty(itemData,+quantity+1)
+    adjustQty(quantity,+quantity+1)
     setQuantity(+quantity+1)   
   }
   const handleDecrease = () => {
       if (quantity>1) {
-        adjustQty(itemData,+quantity-1)
+        adjustQty(quantity,+quantity-1)
         setQuantity(+quantity-1)
       }
   }
@@ -40,8 +40,6 @@ const CartItem = ({itemData,removeFromCart, adjustQty,isEditable}) => {
         ),
         routes.getAccessTokenHeader(token)
       )
-
-      console.log('Update thành công rồi nha: ')
     } catch (err) {
       console.log(err)
     }
@@ -66,9 +64,7 @@ const CartItem = ({itemData,removeFromCart, adjustQty,isEditable}) => {
         }
       );
 
-      console.log(JSON.stringify(routes.getAccessTokenHeader(token)))
-
-      removeFromCart(itemData)
+      removeFromCart(quantity)
     } catch (err) {
       if (err.response) {
         console.log(err.response.data)
@@ -118,8 +114,8 @@ const CartItem = ({itemData,removeFromCart, adjustQty,isEditable}) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    removeFromCart: (itemData) => dispatch(removeFromCart(itemData)),
-    adjustQty: (itemData,value) => dispatch(adjustQty(itemData,value))
+    removeFromCart: (quantity) => dispatch(removeFromCart(quantity)),
+    adjustQty: (quantityBefore,quantityAfter) => dispatch(adjustQty(quantityBefore,quantityAfter))
   }
 }
 

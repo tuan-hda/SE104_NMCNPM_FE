@@ -1,30 +1,63 @@
 import React,{useState,useEffect} from 'react'
-import { connect } from 'react-redux'
+import { connect,useSelector } from 'react-redux'
 import CartItemList from '../components/CartItemList'
+import api from '../api/appApi'
+import * as routes from '../api/apiRoutes'
+import { hambursyLoader } from '../components/LoadingScreen';
 
-const Cart = ({cart}) => {
-
+const Cart = ({qty}) => {
+    const [loading, setLoading] = useState(true)
+    const [items,setItems] = useState([])
     const [subTotal, setSubTotal] = useState(0)
+    const { currentUser } = useSelector(state => state.user)
     
     useEffect(() => {
         let price=0;
 
-        for (let i = 0; i < cart.length; i++) {
-            price += cart[i].number * cart[i].product.price;
+        for (let i = 0; i < items.length; i++) {
+            price += items[i].number * items[i].product.price;
         }
 
         setSubTotal(price);
-    },[cart,subTotal,setSubTotal])
+    },[items,subTotal,setSubTotal])
+
+    const fetchCart = async () => {
+      try {
+        const token = await currentUser.getIdToken()
+  
+        let result = await api.get(routes.DISPLAY_CART_ITEM, routes.getAccessTokenHeader(token))
+
+        setItems([...result.data.cartItems])
+
+      }
+      catch (err) {
+        console.log(err)
+      }
+      finally {
+        setLoading(false)
+      }
+    }
+  
+    //get Cart count
+    useEffect(() => {
+        fetchCart()
+    },[qty])
+
+    if (loading) return (
+        <div className='w-full h-[75%] flex items-center justify-center'>
+          {hambursyLoader}
+        </div>
+      )
 
     return (
-        <div className='py-10 px-32 w-full h-full flex justify-between gap-32'>
+        <div className='py-4 px-32 w-full h-full flex justify-between gap-32'>
             {/* Left section */}
             <div>
                 {/* page Title */}
                 <h1 className='text-34 font-extrabold'>Cart</h1>
                 <div className='mt-8'>
                     {/* Item list */}
-                    <CartItemList cart={cart} prop='w-[800px]' isEditable={true}/>
+                    <CartItemList cart={items} prop='w-[800px]' isEditable={true}/>
                 </div>
             </div>
         
@@ -64,9 +97,10 @@ const Cart = ({cart}) => {
     )
 }
 
+
 const mapStateToProps = state => {
     return {
-        cart: state.cart.cartItems
+        qty: state.cart.qty
     }
 }
 

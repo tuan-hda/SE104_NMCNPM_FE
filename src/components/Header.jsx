@@ -10,7 +10,7 @@ import * as routes from '../api/apiRoutes'
 import { initCart } from '../actions/cart-actions'
 
 
-const Header = ({cartItems,initCart}) => {
+const Header = ({qty,initCart}) => {
   // const [nav,setNav] = useState(false)
   // const handleClick = () => setNav(!nav)
 
@@ -19,20 +19,13 @@ const Header = ({cartItems,initCart}) => {
   const { currentUser } = useSelector(state => state.user)
 
   let items
-  const fetchCart = async () => {
+  const fetchCartCount = async () => {
     try {
       const token = await currentUser.getIdToken()
 
       let result = await api.get(routes.DISPLAY_CART_ITEM, routes.getAccessTokenHeader(token))
 
-      console.log(result)
-
       items = result.data.cartItems
-      console.log(items)
-
-      if (cartItems.length===0) {
-        initCart(items)
-      }
 
       let count = 0;
 
@@ -41,32 +34,27 @@ const Header = ({cartItems,initCart}) => {
       }
 
       setCartCount(count)
+
+      initCart(count)
     }
     catch (err) {
       console.log(err)
     }
   }
 
-  //get Cart
+  // Get cart count
   useEffect(() => {
-    if (currentUser) {
-      fetchCart()
+    if (!currentUser)
+      setCartCount(0)
+    else {
+      fetchCartCount()
     }
   },[currentUser])
 
+  // Set cart count
   useEffect(() => {
-    fetchCart()
-  },[cartItems])
-  
-
-  // useEffect(() => {
-  //   let count = 0;
-  //   for (let i = 0; i < cartItems.length; i++) {
-  //     count += cartItems[i].qty;
-  //   }
-  //   console.log(cartItems)
-  //   setCartCount(count);
-  // }, [cartItems, cartCount])
+    setCartCount(qty);
+  }, [qty])
 
   return (
     <div className='w-screen h-[80px] bg-[#F8F8F8] fixed top-0 z-20'>
@@ -176,13 +164,13 @@ const Header = ({cartItems,initCart}) => {
 
 const mapStateToProps = state => {
   return {
-    cartItems: state.cart.cartItems
+    qty: state.cart.qty
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    initCart: (items) => dispatch(initCart(items))
+    initCart: (quantity) => dispatch(initCart(quantity))
   }
 }
 

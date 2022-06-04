@@ -10,7 +10,6 @@ import * as routes from '../api/apiRoutes'
 const ProductDetail = ({addToCart}) => {
     const [quantity,setQuantity] = useState(1);
     const { currentUser} = useSelector(state => state.user)
-    const navigate = useNavigate();
     
     //Retrieve product from ProductThumb (Link)
     const location= useLocation();
@@ -41,7 +40,7 @@ const ProductDetail = ({addToCart}) => {
             ),
             routes.getAccessTokenHeader(token)
           )
-          addToCart({product,quantity})
+          addToCart(+quantity)
         } catch (err) {
           console.log(err)
         }
@@ -92,7 +91,7 @@ const ProductDetail = ({addToCart}) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        addToCart: ({product,quantity}) => dispatch(addToCart({product,quantity}))
+        addToCart: (quantity) => dispatch(addToCart(quantity))
     }
 }
 
