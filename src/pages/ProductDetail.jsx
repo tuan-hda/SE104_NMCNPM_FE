@@ -4,7 +4,7 @@ import { addToCart } from '../actions/cart-actions';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AddIcon from '../images/addIcon.svg'
 import MinusIcon from '../images/minusIcon.svg'
-import api from '../api/appApi'
+import appApi from '../api/appApi';
 import * as routes from '../api/apiRoutes'
 
 const ProductDetail = ({addToCart}) => {
@@ -15,8 +15,6 @@ const ProductDetail = ({addToCart}) => {
     //Retrieve product from ProductThumb (Link)
     const location= useLocation();
     const product= location.state;
-
-    console.log(product)
     
     useEffect(() => {
         window.scrollTo(0,0);
@@ -32,34 +30,25 @@ const ProductDetail = ({addToCart}) => {
     }
 
     const handleAddToCart = async () => {
-
-        if (!currentUser) {
-            navigate('/signin');
-            return
-        }     
         try {
-            const token = await currentUser.getIdToken()
-
-            await api.post(
-              routes.ADD_ITEM_TO_CART,
-              routes.getAddCartBody(product.id, quantity),
-              routes.getAccessTokenHeader(token)
-            )
-
-            addToCart({product,quantity})
+          const token = await currentUser.getIdToken()
+    
+          await appApi.post(
+            routes.ADD_ITEM_TO_CART,
+            routes.getAddCartBody(
+              product.id,
+              quantity
+            ),
+            routes.getAccessTokenHeader(token)
+          )
+          addToCart({product,quantity})
         } catch (err) {
-          if (err.response) {
-            console.log(err.response.data)
-            console.log(err.response.headers)
-            console.log(err.response.status)
-          } else {
-            console.log(err.message)
-          }
+          console.log(err)
         }
-    }
+      }
 
     return (
-        <div className='grid grid-cols-2 pt-48 px-32 gap-10 justify-between'>
+        <div className='grid grid-cols-2 pt-14 px-32 gap-10 justify-between'>
             {/* Product Image */}
             <div className='bg-gray-thumb rounded-lg w-[750px] h-[500px] grid place-content-center'>
                 <img src={product.itemImage} alt='Product Thumbnail' className='h-[500px] object-contain self-center' />

@@ -55,7 +55,7 @@ const FavoriteItems = () => {
         </div>
         {/* Scroll Items */}
         <div
-        className="flex gap-x-10 mb-20"
+        className="flex gap-x-10 mb-14"
         >  
           {/* Product Thumbs */}
           {Object.keys(productData) !== 0 && productData.map((p, i) => {

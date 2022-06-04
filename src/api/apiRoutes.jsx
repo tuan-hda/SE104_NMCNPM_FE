@@ -101,3 +101,16 @@ export const getAddCartBody = (itemID, number) => ({
 
 //DISPLAY CART ITEM
 export const DISPLAY_CART_ITEM = 'display-cart'
+
+//UPDATE CART ITEM
+export const UPDATE_CART_ITEM = 'update-cart-item'
+export const getUpdateCartBody = (itemID, number) => ({
+  itemID: itemID,
+  number: number
+})
+
+//DELETE CART ITEM
+export const DELETE_CART_ITEM = 'delete-cart-item'
+export const getDeleteCartBody = (itemID) => ({
+  itemID: itemID
+})

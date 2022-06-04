@@ -5,11 +5,12 @@ import CartItemList from '../components/CartItemList'
 const Cart = ({cart}) => {
 
     const [subTotal, setSubTotal] = useState(0)
+    
     useEffect(() => {
         let price=0;
 
         for (let i = 0; i < cart.length; i++) {
-            price += cart[i].qty * cart[i].price;
+            price += cart[i].number * cart[i].product.price;
         }
 
         setSubTotal(price);
@@ -29,7 +30,7 @@ const Cart = ({cart}) => {
         
             {/* Right section */}
             {/* Order Summary */}
-            <div className=' bg-[#F5F5F6] flex-grow h-full place-self-end rounded-xl'>
+            <div className=' bg-[#F5F5F6] flex-grow h-full mt-20 rounded-xl'>
                 <div className=' px-11 py-11'>
                     {/* Title */}
                         <h2 className=' font-semibold text-[24px] mb-10 h-16 border-b-[1px] border-[#C6BDBD]'>ORDER SUMMARY</h2>                    

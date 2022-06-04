@@ -39,25 +39,19 @@ const RecommendationItems = () => {
       {hambursyLoader}
     </div>
   )
-  
-  console.log(productData)
 
   return (
     <div
     className="w-full overflow-x-scroll mb-8"
     >
-        {/* Scroll Items */}
-        <div
-        className="w-max flex gap-x-16 mb-14"
-        >
-          
-            {/* Product Thumbs */}
-            {Object.keys(productData) !== 0 && 
-              productData.map((p, i) => {
-                return <ProductThumb key={i} product={p} />
-              })
-            }
-          
+      {/* Scroll Items */}
+      <div className="w-max flex gap-x-16 mb-14">
+          {/* Product Thumbs */}
+          {Object.keys(productData) !== 0 && 
+            productData.map((p, i) => {
+              return <ProductThumb key={i} product={p} />
+            })
+          }  
       </div>
     </div>
   )
