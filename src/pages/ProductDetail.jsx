@@ -1,12 +1,16 @@
 import React,{useState,useEffect} from 'react'
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { addToCart } from '../actions/cart-actions';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AddIcon from '../images/addIcon.svg'
 import MinusIcon from '../images/minusIcon.svg'
+import appApi from '../api/appApi';
+import * as routes from '../api/apiRoutes'
 
 const ProductDetail = ({addToCart}) => {
     const [quantity,setQuantity] = useState(1);
+    const { currentUser} = useSelector(state => state.user)
+    const navigate = useNavigate();
     
     //Retrieve product from ProductThumb (Link)
     const location= useLocation();
@@ -25,16 +29,34 @@ const ProductDetail = ({addToCart}) => {
             setQuantity(+quantity-1)
     }
 
+    const handleAddToCart = async () => {
+        try {
+          const token = await currentUser.getIdToken()
+    
+          await appApi.post(
+            routes.ADD_ITEM_TO_CART,
+            routes.getAddCartBody(
+              product.id,
+              quantity
+            ),
+            routes.getAccessTokenHeader(token)
+          )
+          addToCart({product,quantity})
+        } catch (err) {
+          console.log(err)
+        }
+      }
+
     return (
-        <div className='grid grid-cols-2 pt-48 px-32 gap-10 justify-between'>
+        <div className='grid grid-cols-2 pt-14 px-32 gap-10 justify-between'>
             {/* Product Image */}
             <div className='bg-gray-thumb rounded-lg w-[750px] h-[500px] grid place-content-center'>
-                <img src={product.image} alt='Product Thumbnail' className='h-[500px] object-contain self-center' />
+                <img src={product.itemImage} alt='Product Thumbnail' className='h-[500px] object-contain self-center' />
             </div>
             {/* Product Detail */}
             <div className='grid place-self-end h-full grid-rows-2 w-[600px]'>
                 {/* Product Title */}
-                <h2 className='font-extrabold text-5xl place-self-start'>{product.title.toUpperCase()}</h2>
+                <h2 className='font-extrabold text-5xl place-self-start'>{product.itemName.toUpperCase()}</h2>
                 <div className='grid'>
                     {/* Calories */}
                     <h4 className='text-22 border-b-[1px] border-divider'>
@@ -59,7 +81,7 @@ const ProductDetail = ({addToCart}) => {
                     </div>
                 </div>
                 {/* Add to Cart Button */}
-                <button onClick={() => addToCart({product,quantity})} className='hidden md:flex items-center justify-center bg-secondary text-5xl text-white font-medium rounded-[50px] w-50 h-20 px-10'>
+                <button onClick={handleAddToCart} className='hidden md:flex items-center justify-center bg-secondary text-5xl text-white font-medium rounded-[50px] w-50 h-20 px-10'>
                     Add to Cart
                 </button>
             </div>

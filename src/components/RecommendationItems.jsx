@@ -1,66 +1,58 @@
-import React from 'react'
+import React, { useEffect, useState }  from 'react'
 import ProductThumb from './ProductThumb'
-import productThumb from '../images/ProductThumbImage.png'
+import api from '../api/appApi'
+import * as routes from '../api/apiRoutes'
+import { hambursyLoader } from './LoadingScreen';
 
 const RecommendationItems = () => {
-    const productData = [
-      {
-        id:1,
-        image: productThumb,
-        title: 'Hamburgers And Chips Meal',
-        calories: 6750,
-        category: 'Featured',
-        price: 59.99
-      },
-      {
-        id:2,
-        image: productThumb,
-        title: 'Hamburgers And Chips Meal',
-        calories: 6750,
-        category: 'Combos',
-        price: 59.99
-      },
-      {
-        id:3,
-        image: productThumb,
-        title: 'Hamburgers And Chips Meal',
-        calories: 6750,
-        category: 'Hamburgers',
-        price: 59.99
-      },
-      {
-        id:4,
-        image: productThumb,
-        title: 'Hamburgers And Chips Meal',
-        calories: 6750,
-        category: 'Chicken',
-        price: 59.99
-      },
-      {
-        id:5,
-        image: productThumb,
-        title: 'Hamburgers And Chips Meal',
-        calories: 6750,
-        category: 'Rice',
-        price: 59.99
-      },
-    ]
+  const [loading, setLoading] = useState(true)
+  const [productData, setProduct] = useState({})
 
+  let result
+  const fetchMenu = async () => {
+    try {
+      result = await api.get(routes.GET_FEATURED_ITEM)
+
+      setProduct(result.data.items)
+    }
+    catch (err) {
+      if (err.response) {
+        console.log(err.response.data)
+        console.log(err.response.status)
+        console.log(err.response.headers)
+      } 
+      else {
+        console.log(err.message)
+      }
+    } 
+    finally {
+    setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchMenu()
+  }, [])
+
+  if (loading) return (
+    <div className='w-full h-[75%] flex items-center justify-center'>
+      {hambursyLoader}
+    </div>
+  )
 
   return (
     <div
-    id="scrollContainer"
-    className="w-full overflow-x-scroll scrolling-touch items-start mb-8 overflow-y-hidden"
+    className="w-full overflow-x-scroll mb-8"
     >
-        {/* Scroll Items */}
-        <div
-        className=" w-[2000px] grid grid-rows-1 grid-flow-col gap-x-16 mb-14"
-        > 
-            {/* Product Thumbs */}
-            {productData.map((p, i) => {
-                return <ProductThumb key={i} product={p} />
-              })}
-        </div>
+      {/* Scroll Items */}
+      <div className="w-max flex gap-x-16 mb-14">
+          {/* Product Thumbs */}
+          {Object.keys(productData) !== 0 && 
+            productData.map((p, i) => {
+              return <ProductThumb key={i} product={p} />
+            })
+          }  
+      </div>
     </div>
   )
 }

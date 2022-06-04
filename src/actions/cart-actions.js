@@ -1,3 +1,10 @@
+export const initCart = (items) => {
+    return {
+        type: 'INIT_CART',
+        payload: items
+    }
+}
+
 export const addToCart = ({product,quantity}) => {
     return {
         type: 'ADD_TO_CART',

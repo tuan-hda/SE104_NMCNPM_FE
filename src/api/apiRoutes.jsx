@@ -88,3 +88,29 @@ export const getPurchaseBody = (payment, phoneNumber, address, province, distric
   ward: ward,
   note: note
 })
+
+// GET FEATURED ITEM
+export const GET_FEATURED_ITEM = 'get-featured-item'
+
+// ADD ITEM TO CART
+export const ADD_ITEM_TO_CART = 'add-item-to-cart'
+export const getAddCartBody = (itemID, number) => ({
+  itemID: itemID,
+  number: number
+})
+
+//DISPLAY CART ITEM
+export const DISPLAY_CART_ITEM = 'display-cart'
+
+//UPDATE CART ITEM
+export const UPDATE_CART_ITEM = 'update-cart-item'
+export const getUpdateCartBody = (itemID, number) => ({
+  itemID: itemID,
+  number: number
+})
+
+//DELETE CART ITEM
+export const DELETE_CART_ITEM = 'delete-cart-item'
+export const getDeleteCartBody = (itemID) => ({
+  itemID: itemID
+})

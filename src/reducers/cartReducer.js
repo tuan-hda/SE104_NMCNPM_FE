@@ -3,6 +3,12 @@ const INITIAL_STATE = {
 }
 const cartReducer = (state = INITIAL_STATE,action) => {
     switch (action.type) {
+        case 'INIT_CART':
+            const items = action.payload;
+            console.log('init info: '+items[0].product.id)
+            return {
+                cartItems: [...items]
+            }
         case 'ADD_TO_CART':
             //Get items data from products array
             //const item = state.products.find((prod) => prod=)
@@ -13,15 +19,16 @@ const cartReducer = (state = INITIAL_STATE,action) => {
             const inCart = state.cartItems.find((item) => 
                 item.id === product.id ? true : false                    
             )
+            
             return {
                 ...state,
                 cartItems : inCart   
                 ? state.cartItems.map((item) =>
                     item.id === product.id
-                    ? {...item, qty: item.qty+quantity}
+                    ? {...item, number: item.number+quantity}
                     : item
                     )
-                : [...state.cartItems, {...product,qty:quantity}]
+                : [...state.cartItems, {...product,number:quantity}]
             }
         case 'REMOVE_FROM_CART':
             return {
@@ -29,14 +36,11 @@ const cartReducer = (state = INITIAL_STATE,action) => {
                 cartItems: state.cartItems.filter(item => item.id !== action.payload.id)
             }
         case 'ADJUST_QTY':
-            console.log('id:')
-            console.log(action.payload.item.id)
-            console.log('value: ',action.payload.value)
             return {
                 ...state,
                 cartItems: state.cartItems.map((item) =>
                     item.id === action.payload.item.id
-                    ? {...item, qty: +action.payload.value}
+                    ? {...item, number: +action.payload.value}
                     : item
                 )
             }
