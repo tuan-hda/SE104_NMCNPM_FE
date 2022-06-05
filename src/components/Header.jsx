@@ -1,27 +1,60 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import Search from '../components/Search'
 import Logo from './Logo'
 import cartIcon from '../images/Cart.png'
+import profileIcon from '../images/profileIcon.png'
+import api from '../api/appApi'
+import * as routes from '../api/apiRoutes'
+import { initCart } from '../actions/cart-actions'
 
-const Header = ({ cartItems }) => {
+
+const Header = ({qty,initCart}) => {
   // const [nav,setNav] = useState(false)
   // const handleClick = () => setNav(!nav)
 
   const [cartCount, setCartCount] = useState(0);
+  const [isNavShowing, toggleNav] = useState(false);
+  const { currentUser } = useSelector(state => state.user)
 
+  let items
+  const fetchCartCount = async () => {
+    try {
+      const token = await currentUser.getIdToken()
 
-  useEffect(() => {
-    let count = 0;
-    for (let i = 0; i < cartItems.length; i++) {
-      count += cartItems[i].qty;
+      let result = await api.get(routes.DISPLAY_CART_ITEM, routes.getAccessTokenHeader(token))
+
+      items = result.data.cartItems
+
+      let count = 0;
+
+      for (let i = 0; i < items.length; i++) {
+            count += items[i].number;
+      }
+
+      setCartCount(count)
+
+      initCart(count)
     }
-    console.log(cartItems)
-    setCartCount(count);
-  }, [cartItems, cartCount])
+    catch (err) {
+      console.log(err)
+    }
+  }
 
+  // Get cart count
+  useEffect(() => {
+    if (!currentUser)
+      setCartCount(0)
+    else {
+      fetchCartCount()
+    }
+  },[currentUser])
 
+  // Set cart count
+  useEffect(() => {
+    setCartCount(qty);
+  }, [qty])
 
   return (
     <div className='w-screen h-[80px] bg-[#F8F8F8] fixed top-0 z-20'>
@@ -30,34 +63,60 @@ const Header = ({ cartItems }) => {
         {/* Logo */}
         <Logo />
         {/* Navbar */}
-        <ul className='hidden mr-14 md:flex'>
-          <li className='px-12 font-bold'>
+        <ul className='hidden mr-10 md:flex'>
+          <li className='px-11 font-bold'>
             <Link to="/">Home</Link>
           </li>
-          <li className='px-12 font-bold'>
+          <li className='px-11 font-bold'>
             <Link to="/menu">Menu</Link>
           </li>
-          <li className='px-12 font-bold'>
+          <li className='px-11 font-bold'>
             <Link to="/about">About</Link>
           </li>
-          <li className='px-12 font-bold'>
+          <li className='px-11 font-bold'>
             <Link to="/contact">Contact</Link>
           </li>
         </ul>
         {/* Search */}
         <Search />
         {/* Start Order Button */}
-        <button className='hidden md:flex items-center bg-secondary text-15 text-white font-bold rounded-[50px] w-50 h-12 px-10'>
+        <button className='items-center bg-secondary text-[14px] text-white font-bold rounded-[50px] px-8 py-3'>
           Start Order
         </button>
         {/* Sign in Button */}
-        <button className='font-semibold'>
-          Sign in
-        </button>
+        {currentUser ? 
+        <div 
+        className='flex items-start relative flex-none'
+        >
+          <Link to="/profile/detail" 
+          className='font-semibold'
+          >
+            <img src={profileIcon} 
+            alt='Profile' 
+            className='w-8'
+            onMouseEnter={() => toggleNav(!isNavShowing)}
+            /> 
+          </Link>
+          <nav 
+          className={`${isNavShowing ? 'opacity-100' : 'opacity-0 pointer-events-none'} lg:mb-0 mb-10 absolute top-12 right-0 z-10 shadow-md border-[1px] transition-opacity rounded-lg bg-white p-3 w-32`}
+          onMouseLeave={() => toggleNav(!isNavShowing)}>
+            <ul className='space-y-1'>
+              {/* Log out button */}
+              <li
+                className={'cursor-pointer px-3 py-2 transition duration-300 rounded-md text-red-500 hover:font-semibold'}>
+                Log out
+              </li>
+            </ul>
+          </nav>
+        </div>
+        : <Link to="/signin" className='font-semibold'>
+          <h2>Sign in</h2>
+        </Link>
+        }
         {/* Divider */}
         |
         {/* Cart Button */}
-        <div className='relative h-[50px] w-[50px]'>
+        <div className=' h-[50px] w-[50px] flex-none relative'>
           <Link to={'/cart'}>
             {/* Cart Icon */}
             <button className='bg-fixed static'>
@@ -105,8 +164,14 @@ const Header = ({ cartItems }) => {
 
 const mapStateToProps = state => {
   return {
-    cartItems: state.cart.cartItems
+    qty: state.cart.qty
   }
 }
 
-export default connect(mapStateToProps)(Header)
+const mapDispatchToProps = dispatch => {
+  return {
+    initCart: (quantity) => dispatch(initCart(quantity))
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Header)

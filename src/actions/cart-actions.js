@@ -1,26 +1,30 @@
-export const addToCart = ({product,quantity}) => {
+export const initCart = (quantity) => {
+    return {
+        type: 'INIT_CART',
+        payload: quantity
+    }
+}
+
+export const addToCart = (quantity) => {
     return {
         type: 'ADD_TO_CART',
-        payload: {
-            product,
-            quantity
-        }
+        payload: quantity
     }
 }
 
-export const removeFromCart = (item) => {
+export const removeFromCart = (quantity) => {
     return {
         type: 'REMOVE_FROM_CART',
-        payload: item
+        payload: quantity
     }
 }
 
-export const adjustQty = (item,value) => {
+export const adjustQty = (quantityBefore, quantityAfter) => {
     return {
         type: 'ADJUST_QTY',
         payload: {
-            item,
-            value
+            quantityBefore,
+            quantityAfter
         }
     }
 }

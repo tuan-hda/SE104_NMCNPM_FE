@@ -14,7 +14,7 @@ const ProductThumb = ({ product }) => {
       null
       :
       <div className='text-13'>
-        <Link to={`/product/${product.id}`} state={product}>
+        <Link to={`/menu/product/${product.id}`} state={product}>
 
           {/* Image */}
           <div className='bg-gray-thumb rounded-lg'>

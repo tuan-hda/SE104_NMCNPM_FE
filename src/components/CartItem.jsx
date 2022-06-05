@@ -1,28 +1,80 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import CartProductThumb from './CartProductThumb'
 import removeIcon from '../images/removeIcon.png'
 
-import { connect } from 'react-redux'
+import { connect,useSelector } from 'react-redux'
 import { removeFromCart, adjustQty } from '../actions/cart-actions'
+import appApi from '../api/appApi';
+import * as routes from '../api/apiRoutes'
 
 const CartItem = ({itemData,removeFromCart, adjustQty,isEditable}) => {
 
-  const [quantity,setQuantity] = useState(itemData.qty)
+  const [quantity,setQuantity] = useState(itemData.number)
+  const { currentUser} = useSelector(state => state.user)
 
   const onChangeHandler = (e) => {
-    adjustQty(itemData,e.target.value)
-    setQuantity(e.target.value);
+    adjustQty(quantity,+e.target.value)
+    setQuantity(+e.target.value);
   }
   
   const handleIncrease = () => {
-    adjustQty(itemData,+quantity+1)
+    adjustQty(quantity,+quantity+1)
     setQuantity(+quantity+1)   
   }
   const handleDecrease = () => {
       if (quantity>1) {
-        adjustQty(itemData,+quantity-1)
+        adjustQty(quantity,+quantity-1)
         setQuantity(+quantity-1)
       }
+  }
+
+  const handleUpdateCart = async () => {
+    try {
+      const token = await currentUser.getIdToken()
+
+      await appApi.put(
+        routes.UPDATE_CART_ITEM,
+        routes.getUpdateCartBody(
+          itemData.product.id,
+          quantity
+        ),
+        routes.getAccessTokenHeader(token)
+      )
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    handleUpdateCart()
+  },[quantity])
+
+  const handleRemove = async () => {
+    try {
+      const token = await currentUser.getIdToken()
+
+      await appApi.delete(
+        routes.DELETE_CART_ITEM, {
+          headers: {
+            Authorization: 'Bearer '+token
+          },
+          data: {
+            itemID: itemData.product.id
+          }
+        }
+      );
+
+      removeFromCart(quantity)
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data)
+        console.log(err.response.status)
+        console.log(err.response.headers)
+      } 
+      else {
+        console.log(err.message)
+      }
+    } 
   }
 
   return (
@@ -48,11 +100,11 @@ const CartItem = ({itemData,removeFromCart, adjustQty,isEditable}) => {
       <h6 className='font-semibold text-15'>{quantity}</h6>
       }
       {/* Total */}
-      <h6 className='font-semibold text-15 text-primary'>{'$'+itemData.price*quantity}</h6>
+      <h6 className='font-semibold text-15 text-primary'>{'$'+itemData.product.price*quantity}</h6>
       {/* Remove */}
       {
       isEditable&&
-      (<button className='w-6 h-6' onClick={() => removeFromCart(itemData)}>
+      (<button className='w-6 h-6' onClick={handleRemove}>
         <img src={removeIcon} alt="Remove" />
       </button>)
       }
@@ -62,8 +114,8 @@ const CartItem = ({itemData,removeFromCart, adjustQty,isEditable}) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    removeFromCart: (itemData) => dispatch(removeFromCart(itemData)),
-    adjustQty: (itemData,value) => dispatch(adjustQty(itemData,value))
+    removeFromCart: (quantity) => dispatch(removeFromCart(quantity)),
+    adjustQty: (quantityBefore,quantityAfter) => dispatch(adjustQty(quantityBefore,quantityAfter))
   }
 }
 
