@@ -293,8 +293,8 @@ const ProfileContainer = () => {
         routes.GET_PROFILE,
         routes.getAccessTokenHeader(token)
       )
+      // console.log(result)
       setProfile(result.data.users)
-      console.log(result)
     } catch (err) {
       if (err.response) {
         console.log(err.response.data)
@@ -379,7 +379,7 @@ const ProfileContainer = () => {
           type='text'
           className='profile-input'
           name='name'
-          value={detail.name}
+          value={detail.name || ''}
           onChange={handleChange}
         />
       </div>
@@ -396,7 +396,7 @@ const ProfileContainer = () => {
           name='email'
           disabled
           onChange={handleChange}
-          value={detail.email}
+          value={detail.email || ''}
         />
       </div>
 
@@ -466,7 +466,7 @@ const ProfileContainer = () => {
           type='text'
           className='profile-input'
           name='phone'
-          value={detail.phone}
+          value={detail.phone || ''}
           onChange={handleChange}
         />
       </div>
@@ -481,7 +481,7 @@ const ProfileContainer = () => {
           type='text'
           className='profile-input'
           name='address'
-          value={detail.address}
+          value={detail.address || ''}
           onChange={handleChange}
         />
       </div>
@@ -497,7 +497,7 @@ const ProfileContainer = () => {
           name='province'
           defaultValue={'default'}
           placeholder='Province'
-          value={detail.province}
+          value={detail.province || 'default'}
           onChange={handleChange}
         >
           <option disabled value='default'>
@@ -572,7 +572,7 @@ const ProfileContainer = () => {
           type='date'
           className='profile-input'
           name='dob'
-          value={detail.dob}
+          value={detail.dob || ''}
           onChange={handleChange}
         />
       </div>

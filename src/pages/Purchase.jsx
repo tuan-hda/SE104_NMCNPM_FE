@@ -8,6 +8,7 @@ import { validateDeliveryInfo } from '../utils/validateInfo'
 import * as routes from '../api/apiRoutes'
 import { useSelector } from 'react-redux'
 import appApi from '../api/appApi'
+import PurchaseItemList from '../components/PurchaseItemList'
 
 // Create data for combobox
 const createComboboxData = data => {
@@ -31,7 +32,6 @@ const Purchase = () => {
   })
   const [saveAddress, setSaveAddress] = useState(false)
   const [currMethod, setMethod] = useState('COD')
-  const [voucher, setVoucher] = useState('')
 
   const [province, setProvince] = useState([])
   const [district, setDistrict] = useState([])
@@ -39,7 +39,7 @@ const Purchase = () => {
   const [isProvinceSelected, setProvinceSelected] = useState(false)
   const [isDistrictSelected, setDistrictSelected] = useState(false)
   const [isWardSelected, setWardSelected] = useState(false)
-
+  const [info, setInfo] = useState({})
   const [error, setError] = useState({})
 
   // ABM (Address Book Modal) is true by default, otherwise AAM (Add Address Modal) is true
@@ -50,7 +50,6 @@ const Purchase = () => {
   const { isShowing, toggle } = useModal()
   const { isShowing: isSuccessShowing, toggle: toggleSuccessShowing } =
     useModal()
-
   const { currentUser } = useSelector(state => state.user)
 
   ProvinceGetter({
@@ -161,9 +160,6 @@ const Purchase = () => {
       return
     }
 
-    console.log(isSuccessShowing)
-    toggleSuccessShowing()
-
     checkout()
   }
 
@@ -185,6 +181,7 @@ const Purchase = () => {
         routes.getAccessTokenHeader(token)
       )
 
+      toggleSuccessShowing()
       if (saveAddress) {
         await appApi.post(
           routes.ADD_ADDRESS,
@@ -214,7 +211,10 @@ const Purchase = () => {
         setResult={setResult}
       />
 
-      <OrderSuccessModal isShowing={isSuccessShowing} />
+      <OrderSuccessModal
+        isShowing={isSuccessShowing}
+        data={{ deliveryInfo, currMethod }}
+      />
 
       <form className='px-2 sm:px-8 md:px-16 xl:px-32 flex md:flex-row flex-col-reverse justify-between gap-8'>
         {/* Small devices purchase button. This button is put at the top of the page because we're using flex-col-reverse here on small devices */}
@@ -416,17 +416,8 @@ const Purchase = () => {
           {/* Title: Cart */}
           <h1 className='text-32 font-extrabold mb-5'>CART</h1>
 
-          {/* Voucher */}
-          <input
-            type='text'
-            placeholder='Voucher'
-            className={`mt-4 delivery-input font-semibold`}
-            name='voucher'
-            value={voucher}
-            onChange={e => {
-              setVoucher(e.target.value)
-            }}
-          />
+          {/* Purchase Item List */}
+          <PurchaseItemList currentUser={currentUser} setInfo={setInfo} />
 
           {/* Divider */}
           <div className='border-t-[1px] border-gray-border mt-4' />
@@ -434,35 +425,40 @@ const Purchase = () => {
           {/* Subtotal */}
           <div className='flex justify-between pt-4 font-semibold'>
             <p>Subtotal</p>
-            <p>{'$' + 40}</p>
+            <p>{'$' + (info.subtotal || 0)}</p>
+          </div>
+
+          {/* Delivery fee */}
+          <div className='flex justify-between pt-4 font-semibold'>
+            <p>Delivery fee</p>
+            <p>{'$' + (info.deliveryFee || 0)}</p>
           </div>
 
           {/* Discount */}
           <div className='flex justify-between pt-4 font-semibold'>
-            <p>Subtotal</p>
-            <p>{'$' + 5.01}</p>
-          </div>
-
-          {/* Shipping fee */}
-          <div className='flex justify-between pt-4 font-semibold'>
-            <p>Subtotal</p>
-            <p>{'$' + 1}</p>
+            <p>Discount</p>
+            <p>{'$' + (info.discount || 0)}</p>
           </div>
 
           {/* Divider */}
           <div className='border-t-[1px] border-gray-border mt-4' />
 
           {/* Total */}
-          <div className='flex justify-between pt-4 font-semibold text-base'>
-            <p>Subtotal</p>
-            <p>{'$' + 40}</p>
+          <div className='flex justify-between pt-4 font-semibold text-lg text-primary'>
+            <p>Total</p>
+            <p>
+              {'$' +
+                ((info.subtotal || 0) +
+                  (info.deliveryFee || 0) -
+                  (info.discount || 0))}
+            </p>
           </div>
 
-          {/* Purchase button */}
+          {/* Check out button */}
           <button
             className='bg-primary hidden md:block text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300'
             type='submit'
-            onClick={() => handleCheckout()}
+            onClick={handleCheckout}
           >
             Check out
           </button>
