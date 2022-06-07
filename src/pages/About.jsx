@@ -42,25 +42,25 @@ const About = () => {
             </div>
         </div>
         {/* History */}
-        <div className='flex gap-24 mt-20'>
-            <div className=' w-3/5 mt-16'>
+        <div className='flex gap-24 mt-20 flex-row-reverse'>
+            <div className=''>
+                <div className='flex justify-end '>
+                    <img src={theGirlImage} alt='The Girl' className=''/>
+                    <img src={quote} alt='Quote' className=''/>
+                </div>
+                <img src={factoryImage} alt='Factory' className=''/>
+            </div>
+            <div className=' w-1/3 mt-10'>
                 <div className='flex items-center '>
                     <span className='font-semibold text-32'>OUR HISTORY</span>
                     {/* Divider */}
                     <span className='ml-4 border-t-[1px] border-divider flex-grow'/>
                 </div>
-                <h2 className='font-bold text-6xl mt-8'>THE GIRL,</h2>
-                <h2 className='font-bold text-6xl mt-4'>THE LEGEND</h2>
-                <p className='mt-12'>
+                    <h2 className='font-bold text-6xl mt-8 text-right'>THE GIRL,</h2>
+                    <h2 className='font-bold text-6xl mt-4 text-right'>THE LEGEND</h2>
+                <p className='mt-12 text-right'>
                 It all began with the girl, the myth, the legend herself. In 2002, in a humble service station in Saigon, Vietnam, 19-year old Thu Trang began feeding hungry travellers. Trang Pham spent the next nine years (now that's dedication) perfecting her secret blend of 11 herbs and spices, as well as the basic cooking technique we still use today.
                 In 2020, she founded a chain of restaurants called ‘Hambursy’. There are now over 2,000 Hambursy outlets in more than 30 provinces around Vietnam.                </p>
-            </div>
-            <div className=''>
-                <div className='flex h-1/3 '>
-                    <img src={theGirlImage} alt='The Girl'/>
-                    <img src={quote} alt='Quote' className=''/>
-                </div>
-                <img src={factoryImage} alt='Factory' className='w-1/2'/>
             </div>
         </div>
     </div>
