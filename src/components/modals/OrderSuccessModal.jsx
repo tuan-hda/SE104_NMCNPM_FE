@@ -1,26 +1,25 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Check from '../../images/check.png'
 
-const sampleDeliveryInfo = {
-  name: 'Hoang Dinh Anh Tuan',
-  phone: '0849167234',
-  email: 'hdatdragon2@gmail.com',
-  address: '22 Le Duan',
-  province: 'Quang Tri',
-  district: 'Trieu Phong',
-  ward: 'Thi tran Ai Tu'
-}
-
-const OrderSuccessModal = ({ isShowing, progress }) => {
+const OrderSuccessModal = ({ isShowing, data }) => {
   const navigate = useNavigate()
 
   // get html from delivery info
-  const getDeliveryInfo = (info) => {
-    return <div className='text-[12px] leading-[14px] font-medium'>
-      <p>{info.name}, {info.phone}</p>
-      <p>{info.address}, {info.province}, {info.district}, {info.ward}</p>
-    </div>
+  const getDeliveryInfo = info => {
+    return (
+      <div className='text-[12px] leading-[14px] font-medium'>
+        <p>
+          {info.name}, {info.phone}
+        </p>
+        <p>
+          {info.address},{' '}
+          {info.province.substring(info.province.indexOf('_') + 1)},{' '}
+          {info.district.substring(info.district.indexOf('_') + 1)},{' '}
+          {info.ward.substring(info.ward.indexOf('_') + 1)}
+        </p>
+      </div>
+    )
   }
 
   // Back to home page
@@ -29,19 +28,17 @@ const OrderSuccessModal = ({ isShowing, progress }) => {
   }
 
   return (
-    <div className={`address-modal-layer ${isShowing ? '' : 'opacity-0 pointer-events-none'}`}>
+    <div
+      className={`address-modal-layer ${
+        isShowing ? '' : 'opacity-0 pointer-events-none'
+      }`}
+    >
       <div className='order-success-modal flex items-center text-13'>
-        <img src={Check}
-          alt='Order Succeeded'
-          className='w-16 h-16' />
+        <img src={Check} alt='Order Succeeded' className='w-16 h-16' />
 
-        <h1 className='font-bold text-xl text-center mt-5'>
-          Success
-        </h1>
+        <h1 className='font-bold text-xl text-center mt-5'>Success</h1>
 
-        <p>
-          Thanks for your order.
-        </p>
+        <p>Thanks for your order.</p>
 
         {/* Order and shipping detail */}
         <div className='rounded-md border-[1px] text-sm border-gray-border w-full p-2 mt-8'>
@@ -54,31 +51,35 @@ const OrderSuccessModal = ({ isShowing, progress }) => {
             {/* Left section */}
             <div className='space-y-3'>
               <p>Order Amount</p>
-              <p>Order Detail</p>
             </div>
 
             {/* Right section */}
-            <div className='font-semibold space-y-3 text-right'>
+            <div className='font-semibold space-y-3 text-right text-red-500'>
               <p>$1234</p>
-              <Link to='/profile/orders/123456'
-                className='text-blue-primary block cursor-pointer'>
-                #123456
-              </Link>
             </div>
           </div>
-
 
           {/* Delivery Info */}
           <div className='mt-3'>
             <p> Delivery Info</p>
-            {getDeliveryInfo(sampleDeliveryInfo)}
+            {getDeliveryInfo(data.deliveryInfo)}
           </div>
         </div>
 
-        <button type='button'
+        <button
+          type='button'
           className='w-full bg-primary text-white rounded-md text-[11px] py-3 mt-8 hover:bg-opacity-90 transition duration-300'
-          onClick={() => continueShopping()}>
+          onClick={() => continueShopping()}
+        >
           CONTINUE SHOPPING
+        </button>
+
+        <button
+          type='button'
+          className='w-full bg-white text-black border-[1px] border-gray-border rounded-md text-[11px] py-3 mt-2 hover:bg-gray-border transition duration-300'
+          onClick={() => navigate('/profile/orders')}
+        >
+          VIEW YOUR ORDERS
         </button>
       </div>
     </div>

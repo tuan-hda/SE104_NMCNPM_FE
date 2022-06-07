@@ -13,15 +13,22 @@ import { useSelector } from 'react-redux'
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
 
 // Define default user avatar
-const defaultAvatar = (style) => <svg
-  className={`rounded-full inline object-cover fill-gray-500 ${style}`}
-  xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512">
-  <g>
-    <circle cx="256" cy="128" r="128" />
-    <path d="M256,298.667c-105.99,0.118-191.882,86.01-192,192C64,502.449,73.551,512,85.333,512h341.333   c11.782,0,21.333-9.551,21.333-21.333C447.882,384.677,361.99,298.784,256,298.667z" />
-  </g>
-</svg>
-
+const defaultAvatar = style => (
+  <svg
+    className={`rounded-full inline object-cover fill-gray-500 ${style}`}
+    xmlns='http://www.w3.org/2000/svg'
+    version='1.1'
+    id='Capa_1'
+    x='0px'
+    y='0px'
+    viewBox='0 0 512 512'
+  >
+    <g>
+      <circle cx='256' cy='128' r='128' />
+      <path d='M256,298.667c-105.99,0.118-191.882,86.01-192,192C64,502.449,73.551,512,85.333,512h341.333   c11.782,0,21.333-9.551,21.333-21.333C447.882,384.677,361.99,298.784,256,298.667z' />
+    </g>
+  </svg>
+)
 
 // // Create axios
 // const provinceApi = axios.create({
@@ -30,9 +37,11 @@ const defaultAvatar = (style) => <svg
 
 // Create data for combobox
 const createComboboxData = data => {
-  return data.map((d, i) => <option key={i} value={d.code + '_' + d.name}>
-    {d.name}
-  </option>)
+  return data.map((d, i) => (
+    <option key={i} value={d.code + '_' + d.name}>
+      {d.name}
+    </option>
+  ))
 }
 
 // // Handle call API error
@@ -55,22 +64,22 @@ const ProfileContainer = () => {
     address: '',
     gender: '',
     dob: ''
-  });
+  })
 
   // Get province, district and ward state from store
   // const province = useSelector((state) => state.province);
   // const district = useSelector((state) => state.district);
   // const ward = useSelector((state) => state.ward);
 
-  const [province, setProvince] = useState([]);
-  const [district, setDistrict] = useState([]);
-  const [ward, setWard] = useState([]);
-  const [isDistrictSelected, setDistrictSelected] = useState(null);
-  const [isWardSelected, setWardSelected] = useState(null);
-  const { isShowing, toggle } = useModal();
+  const [province, setProvince] = useState([])
+  const [district, setDistrict] = useState([])
+  const [ward, setWard] = useState([])
+  const [isDistrictSelected, setDistrictSelected] = useState(null)
+  const [isWardSelected, setWardSelected] = useState(null)
+  const { isShowing, toggle } = useModal()
   const [loading, setLoading] = useState(false)
   // Get result of Modal
-  const [modalResult, setModalResult] = useState(-1);
+  const [modalResult, setModalResult] = useState(-1)
   // Province, District and Ward fetched from API
   const [addr, setAddr] = useState({})
   // Store upload image of user temporarily
@@ -86,12 +95,24 @@ const ProfileContainer = () => {
           ...detail,
           photo: null
         }))
-        break;
-      default: break;
+        break
+      default:
+        break
     }
   }, [modalResult])
 
-  ProvinceGetter({ province: detail.province, district: detail.district, setProvince, setDistrict, setWard, setWardSelected, setDistrictSelected, setInfo: setDetail, result: addr, setResult: setAddr })
+  ProvinceGetter({
+    province: detail.province,
+    district: detail.district,
+    setProvince,
+    setDistrict,
+    setWard,
+    setWardSelected,
+    setDistrictSelected,
+    setInfo: setDetail,
+    result: addr,
+    setResult: setAddr
+  })
 
   // // Fetch province data
   // useEffect(() => {
@@ -108,7 +129,6 @@ const ProfileContainer = () => {
 
   //   fetchProvinces();
   // }, [])
-
 
   // // Fetch district data after user choose province
   // useEffect(() => {
@@ -162,11 +182,11 @@ const ProfileContainer = () => {
   // Handle user's changes in input
   const handleChange = e => {
     if (e.target.name === 'district' && e.target.value !== 'default') {
-      setDistrictSelected(true);
+      setDistrictSelected(true)
     }
 
     if (e.target.name === 'ward' && e.target.value !== 'default') {
-      setWardSelected(true);
+      setWardSelected(true)
     }
 
     setDetail({
@@ -176,7 +196,7 @@ const ProfileContainer = () => {
   }
 
   // Handle gender selection
-  const handleGenderSelect = (g) => {
+  const handleGenderSelect = g => {
     setDetail({
       ...detail,
       gender: g
@@ -185,17 +205,15 @@ const ProfileContainer = () => {
 
   const handleSubmit = e => {
     setLoading(true)
-    e.preventDefault();
-    if (image)
-      handleUploadImage()
-    else
-      updateProfile(detail.photo)
+    e.preventDefault()
+    if (image) handleUploadImage()
+    else updateProfile(detail.photo)
   }
 
   // Handle when user update photo
   const handlePhotoChange = e => {
     setImage(e.target.files[0])
-    const reader = new FileReader();
+    const reader = new FileReader()
     reader.onload = () => {
       if (reader.readyState === 2) {
         setDetail({
@@ -204,14 +222,14 @@ const ProfileContainer = () => {
         })
       }
     }
-    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(e.target.files[0])
   }
 
   const handleUploadImage = () => {
     const task = storage.ref(`images/${image.name}`).put(image)
     task.on(
-      "state_changed",
-      snapshot => { },
+      'state_changed',
+      snapshot => {},
       error => {
         console.log(error)
       },
@@ -220,8 +238,8 @@ const ProfileContainer = () => {
           .ref('images')
           .child(image.name)
           .getDownloadURL()
-          .then((url) => {
-            setDetail((previousState) => ({
+          .then(url => {
+            setDetail(previousState => ({
               ...previousState,
               photo: url
             }))
@@ -233,7 +251,7 @@ const ProfileContainer = () => {
 
   // Update profile. We need a photoUrl parameter here since we need the result from
   // uploading user's avatar
-  const updateProfile = async (photoUrl) => {
+  const updateProfile = async photoUrl => {
     try {
       const token = await currentUser.getIdToken()
 
@@ -251,7 +269,8 @@ const ProfileContainer = () => {
           detail.district,
           detail.ward
         ),
-        routes.getAccessTokenHeader(token))
+        routes.getAccessTokenHeader(token)
+      )
     } catch (err) {
       if (err.response) {
         console.log(err.response.data)
@@ -269,10 +288,13 @@ const ProfileContainer = () => {
   const fetchProfile = async () => {
     setLoading(true)
     try {
-      const token = await currentUser.getIdToken();
-      const result = await api.get(routes.GET_PROFILE, routes.getAccessTokenHeader(token))
+      const token = await currentUser.getIdToken()
+      const result = await api.get(
+        routes.GET_PROFILE,
+        routes.getAccessTokenHeader(token)
+      )
+      // console.log(result)
       setProfile(result.data.users)
-      console.log(result.data.users)
     } catch (err) {
       if (err.response) {
         console.log(err.response.data)
@@ -291,7 +313,7 @@ const ProfileContainer = () => {
   // To do that, i create here an 'addr' state. This will contain temporary information about
   // district and ward. Then pass it to ProvinceGetter and let that component handle the rest
   const setProfile = data => {
-    setDetail((previousState) => ({
+    setDetail(previousState => ({
       ...previousState,
       name: data.name,
       dob: data.dob ? data.dob.substring(0, 10) : null,
@@ -322,10 +344,15 @@ const ProfileContainer = () => {
         {/* User's avatar goes here */}
         <div className='rounded-full shadow-circle w-[184px] h-[184px] flex justify-center items-center'>
           <div>
-            {detail.photo ? <img src={detail.photo || DefaultAvatar} alt="Sample Avatar"
-              className='rounded-full w-44 h-44 object-contain' />
-              : defaultAvatar('w-44 h-44')
-            }
+            {detail.photo ? (
+              <img
+                src={detail.photo || DefaultAvatar}
+                alt='Sample Avatar'
+                className='rounded-full w-44 h-44 object-contain'
+              />
+            ) : (
+              defaultAvatar('w-44 h-44')
+            )}
           </div>
         </div>
 
@@ -333,11 +360,14 @@ const ProfileContainer = () => {
         <div className='flex justify-between items-center flex-1 w-full lg:mt-0 mt-4 lg:ml-9 lg:w-auto'>
           <div className=''>
             <h1 className='font-bold text-32'>Profile</h1>
-            <p className='text-sm mt-2'>Update your photo and personal details.</p>
+            <p className='text-sm mt-2'>
+              Update your photo and personal details.
+            </p>
           </div>
 
-          <button className='profile-save-button'
-            onClick={handleSubmit}>Save</button>
+          <button className='profile-save-button' onClick={handleSubmit}>
+            Save
+          </button>
         </div>
       </div>
 
@@ -349,8 +379,9 @@ const ProfileContainer = () => {
           type='text'
           className='profile-input'
           name='name'
-          value={detail.name}
-          onChange={handleChange} />
+          value={detail.name || ''}
+          onChange={handleChange}
+        />
       </div>
 
       {divider}
@@ -365,7 +396,8 @@ const ProfileContainer = () => {
           name='email'
           disabled
           onChange={handleChange}
-          value={detail.email} />
+          value={detail.email || ''}
+        />
       </div>
 
       {divider}
@@ -378,25 +410,48 @@ const ProfileContainer = () => {
           {/* User's current avatar */}
           <div className='flex items-center gap-2'>
             <div>
-              {detail.photo ? <img src={detail.photo} alt="User's ava"
-                className='w-20 aspect-square rounded-full inline object-cover fill-gray-500' />
-                : defaultAvatar('w-20 h-20')
-              }
-
+              {detail.photo ? (
+                <img
+                  src={detail.photo}
+                  alt="User's ava"
+                  className='w-20 aspect-square rounded-full inline object-cover fill-gray-500'
+                />
+              ) : (
+                defaultAvatar('w-20 h-20')
+              )}
             </div>
             <span>This will be displayed on your profile.</span>
           </div>
 
           {/* Button delete and button update */}
           <div className='flex sm:flex-row sm:gap-4 gap-2 flex-col'>
-            <button className='font-semibold hover:underline' type='button'
-              onClick={toggle}>Delete</button>
-            <AlertModal msg='Are you sure you want to delete your photo?' isShowing={isShowing}
-              hide={toggle} setResult={setModalResult} />
+            <button
+              className='font-semibold hover:underline'
+              type='button'
+              onClick={toggle}
+            >
+              Delete
+            </button>
+            <AlertModal
+              msg='Are you sure you want to delete your photo?'
+              isShowing={isShowing}
+              hide={toggle}
+              setResult={setModalResult}
+            />
 
-            <label className='font-semibold hover:underline cursor-pointer' htmlFor='photo'>Update</label>
-            <input className='hidden' type='file' onChange={handlePhotoChange} id='photo'
-              accept='image/*' />
+            <label
+              className='font-semibold hover:underline cursor-pointer'
+              htmlFor='photo'
+            >
+              Update
+            </label>
+            <input
+              className='hidden'
+              type='file'
+              onChange={handlePhotoChange}
+              id='photo'
+              accept='image/*'
+            />
           </div>
         </div>
       </div>
@@ -411,8 +466,9 @@ const ProfileContainer = () => {
           type='text'
           className='profile-input'
           name='phone'
-          value={detail.phone}
-          onChange={handleChange} />
+          value={detail.phone || ''}
+          onChange={handleChange}
+        />
       </div>
 
       {divider}
@@ -425,8 +481,9 @@ const ProfileContainer = () => {
           type='text'
           className='profile-input'
           name='address'
-          value={detail.address}
-          onChange={handleChange} />
+          value={detail.address || ''}
+          onChange={handleChange}
+        />
       </div>
 
       {divider}
@@ -440,9 +497,12 @@ const ProfileContainer = () => {
           name='province'
           defaultValue={'default'}
           placeholder='Province'
-          value={detail.province}
-          onChange={handleChange}>
-          <option disabled value='default' >Choose province</option>
+          value={detail.province || 'default'}
+          onChange={handleChange}
+        >
+          <option disabled value='default'>
+            Choose province
+          </option>
           {createComboboxData(province)}
         </select>
       </div>
@@ -458,8 +518,11 @@ const ProfileContainer = () => {
           name='district'
           placeholder='District'
           value={isDistrictSelected ? detail.district : 'default'}
-          onChange={handleChange}>
-          <option disabled value='default'>Choose district</option>
+          onChange={handleChange}
+        >
+          <option disabled value='default'>
+            Choose district
+          </option>
           {createComboboxData(district)}
         </select>
       </div>
@@ -475,8 +538,11 @@ const ProfileContainer = () => {
           name='ward'
           placeholder='Ward'
           value={isWardSelected ? detail.ward : 'default'}
-          onChange={handleChange}>
-          <option disabled value='default' >Choose ward</option>
+          onChange={handleChange}
+        >
+          <option disabled value='default'>
+            Choose ward
+          </option>
           {createComboboxData(ward)}
         </select>
       </div>
@@ -490,24 +556,26 @@ const ProfileContainer = () => {
         <GenderRadioButton
           OnClick={handleGenderSelect}
           currGender={detail.gender}
-          setDetail={setDetail} />
+          setDetail={setDetail}
+        />
       </div>
-
 
       {divider}
 
       {/* Your date of birth */}
       <div className='profile-div'>
-        <p className='sm:w-24 w-full lg:w-36 font-semibold'>Your date of birth</p>
+        <p className='sm:w-24 w-full lg:w-36 font-semibold'>
+          Your date of birth
+        </p>
 
         <input
           type='date'
           className='profile-input'
           name='dob'
-          value={detail.dob}
-          onChange={handleChange} />
+          value={detail.dob || ''}
+          onChange={handleChange}
+        />
       </div>
-
     </form>
   )
 }
