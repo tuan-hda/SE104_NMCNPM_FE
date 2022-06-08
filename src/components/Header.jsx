@@ -52,7 +52,10 @@ const Header = ({ qty, initCart }) => {
 
   // Get cart count
   useEffect(() => {
-    if (!currentUser) setCartCount(0)
+    if (!currentUser) {
+      setCartCount(0)
+      initCart(0)
+    }
     else {
       fetchCartCount()
     }
@@ -60,7 +63,7 @@ const Header = ({ qty, initCart }) => {
 
   // Set cart count
   useEffect(() => {
-    setCartCount(qty)
+    fetchCartCount()
   }, [qty])
 
   const handleLogout = value => {
