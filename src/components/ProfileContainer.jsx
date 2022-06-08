@@ -293,7 +293,7 @@ const ProfileContainer = () => {
         routes.GET_PROFILE,
         routes.getAccessTokenHeader(token)
       )
-      // console.log(result)
+      console.log(result)
       setProfile(result.data.users)
     } catch (err) {
       if (err.response) {
@@ -313,22 +313,26 @@ const ProfileContainer = () => {
   // To do that, i create here an 'addr' state. This will contain temporary information about
   // district and ward. Then pass it to ProvinceGetter and let that component handle the rest
   const setProfile = data => {
-    setDetail(previousState => ({
-      ...previousState,
-      name: data.name,
-      dob: data.dob ? data.dob.substring(0, 10) : null,
-      email: data.email,
-      photo: data.avatar,
-      phone: data.phoneNumber,
-      gender: data.gender,
-      address: data.Addresses.detail,
-      province: data.Addresses.province
-    }))
+    try {
+      setDetail(previousState => ({
+        ...previousState,
+        name: data.name,
+        dob: data.dob ? data.dob.substring(0, 10) : null,
+        email: data.email,
+        photo: data.avatar,
+        phone: data.phoneNumber,
+        gender: data.gender,
+        address: data.detail,
+        province: data.province
+      }))
 
-    setAddr({
-      district: data.Addresses.district,
-      ward: data.Addresses.ward
-    })
+      setAddr({
+        district: data.district,
+        ward: data.ward
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   useEffect(() => {
