@@ -55,8 +55,7 @@ const Header = ({ qty, initCart }) => {
     if (!currentUser) {
       setCartCount(0)
       initCart(0)
-    }
-    else {
+    } else {
       fetchCartCount()
     }
   }, [currentUser])

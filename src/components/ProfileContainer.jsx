@@ -255,6 +255,10 @@ const ProfileContainer = () => {
     try {
       const token = await currentUser.getIdToken()
 
+      await currentUser.updateProfile({
+        displayName: detail.name
+      })
+
       await api.put(
         routes.EDIT_PROFILE,
         routes.getEditProfileBody(
@@ -293,7 +297,7 @@ const ProfileContainer = () => {
         routes.GET_PROFILE,
         routes.getAccessTokenHeader(token)
       )
-      console.log(result)
+      // console.log(result)
       setProfile(result.data.users)
     } catch (err) {
       if (err.response) {
@@ -316,19 +320,19 @@ const ProfileContainer = () => {
     try {
       setDetail(previousState => ({
         ...previousState,
-        name: data.name,
+        name: currentUser.displayName,
         dob: data.dob ? data.dob.substring(0, 10) : null,
         email: data.email,
         photo: data.avatar,
         phone: data.phoneNumber,
         gender: data.gender,
-        address: data.detail,
-        province: data.province
+        address: data.Addresses.detail,
+        province: data.Addresses.province
       }))
 
       setAddr({
-        district: data.district,
-        ward: data.ward
+        district: data.Addresses.district,
+        ward: data.Addresses.ward
       })
     } catch (err) {
       console.log(err)
@@ -576,6 +580,7 @@ const ProfileContainer = () => {
           type='date'
           className='profile-input'
           name='dob'
+          max={new Date().toISOString().split('T')[0]}
           value={detail.dob || ''}
           onChange={handleChange}
         />
