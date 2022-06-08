@@ -32,8 +32,8 @@ const Cart = ({ qty }) => {
         routes.getAccessTokenHeader(token)
       )
 
-      setItems([...result.data.cartItems])
-      console.log(result.data.cartItems)
+      if (result.data.cartItems!=='hmu')
+        setItems([...result.data.cartItems])
     } catch (err) {
       console.log(err)
     } finally {
@@ -54,7 +54,7 @@ const Cart = ({ qty }) => {
     )
 
   return (
-    <div className='py-4 px-32 w-full h-full flex justify-between gap-32'>
+    <div className='py-4 px-32 w-full h-full flex justify-between gap-16'>
       {/* Left section */}
       <div>
         {/* page Title */}
@@ -67,7 +67,7 @@ const Cart = ({ qty }) => {
 
       {/* Right section */}
       {/* Order Summary */}
-      <div className=' bg-[#F5F5F6] flex-grow h-full mt-20 rounded-xl'>
+      <div className=' bg-[#F5F5F6] flex-grow h-full mt-10 rounded-xl'>
         <div className=' px-11 py-11'>
           {/* Title */}
           <h2 className=' font-semibold text-[24px] mb-10 h-16 border-b-[1px] border-[#C6BDBD]'>
