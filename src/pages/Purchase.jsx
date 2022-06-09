@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import AddressBookModal from '../components/modals/AddressBookModal'
 import OrderSuccessModal from '../components/modals/OrderSuccessModal'
 import PaymentMethodRadioButton from '../components/PaymentMethodRadioButton'
-import ProvinceGetter from '../components/ProvinceGetter'
 import useModal from '../utils/useModal'
 import { validateDeliveryInfo } from '../utils/validateInfo'
 import * as routes from '../api/apiRoutes'
@@ -251,9 +250,8 @@ const Purchase = () => {
   }
 
   const getPaymentMethodValue = method => {
-    if (method === 'COD') return 0
-    else if (method === 'Momo') return 1
-    else return 2
+    if (method === 'COD') return '0'
+    else return '1'
   }
 
   const sendCheckout = (token, restaurantID) => {
@@ -423,6 +421,7 @@ const Purchase = () => {
       <OrderSuccessModal
         isShowing={isSuccessShowing}
         data={{ deliveryInfo, currMethod }}
+        info={info}
       />
 
       <form className='px-2 sm:px-8 md:px-16 xl:px-32 flex md:flex-row flex-col-reverse justify-between gap-8'>

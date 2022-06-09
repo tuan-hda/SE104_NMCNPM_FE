@@ -32,6 +32,7 @@ const PurchaseItemList = ({ currentUser, setInfo }) => {
   }
 
   const calculateSubtotal = data => {
+    if (!Array.isArray(data)) return
     return data.reduce(
       (total, curr) => total + curr.product.price * curr.number,
       0

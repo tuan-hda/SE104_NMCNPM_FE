@@ -343,9 +343,9 @@ const ProfileContainer = () => {
     }
   }
 
-  useEffect(() => {
-    console.log(detail)
-  }, [detail])
+  // useEffect(() => {
+  //   console.log(detail)
+  // }, [detail])
 
   // Set profile using fetched data
 

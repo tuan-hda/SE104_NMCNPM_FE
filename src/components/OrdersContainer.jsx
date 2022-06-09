@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import * as routes from '../api/apiRoutes'
@@ -8,39 +8,17 @@ const divider = (
   <tr className='border-t-[1px] border-[#F0F0F0] w-full' height='6px' />
 )
 
-const orderListData = [
-  {
-    orderID: '123456',
-    purchaseDate: '12/04/2022',
-    total: '324',
-    status: 2,
-    payment: 0
-  },
-  {
-    orderID: '123451',
-    purchaseDate: '13/04/2022',
-    total: '314',
-    status: 1,
-    payment: 1
-  },
-  {
-    orderID: '123451',
-    purchaseDate: '13/04/2022',
-    total: '314',
-    status: 0,
-    payment: 0
-  }
-]
-
 // get delivery status based on status code
 const getDeliveryStatus = code => {
   switch (code) {
-    case 0:
-      return 'In Progress'
     case 1:
-      return 'Cancelled'
+      return 'Pending'
     case 2:
+      return 'In progress'
+    case 3:
       return 'Delivered'
+    case 4:
+      return 'Canceled'
     default:
       return 'Unknown'
   }
@@ -49,11 +27,13 @@ const getDeliveryStatus = code => {
 // Get text color based on status code
 const getTextColor = code => {
   switch (code) {
-    case 0:
-      return 'text-[#FFC107]'
     case 1:
-      return 'text-[#FF0000]'
+      return 'text-[#FFC107]'
     case 2:
+      return 'text-[#0086FF]'
+    case 3:
+      return 'text-[#FF0000]'
+    case 4:
       return 'text-[#009D34]'
     default:
       return ''
@@ -61,6 +41,7 @@ const getTextColor = code => {
 }
 
 const OrdersContainer = () => {
+  const [orders, setOrders] = useState([])
   const navigate = useNavigate()
   const { currentUser } = useSelector(state => state.user)
 
@@ -77,6 +58,7 @@ const OrdersContainer = () => {
         routes.getAccessTokenHeader(token)
       )
       console.log(result.data)
+      setOrders(result.data.orders)
     } catch (err) {
       console.log(err)
     }
@@ -108,21 +90,21 @@ const OrdersContainer = () => {
           </thead>
 
           <tbody>
-            {orderListData.map((o, i) => {
+            {orders.map((o, i) => {
               return (
                 <React.Fragment key={i}>
                   {divider}
                   <tr className='font-medium' height='40px'>
                     <td
                       className='text-[#1976D2] cursor-pointer hover:underline'
-                      onClick={() => handleClick(o.orderID)}
+                      onClick={() => handleClick(o.id)}
                     >
-                      {'#' + o.orderID}
+                      {'#' + o.id}
                     </td>
-                    <td>{o.purchaseDate}</td>
+                    <td>{o.date.substring(0, 10)}</td>
                     <td>{'$ ' + o.total}</td>
-                    <td className={getTextColor(o.status)}>
-                      {getDeliveryStatus(o.status)}
+                    <td className={getTextColor(o.billstatus)}>
+                      {getDeliveryStatus(o.billstatus)}
                     </td>
                     <td>{o.payment ? 'Paid' : 'Cash'}</td>
                   </tr>

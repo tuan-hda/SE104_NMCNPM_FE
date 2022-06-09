@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { initCart } from '../../actions/cart-actions'
 import Check from '../../images/check.png'
 
-const OrderSuccessModal = ({ isShowing, data }) => {
+const OrderSuccessModal = ({ isShowing, data, info }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -65,7 +65,13 @@ const OrderSuccessModal = ({ isShowing, data }) => {
 
             {/* Right section */}
             <div className='font-semibold space-y-3 text-right text-red-500'>
-              <p>$1234</p>
+              import ProvinceGetter from '../components/ProvinceGetter'
+              <p>
+                $
+                {(info.subtotal || 0) +
+                  (info.deliveryFee || 0) -
+                  (info.discount || 0)}
+              </p>
             </div>
           </div>
 
