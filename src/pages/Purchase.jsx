@@ -51,6 +51,7 @@ const Purchase = () => {
   const { isShowing: isSuccessShowing, toggle: toggleSuccessShowing } =
     useModal()
   const { currentUser } = useSelector(state => state.user)
+  const { qty } = useSelector(state => state.cart)
 
   // Store purchase list items here. This one is used to clear carts.
   const [items, setItems] = useState([])
@@ -165,7 +166,7 @@ const Purchase = () => {
     setError(err)
 
     // If validation return false then break the function
-    if (Object.keys(err).length !== 0) {
+    if (Object.keys(err).length !== 0 || qty === 0) {
       return
     }
 
@@ -246,11 +247,16 @@ const Purchase = () => {
       <form className='px-2 sm:px-8 md:px-16 xl:px-32 flex md:flex-row flex-col-reverse justify-between gap-8'>
         {/* Small devices purchase button. This button is put at the top of the page because we're using flex-col-reverse here on small devices */}
         <button
-          className='md:hidden text-13 bg-primary text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300'
+          className={`${
+            qty
+              ? 'bg-primary text-white hover:bg-opacity-90 '
+              : 'bg-gray-200 text-gray-500'
+          } md:hidden text-13  text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300'`}
           type='submit'
+          disabled={!qty}
           onClick={handleCheckout}
         >
-          Check out
+          Purchase
         </button>
 
         {/* Left section */}
@@ -488,11 +494,16 @@ const Purchase = () => {
 
           {/* Check out button */}
           <button
-            className='bg-primary hidden md:block text-white h-12 font-semibold w-full mt-5 rounded-lg hover:bg-opacity-90 transition duration-300'
+            className={`${
+              qty
+                ? 'bg-primary text-white hover:bg-opacity-90 '
+                : 'bg-gray-200 text-gray-500'
+            } hidden md:block  h-12 font-semibold w-full mt-5 rounded-lg transition duration-300`}
             type='submit'
+            disabled={!qty}
             onClick={handleCheckout}
           >
-            Check out
+            Purchase
           </button>
         </div>
       </form>

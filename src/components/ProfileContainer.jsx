@@ -110,8 +110,7 @@ const ProfileContainer = () => {
     setWardSelected,
     setDistrictSelected,
     setInfo: setDetail,
-    result: addr,
-    setResult: setAddr
+    result: addr
   })
 
   // // Fetch province data
@@ -312,6 +311,10 @@ const ProfileContainer = () => {
     }
   }
 
+  useEffect(() => {
+    console.log(detail)
+  }, [detail])
+
   // Set profile using fetched data
   // We will only set province. District and ward needed to be set inside ProvinceGetter.
   // To do that, i create here an 'addr' state. This will contain temporary information about
@@ -331,6 +334,7 @@ const ProfileContainer = () => {
       }))
 
       setAddr({
+        province: data.Addresses.province,
         district: data.Addresses.district,
         ward: data.Addresses.ward
       })

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import * as routes from '../api/apiRoutes'
@@ -76,11 +76,15 @@ const OrdersContainer = () => {
         routes.GET_ALL_ORDERS,
         routes.getAccessTokenHeader(token)
       )
-      console.log(result)
+      console.log(result.data)
     } catch (err) {
       console.log(err)
     }
   }
+
+  useEffect(() => {
+    fetchOrders()
+  }, [])
 
   return (
     <div className='mb-10'>

@@ -56,7 +56,7 @@ const StoreLocator = () => {
   // Get location from marker / branch
   const getLocation = marker => {
     try {
-      return [marker.longitude, marker.latitude]
+      return [marker.latitude, marker.longitude]
     } catch (err) {
       console.log(err)
       return [10.762622, 106.660172]

@@ -32,8 +32,7 @@ const Cart = ({ qty }) => {
         routes.getAccessTokenHeader(token)
       )
 
-      if (result.data.cartItems!=='hmu')
-        setItems([...result.data.cartItems])
+      if (result.data.cartItems !== 'hmu') setItems([...result.data.cartItems])
     } catch (err) {
       console.log(err)
     } finally {
@@ -92,7 +91,10 @@ const Cart = ({ qty }) => {
           </div>
           {/* Add to Cart Button */}
           <button
-            className='hidden md:flex items-center justify-center bg-secondary text-22 text-white font-semibold rounded-[15px] w-full h-14 px-10'
+            className={`${
+              qty ? 'bg-secondary text-white' : 'bg-gray-200 text-gray-500'
+            } hidden md:flex items-center justify-center text-22  font-semibold rounded-[15px] w-full h-14 px-10`}
+            disabled={!qty}
             onClick={() => navigate('/purchase')}
           >
             CHECKOUT

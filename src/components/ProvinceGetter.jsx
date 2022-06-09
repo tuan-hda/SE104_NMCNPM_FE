@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import removeAccents from '../utils/removeAccents'
 
 const provinceApi = axios.create({
