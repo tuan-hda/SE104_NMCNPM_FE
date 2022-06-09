@@ -96,7 +96,7 @@ const ProvinceGetter = ({
     }
 
     if (province) fetchDistricts()
-  }, [province, result])
+  }, [province])
 
   // Fetch ward data after user choose district
   useEffect(() => {
@@ -126,9 +126,6 @@ const ProvinceGetter = ({
             ...prevInfo,
             ward: result.ward
           }))
-          if (result && setResult) {
-            setResult()
-          }
         }
         //dispatch(setWard(response.data.wards))
         setWard(sortByName(normalizeText(response.data.wards)))
@@ -138,7 +135,7 @@ const ProvinceGetter = ({
     }
 
     if (district) fetchWards()
-  }, [district, result])
+  }, [district])
 
   // This sets district received from Addressbook
   // useEffect(() => {

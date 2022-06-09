@@ -9,6 +9,10 @@ import api from '../api/appApi'
 import { storage } from '../firebase'
 import LoadingScreen from './LoadingScreen'
 import { useSelector } from 'react-redux'
+import handleApiCallError from '../utils/handleApiCallError'
+import provinceApi from '../api/provinceApi'
+import sortByName from '../utils/sortByName'
+import normalizeText from '../utils/normalizeText'
 
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
 
@@ -80,8 +84,6 @@ const ProfileContainer = () => {
   const [loading, setLoading] = useState(false)
   // Get result of Modal
   const [modalResult, setModalResult] = useState(-1)
-  // Province, District and Ward fetched from API
-  const [addr, setAddr] = useState({})
   // Store upload image of user temporarily
   const [image, setImage] = useState()
 
@@ -100,18 +102,6 @@ const ProfileContainer = () => {
         break
     }
   }, [modalResult])
-
-  ProvinceGetter({
-    province: detail.province,
-    district: detail.district,
-    setProvince,
-    setDistrict,
-    setWard,
-    setWardSelected,
-    setDistrictSelected,
-    setInfo: setDetail,
-    result: addr
-  })
 
   // // Fetch province data
   // useEffect(() => {
@@ -178,19 +168,61 @@ const ProfileContainer = () => {
   //     fetchWards();
   // }, [detail.district])
 
+  const setAddress = async result => {
+    setDetail(prev => ({
+      ...prev,
+      province: result.province
+    }))
+
+    await fetchDistricts(result.province)
+    setDetail(prev => ({
+      ...prev,
+      district: result.district
+    }))
+    setDistrictSelected(true)
+
+    await fetchWards(result.district)
+    setDetail(prev => ({
+      ...prev,
+      ward: result.ward
+    }))
+    setWardSelected(true)
+  }
+
   // Handle user's changes in input
   const handleChange = e => {
-    if (e.target.name === 'district' && e.target.value !== 'default') {
-      setDistrictSelected(true)
+    const key = e.target.name
+    const value = e.target.value
+
+    if (key === 'province' && value !== 'default') {
+      setDetail({
+        ...detail,
+        province: value,
+        district: '',
+        ward: ''
+      })
+      fetchDistricts(value)
+      return
     }
 
-    if (e.target.name === 'ward' && e.target.value !== 'default') {
+    if (key === 'district' && value !== 'default') {
+      setDistrictSelected(true)
+      setDetail({
+        ...detail,
+        district: value,
+        ward: ''
+      })
+      fetchWards(value)
+      return
+    }
+
+    if (key === 'ward' && value !== 'ward') {
       setWardSelected(true)
     }
 
     setDetail({
       ...detail,
-      [e.target.name]: e.target.value
+      [key]: value
     })
   }
 
@@ -316,9 +348,7 @@ const ProfileContainer = () => {
   }, [detail])
 
   // Set profile using fetched data
-  // We will only set province. District and ward needed to be set inside ProvinceGetter.
-  // To do that, i create here an 'addr' state. This will contain temporary information about
-  // district and ward. Then pass it to ProvinceGetter and let that component handle the rest
+
   const setProfile = data => {
     try {
       setDetail(previousState => ({
@@ -329,15 +359,10 @@ const ProfileContainer = () => {
         photo: data.avatar,
         phone: data.phoneNumber,
         gender: data.gender,
-        address: data.Addresses.detail,
-        province: data.Addresses.province
+        address: data.Addresses.detail
       }))
 
-      setAddr({
-        province: data.Addresses.province,
-        district: data.Addresses.district,
-        ward: data.Addresses.ward
-      })
+      setAddress(data.Addresses)
     } catch (err) {
       console.log(err)
     }
@@ -345,7 +370,57 @@ const ProfileContainer = () => {
 
   useEffect(() => {
     fetchProfile()
+    fetchProvinces()
   }, [])
+
+  // Fetch province at first render\
+  const fetchProvinces = async () => {
+    try {
+      const response = await provinceApi.get('/p')
+      //dispatch(setProvince(response.data))
+      setProvince(sortByName(normalizeText(response.data)))
+    } catch (err) {
+      handleApiCallError(err)
+    }
+  }
+
+  // Fetch district after selected province
+  const fetchDistricts = async province => {
+    try {
+      const str = String(province)
+      const code = str.substring(0, str.indexOf('_'))
+      const response = await provinceApi.get(`p/${code}`, {
+        params: {
+          depth: 2
+        }
+      })
+      setDistrictSelected(false)
+      setWardSelected(false)
+      setDistrict(sortByName(normalizeText(response.data.districts)))
+      setWard([])
+    } catch (err) {
+      handleApiCallError(err)
+    }
+  }
+
+  // Fetch wards after selected district
+  const fetchWards = async district => {
+    try {
+      const str = String(district)
+      const code = str.substring(0, str.indexOf('_'))
+      const response = await provinceApi.get(`d/${code}`, {
+        params: {
+          depth: 2
+        }
+      })
+
+      //console.log(2);
+      setWardSelected(false)
+      setWard(sortByName(normalizeText(response.data.wards)))
+    } catch (err) {
+      handleApiCallError(err)
+    }
+  }
 
   return (
     <form className='mb-10' onSubmit={e => e.preventDefault()}>

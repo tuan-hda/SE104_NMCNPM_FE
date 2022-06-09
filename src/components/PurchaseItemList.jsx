@@ -4,8 +4,9 @@ import appApi from '../api/appApi'
 import LoadingScreen from './LoadingScreen'
 import PurchaseItemThumb from './PurchaseItemThumb'
 
-const PurchaseItemList = ({ currentUser, setInfo, items, setItems }) => {
+const PurchaseItemList = ({ currentUser, setInfo }) => {
   const [loading, setLoading] = useState(false)
+  const [items, setItems] = useState([])
 
   const fetchCart = async () => {
     setLoading(true)

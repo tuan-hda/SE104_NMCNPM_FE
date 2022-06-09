@@ -7,7 +7,7 @@ export const getItemParams = id => ({
 })
 
 // GET RESTAURANT
-export const GET_RESTAURANT = 'get-restaurant'
+export const GET_RESTAURANT = 'get-all-restaurants'
 export const getRestaurantParams = id => ({
   params: {
     id: id
@@ -114,7 +114,8 @@ export const getPurchaseBody = (
   province,
   district,
   ward,
-  note
+  note,
+  restaurantID
 ) => ({
   payment: payment,
   phoneNumber: phoneNumber,
@@ -122,7 +123,8 @@ export const getPurchaseBody = (
   province: province,
   district: district,
   ward: ward,
-  note: note
+  note: note,
+  restaurantID
 })
 
 // GET FEATURED ITEM

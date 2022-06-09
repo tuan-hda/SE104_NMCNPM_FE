@@ -76,11 +76,6 @@ const AddressBookModal = ({
     }
   }, [ABM_isShowing])
 
-  // Default address
-  useEffect(() => {
-    setCurrAddress(addresses[0])
-  }, [])
-
   // Handle address select
   const handleSelectAddress = index => {
     setCurrAddress(addresses[index])

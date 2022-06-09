@@ -1,6 +1,6 @@
 import React from 'react'
 
-const AlertModal = ({ msg, isShowing, hide, setResult }) => {
+const AlertModal = ({ msg, isShowing, hide, setResult, disableCancel }) => {
   const handleCancel = () => {
     if (setResult) setResult(0)
     hide()
@@ -46,12 +46,15 @@ const AlertModal = ({ msg, isShowing, hide, setResult }) => {
         {/* Buttons */}
         <div className='flex items-center absolute bottom-6 gap-4'>
           {/* Button Cancel */}
-          <button
-            onClick={handleCancel}
-            className='font-semibold rounded-md bg-gray-200 p-2 px-4 hover:bg-opacity-60 transition duration-300'
-          >
-            Cancel
-          </button>
+          {!disableCancel && (
+            <button
+              onClick={handleCancel}
+              className='font-semibold rounded-md bg-gray-200 p-2 px-4 hover:bg-opacity-60 transition duration-300'
+            >
+              Cancel
+            </button>
+          )}
+
           {/* Button OK */}
           <button
             onClick={handleOK}

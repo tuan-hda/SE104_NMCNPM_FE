@@ -1,13 +1,14 @@
-export const validateInfo = (value) => {
+export const validateInfo = value => {
   let error = {}
 
   // Email validation
   if (!value.email) {
     error.email = 'Email required.'
-  } else if (!String(value.email)
-    .match(
+  } else if (
+    !String(value.email).match(
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    )) {
+    )
+  ) {
     error.email = 'Email is invalid.'
   }
 
@@ -20,56 +21,63 @@ export const validateInfo = (value) => {
   if (!value.password) {
     error.password = ['Password required.']
   } else {
-    const password = String(value.password);
+    const password = String(value.password)
 
     error.password = []
 
     if (password.length < 8)
-      error.password = [...error.password, 'Must contain at least 8 characters.'];
+      error.password = [
+        ...error.password,
+        'Must contain at least 8 characters.'
+      ]
 
     if (!/^(?=.*[0-9])/.test(password))
-      error.password = [...error.password, 'Must contain at least one number.'];
+      error.password = [...error.password, 'Must contain at least one number.']
 
     if (!/^(?=.*[A-Z])/.test(password))
-      error.password = [...error.password, 'Must contain at least one uppercase character.'];
+      error.password = [
+        ...error.password,
+        'Must contain at least one uppercase character.'
+      ]
 
     if (!/^(?=.*[a-z])/.test(password))
-      error.password = [...error.password, 'Must contain at least one lowercase character.'];
+      error.password = [
+        ...error.password,
+        'Must contain at least one lowercase character.'
+      ]
   }
 
   // Confirm password validation
-  if (!value.confirmPassword)
-    error.confirmPassword = 'Password required.'
+  if (!value.confirmPassword) error.confirmPassword = 'Password required.'
   else if (value.confirmPassword !== value.password)
     error.confirmPassword = 'Your password do not match'
 
   // Old password validation
-  if (!value.oldPassword)
-    error.oldPassword = 'Old password required.'
+  if (!value.oldPassword) error.oldPassword = 'Old password required.'
 
   return error
 }
 
-
 // VALIDATE DELIVERY INFO
 
-export const validateDeliveryInfo = (value) => {
+export const validateDeliveryInfo = value => {
   let error = validateAddAddress(value)
 
   // Email validation
   if (!value.email) {
     error.email = 'Email required.'
-  } else if (!String(value.email)
-    .match(
+  } else if (
+    !String(value.email).match(
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    )) {
+    )
+  ) {
     error.email = 'Email is invalid.'
   }
 
-  return error;
+  return error
 }
 
-export const validateAddAddress = (value) => {
+export const validateAddAddress = value => {
   let error = {}
   if (!value.name) {
     error.name = 'Name required.'
@@ -85,15 +93,15 @@ export const validateAddAddress = (value) => {
     error.address = 'Address required.'
   }
 
-  if (!value.province) {
+  if (!value.province || value.province === 'default') {
     error.province = 'Province required.'
   }
 
-  if (!value.district) {
+  if (!value.district || value.district === 'default') {
     error.district = 'District required.'
   }
 
-  if (!value.ward) {
+  if (!value.ward || value.ward === 'default') {
     error.ward = 'Ward required.'
   }
 

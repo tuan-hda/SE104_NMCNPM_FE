@@ -9,6 +9,13 @@ import * as routes from '../api/apiRoutes'
 import { useSelector } from 'react-redux'
 import appApi from '../api/appApi'
 import PurchaseItemList from '../components/PurchaseItemList'
+import axios from 'axios'
+import provinceApi from '../api/provinceApi'
+import sortByName from '../utils/sortByName'
+import normalizeText from '../utils/normalizeText'
+import handleApiCallError from '../utils/handleApiCallError'
+import AlertModal from '../components/modals/AlertModal'
+import LoadingScreen from '../components/LoadingScreen'
 
 // Create data for combobox
 const createComboboxData = data => {
@@ -18,6 +25,13 @@ const createComboboxData = data => {
     </option>
   ))
 }
+
+const nominatimApi = axios.create({
+  baseURL: 'https://nominatim.openstreetmap.org/'
+})
+
+const getProvinceName = province =>
+  province.substring(province.indexOf('_') + 1)
 
 const Purchase = () => {
   const [deliveryInfo, setDeliveryInfo] = useState({
@@ -41,6 +55,7 @@ const Purchase = () => {
   const [isWardSelected, setWardSelected] = useState(false)
   const [info, setInfo] = useState({})
   const [error, setError] = useState({})
+  const [loading, setLoading] = useState(false)
 
   // ABM (Address Book Modal) is true by default, otherwise AAM (Add Address Modal) is true
   const [isABM, setIsABM] = useState(true)
@@ -50,24 +65,62 @@ const Purchase = () => {
   const { isShowing, toggle } = useModal()
   const { isShowing: isSuccessShowing, toggle: toggleSuccessShowing } =
     useModal()
+  const { isShowing: distanceError, toggle: toggleDistanceError } = useModal()
   const { currentUser } = useSelector(state => state.user)
   const { qty } = useSelector(state => state.cart)
 
-  // Store purchase list items here. This one is used to clear carts.
-  const [items, setItems] = useState([])
+  // Fetch province at first render
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      try {
+        const response = await provinceApi.get('/p')
+        //dispatch(setProvince(response.data))
+        setProvince(sortByName(normalizeText(response.data)))
+      } catch (err) {
+        handleApiCallError(err)
+      }
+    }
 
-  ProvinceGetter({
-    province: deliveryInfo.province,
-    district: deliveryInfo.district,
-    setProvince,
-    setDistrict,
-    setWard,
-    setWardSelected,
-    setDistrictSelected,
-    info: deliveryInfo,
-    setInfo: setDeliveryInfo,
-    result
-  })
+    fetchProvinces()
+  }, [])
+
+  // Fetch district after selected province
+  const fetchDistricts = async province => {
+    try {
+      const str = String(province)
+      const code = str.substring(0, str.indexOf('_'))
+      const response = await provinceApi.get(`p/${code}`, {
+        params: {
+          depth: 2
+        }
+      })
+      setDistrictSelected(false)
+      setWardSelected(false)
+      setDistrict(sortByName(normalizeText(response.data.districts)))
+      setWard([])
+    } catch (err) {
+      handleApiCallError(err)
+    }
+  }
+
+  // Fetch wards after selected district
+  const fetchWards = async district => {
+    try {
+      const str = String(district)
+      const code = str.substring(0, str.indexOf('_'))
+      const response = await provinceApi.get(`d/${code}`, {
+        params: {
+          depth: 2
+        }
+      })
+
+      //console.log(2);
+      setWardSelected(false)
+      setWard(sortByName(normalizeText(response.data.wards)))
+    } catch (err) {
+      handleApiCallError(err)
+    }
+  }
 
   const handleChange = e => {
     const key = e.target.name
@@ -100,6 +153,7 @@ const Purchase = () => {
         district: '',
         ward: ''
       })
+      fetchDistricts(value)
       return
     }
 
@@ -110,6 +164,7 @@ const Purchase = () => {
         district: value,
         ward: ''
       })
+      fetchWards(value)
       return
     }
 
@@ -133,11 +188,6 @@ const Purchase = () => {
     if (!isShowing) {
       setIsABM(true)
       if (result) {
-        setProvinceSelected(true)
-        setDeliveryInfo(deliveryInfo => ({
-          ...deliveryInfo,
-          province: result.province
-        }))
         const temp = error
         Object.keys(temp).forEach(value => {
           if (value !== 'email') {
@@ -148,6 +198,32 @@ const Purchase = () => {
     }
   }, [isShowing])
 
+  const setAddress = async result => {
+    setProvinceSelected(true)
+    setDeliveryInfo(prev => ({
+      ...prev,
+      province: result.province
+    }))
+
+    await fetchDistricts(result.province)
+    setDeliveryInfo(prev => ({
+      ...prev,
+      district: result.district
+    }))
+    setDistrictSelected(true)
+
+    await fetchWards(result.district)
+    setDeliveryInfo(prev => ({
+      ...prev,
+      ward: result.ward
+    }))
+    setWardSelected(true)
+  }
+
+  // useEffect(() => {
+  //   console.log(deliveryInfo.province, deliveryInfo.district, deliveryInfo.ward)
+  // }, [deliveryInfo.province, deliveryInfo.district, deliveryInfo.ward])
+
   useEffect(() => {
     if (result) {
       setDeliveryInfo(deliveryInfo => ({
@@ -156,6 +232,7 @@ const Purchase = () => {
         phone: result.phone,
         address: result.address
       }))
+      setAddress(result)
     }
   }, [result])
 
@@ -173,40 +250,135 @@ const Purchase = () => {
     checkout()
   }
 
-  const sendCheckout = token => {
-    return appApi.put(
-      routes.PURCHASE,
+  const getPaymentMethodValue = method => {
+    if (method === 'COD') return 0
+    else if (method === 'Momo') return 1
+    else return 2
+  }
+
+  const sendCheckout = (token, restaurantID) => {
+    console.log(
       routes.getPurchaseBody(
-        currMethod,
+        getPaymentMethodValue(currMethod),
         deliveryInfo.phone,
         deliveryInfo.address,
         deliveryInfo.province,
         deliveryInfo.district,
         deliveryInfo.ward,
-        deliveryInfo.note
+        deliveryInfo.note,
+        restaurantID
+      )
+    )
+    return appApi.put(
+      routes.PURCHASE,
+      routes.getPurchaseBody(
+        getPaymentMethodValue(currMethod),
+        deliveryInfo.phone,
+        deliveryInfo.address,
+        deliveryInfo.province,
+        deliveryInfo.district,
+        deliveryInfo.ward,
+        deliveryInfo.note,
+        restaurantID
       ),
       routes.getAccessTokenHeader(token)
     )
   }
 
-  const clearCart = token => {
-    return items.map((item, index) => {
-      return appApi.delete(routes.DELETE_CART_ITEM, {
-        headers: {
-          Authorization: 'Bearer ' + token
-        },
-        data: {
-          itemID: item.product.id
-        }
-      })
-    })
+  const getCoordinates = () => {
+    const q =
+      getProvinceName(deliveryInfo.province) +
+      ', ' +
+      getProvinceName(deliveryInfo.district) +
+      ', ' +
+      getProvinceName(deliveryInfo.ward)
+    return nominatimApi.get('search.php?format=jsonv2&q=' + q)
+  }
+
+  const showDistanceError = () => {
+    console.log('Error distance too far')
+    toggleDistanceError()
+  }
+
+  const fetchRestaurants = async () => {
+    try {
+      const result = await appApi.get(routes.GET_RESTAURANT)
+      return result.data.restaurants
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data)
+        console.log(err.response.status)
+        console.log(err.response.headers)
+      } else {
+        console.log(err.message)
+      }
+      return []
+    }
+  }
+
+  const degreesToRadians = degrees => {
+    return (degrees * Math.PI) / 180
+  }
+
+  const distanceBetween2Coors = (coor1, coor2) => {
+    const earthRadiusKm = 6371
+
+    const dLat = degreesToRadians(coor1.latitude - coor2.latitude)
+    const dLon = degreesToRadians(coor1.longitude - coor2.longitude)
+
+    const lat1 = degreesToRadians(coor1.latitude)
+    const lat2 = degreesToRadians(coor2.latitude)
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    return earthRadiusKm * c
   }
 
   const checkout = async () => {
+    setLoading(true)
     try {
       const token = await currentUser.getIdToken()
 
-      await Promise.all([sendCheckout(token), ...clearCart(token)])
+      // Get current Coordinates of user's address
+      const result = await getCoordinates()
+      if (result.data.length === 0) {
+        showDistanceError()
+        return
+      }
+      const coordinates = {
+        latitude: result.data[0].lat,
+        longitude: result.data[0].lon
+      }
+
+      const fetchedRestaurants = await fetchRestaurants()
+      // Sort restaurants by distance
+      const calculatedRestaurants = fetchedRestaurants.map((res, index) => {
+        return {
+          ...res,
+          key: index,
+          distance: distanceBetween2Coors(res, coordinates)
+        }
+      })
+      // console.log(calculatedRestaurants)
+
+      const sortedRestaurants = calculatedRestaurants.sort((a, b) => {
+        return a.distance - b.distance
+      })
+
+      const nearestRestaurant = sortedRestaurants[0]
+
+      // If the distance is too far then show error
+      if (nearestRestaurant.distance > 5) {
+        showDistanceError()
+        return
+      }
+      console.log(nearestRestaurant)
+
+      // console.log(nearestRestaurant.id)
+      // return
+      await sendCheckout(token, nearestRestaurant.id)
 
       // Save address if user choose this option
       if (saveAddress) {
@@ -226,11 +398,20 @@ const Purchase = () => {
       toggleSuccessShowing()
     } catch (err) {
       console.log(err)
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
     <div className='w-full h-full' onSubmit={e => e.preventDefault()}>
+      <LoadingScreen loading={loading} />
+      <AlertModal
+        isShowing={distanceError}
+        msg="Your location is too far. Sorry that we can't confirm your order."
+        hide={toggleDistanceError}
+        disableCancel={true}
+      />
       <AddressBookModal
         isABM={isABM}
         setIsABM={setIsABM}
@@ -257,6 +438,13 @@ const Purchase = () => {
           onClick={handleCheckout}
         >
           Purchase
+          <br />
+          <p className='font-normal mt-1'>
+            {'$' +
+              ((info.subtotal || 0) +
+                (info.deliveryFee || 0) -
+                (info.discount || 0))}
+          </p>
         </button>
 
         {/* Left section */}
@@ -349,7 +537,7 @@ const Purchase = () => {
                     <option value='default' disabled>
                       Choose province
                     </option>
-                    {createComboboxData(province)}
+                    {createComboboxData(province || [])}
                   </select>
                   <span className='ml-4 text-red-500'>{error.province}</span>
                 </div>
@@ -373,7 +561,7 @@ const Purchase = () => {
                     <option value='default' disabled>
                       Choose district
                     </option>
-                    {createComboboxData(district)}
+                    {createComboboxData(district || [])}
                   </select>
                   <span className='ml-4 text-red-500'>{error.district}</span>
                 </div>
@@ -395,7 +583,7 @@ const Purchase = () => {
                     <option value='default' disabled>
                       Choose ward
                     </option>
-                    {createComboboxData(ward)}
+                    {createComboboxData(ward || [])}
                   </select>
                   <span className='ml-4 text-red-500'>{error.ward}</span>
                 </div>
@@ -450,12 +638,7 @@ const Purchase = () => {
           <h1 className='text-32 font-extrabold mb-5'>CART</h1>
 
           {/* Purchase Item List */}
-          <PurchaseItemList
-            setItems={setItems}
-            items={items}
-            currentUser={currentUser}
-            setInfo={setInfo}
-          />
+          <PurchaseItemList currentUser={currentUser} setInfo={setInfo} />
 
           {/* Divider */}
           <div className='border-t-[1px] border-gray-border mt-4' />

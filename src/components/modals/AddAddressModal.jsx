@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import appApi from '../../api/appApi'
 import { validateAddAddress } from '../../utils/validateInfo'
-import ProvinceGetter from '../ProvinceGetter'
 import * as routes from '../../api/apiRoutes'
 import { useSelector } from 'react-redux'
+import provinceApi from '../../api/provinceApi'
+import sortByName from '../../utils/sortByName'
+import normalizeText from '../../utils/normalizeText'
+import handleApiCallError from '../../utils/handleApiCallError'
 
 // Create data for combobox
 const createComboboxData = data => {
@@ -59,22 +62,86 @@ const AddAddressModal = ({
 
   const { currentUser } = useSelector(state => state.user)
 
-  ProvinceGetter({
-    province: address.province,
-    district: address.district,
-    setProvince,
-    setDistrict,
-    setWard,
-    setWardSelected,
-    setDistrictSelected,
-    result: currEditAddress,
-    setInfo: setAddress
-  })
+  // Fetch province at first render\
+  const fetchProvinces = async () => {
+    try {
+      const response = await provinceApi.get('/p')
+      //dispatch(setProvince(response.data))
+      setProvince(sortByName(normalizeText(response.data)))
+    } catch (err) {
+      handleApiCallError(err)
+    }
+  }
+
+  // Fetch district after selected province
+  const fetchDistricts = async province => {
+    try {
+      const str = String(province)
+      const code = str.substring(0, str.indexOf('_'))
+      const response = await provinceApi.get(`p/${code}`, {
+        params: {
+          depth: 2
+        }
+      })
+      setDistrictSelected(false)
+      setWardSelected(false)
+      setDistrict(sortByName(normalizeText(response.data.districts)))
+      setWard([])
+    } catch (err) {
+      handleApiCallError(err)
+    }
+  }
+
+  // Fetch wards after selected district
+  const fetchWards = async district => {
+    try {
+      const str = String(district)
+      const code = str.substring(0, str.indexOf('_'))
+      const response = await provinceApi.get(`d/${code}`, {
+        params: {
+          depth: 2
+        }
+      })
+
+      //console.log(2);
+      setWardSelected(false)
+      setWard(sortByName(normalizeText(response.data.wards)))
+    } catch (err) {
+      handleApiCallError(err)
+    }
+  }
+
+  const setCurrAddress = async result => {
+    setAddress(prev => ({
+      ...prev,
+      province: result.province
+    }))
+
+    await fetchDistricts(result.province)
+    setAddress(prev => ({
+      ...prev,
+      district: result.district
+    }))
+    setDistrictSelected(true)
+
+    await fetchWards(result.district)
+    setAddress(prev => ({
+      ...prev,
+      ward: result.ward
+    }))
+    setWardSelected(true)
+  }
 
   useEffect(() => {
+    fetchProvinces()
     // If currEditAddress is not null, that means this modal is opened in edit mode
     if (currEditAddress) {
-      setAddress(currEditAddress)
+      setAddress({
+        name: currEditAddress.name,
+        phone: currEditAddress.phone,
+        address: currEditAddress.address
+      })
+      setCurrAddress(currEditAddress)
       setTitle('EDIT ADDRESS')
       return
     }
@@ -108,11 +175,32 @@ const AddAddressModal = ({
   }, [isWardSelected])
 
   const handleChange = e => {
-    if (e.target.name === 'district' && e.target.value !== 'default') {
-      setDistrictSelected(true)
+    const key = e.target.name
+    const value = e.target.value
+
+    if (key === 'province' && value !== 'default') {
+      setAddress({
+        ...address,
+        province: value,
+        district: '',
+        ward: ''
+      })
+      fetchDistricts(value)
+      return
     }
 
-    if (e.target.name === 'ward' && e.target.value !== 'default') {
+    if (key === 'district' && value !== 'default') {
+      setDistrictSelected(true)
+      setAddress({
+        ...address,
+        district: value,
+        ward: ''
+      })
+      fetchWards(value)
+      return
+    }
+
+    if (key === 'ward' && value !== 'ward') {
       setWardSelected(true)
     }
 
