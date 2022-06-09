@@ -4,8 +4,7 @@ import appApi from '../api/appApi'
 import LoadingScreen from './LoadingScreen'
 import PurchaseItemThumb from './PurchaseItemThumb'
 
-const PurchaseItemList = ({ currentUser, setInfo }) => {
-  const [items, setItems] = useState([])
+const PurchaseItemList = ({ currentUser, setInfo, items, setItems }) => {
   const [loading, setLoading] = useState(false)
 
   const fetchCart = async () => {
@@ -39,16 +38,17 @@ const PurchaseItemList = ({ currentUser, setInfo }) => {
   }
 
   useEffect(() => {
-    fetchCart()
+    if (currentUser) fetchCart()
   }, [currentUser])
 
   if (loading) return <LoadingScreen />
 
   return (
     <div>
-      {items.map((item, index) => (
-        <PurchaseItemThumb key={index} itemData={item} />
-      ))}
+      {Array.isArray(items) &&
+        items.map((item, index) => (
+          <PurchaseItemThumb key={index} itemData={item} />
+        ))}
     </div>
   )
 }

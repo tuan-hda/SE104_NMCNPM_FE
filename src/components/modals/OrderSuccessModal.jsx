@@ -1,9 +1,12 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { initCart } from '../../actions/cart-actions'
 import Check from '../../images/check.png'
 
 const OrderSuccessModal = ({ isShowing, data }) => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   // get html from delivery info
   const getDeliveryInfo = info => {
@@ -25,6 +28,13 @@ const OrderSuccessModal = ({ isShowing, data }) => {
   // Back to home page
   const continueShopping = () => {
     navigate('/')
+    dispatch(initCart(0))
+  }
+
+  // View orders
+  const viewOrders = () => {
+    navigate('/profile/orders')
+    dispatch(initCart(0))
   }
 
   return (
@@ -69,7 +79,7 @@ const OrderSuccessModal = ({ isShowing, data }) => {
         <button
           type='button'
           className='w-full bg-primary text-white rounded-md text-[11px] py-3 mt-8 hover:bg-opacity-90 transition duration-300'
-          onClick={() => continueShopping()}
+          onClick={continueShopping}
         >
           CONTINUE SHOPPING
         </button>
@@ -77,7 +87,7 @@ const OrderSuccessModal = ({ isShowing, data }) => {
         <button
           type='button'
           className='w-full bg-white text-black border-[1px] border-gray-border rounded-md text-[11px] py-3 mt-2 hover:bg-gray-border transition duration-300'
-          onClick={() => navigate('/profile/orders')}
+          onClick={viewOrders}
         >
           VIEW YOUR ORDERS
         </button>

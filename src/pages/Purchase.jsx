@@ -52,6 +52,9 @@ const Purchase = () => {
     useModal()
   const { currentUser } = useSelector(state => state.user)
 
+  // Store purchase list items here. This one is used to clear carts.
+  const [items, setItems] = useState([])
+
   ProvinceGetter({
     province: deliveryInfo.province,
     district: deliveryInfo.district,
@@ -68,6 +71,16 @@ const Purchase = () => {
   const handleChange = e => {
     const key = e.target.name
     const value = e.target.value
+
+    // Realtime validation
+    const err = validateDeliveryInfo({
+      [key]: value
+    })
+
+    setError(previousState => ({
+      ...previousState,
+      [key]: err[key]
+    }))
 
     if (key === 'phone') {
       if (value === '' || /^[0-9\b]+$/.test(value))
@@ -107,16 +120,6 @@ const Purchase = () => {
       ...deliveryInfo,
       [key]: value
     })
-
-    // Realtime validation
-    const err = validateDeliveryInfo({
-      [key]: value
-    })
-
-    setError(previousState => ({
-      ...previousState,
-      [key]: err[key]
-    }))
   }
 
   const showModal = () => {
@@ -134,6 +137,12 @@ const Purchase = () => {
           ...deliveryInfo,
           province: result.province
         }))
+        const temp = error
+        Object.keys(temp).forEach(value => {
+          if (value !== 'email') {
+            temp[value] = ''
+          }
+        })
       }
     }
   }, [isShowing])
@@ -163,25 +172,42 @@ const Purchase = () => {
     checkout()
   }
 
+  const sendCheckout = token => {
+    return appApi.put(
+      routes.PURCHASE,
+      routes.getPurchaseBody(
+        currMethod,
+        deliveryInfo.phone,
+        deliveryInfo.address,
+        deliveryInfo.province,
+        deliveryInfo.district,
+        deliveryInfo.ward,
+        deliveryInfo.note
+      ),
+      routes.getAccessTokenHeader(token)
+    )
+  }
+
+  const clearCart = token => {
+    return items.map((item, index) => {
+      return appApi.delete(routes.DELETE_CART_ITEM, {
+        headers: {
+          Authorization: 'Bearer ' + token
+        },
+        data: {
+          itemID: item.product.id
+        }
+      })
+    })
+  }
+
   const checkout = async () => {
     try {
       const token = await currentUser.getIdToken()
 
-      await appApi.put(
-        routes.PURCHASE,
-        routes.getPurchaseBody(
-          currMethod,
-          deliveryInfo.phone,
-          deliveryInfo.address,
-          deliveryInfo.province,
-          deliveryInfo.district,
-          deliveryInfo.ward,
-          deliveryInfo.note
-        ),
-        routes.getAccessTokenHeader(token)
-      )
+      await Promise.all([sendCheckout(token), ...clearCart(token)])
 
-      toggleSuccessShowing()
+      // Save address if user choose this option
       if (saveAddress) {
         await appApi.post(
           routes.ADD_ADDRESS,
@@ -196,6 +222,7 @@ const Purchase = () => {
           routes.getAccessTokenHeader(token)
         )
       }
+      toggleSuccessShowing()
     } catch (err) {
       console.log(err)
     }
@@ -417,7 +444,12 @@ const Purchase = () => {
           <h1 className='text-32 font-extrabold mb-5'>CART</h1>
 
           {/* Purchase Item List */}
-          <PurchaseItemList currentUser={currentUser} setInfo={setInfo} />
+          <PurchaseItemList
+            setItems={setItems}
+            items={items}
+            currentUser={currentUser}
+            setInfo={setInfo}
+          />
 
           {/* Divider */}
           <div className='border-t-[1px] border-gray-border mt-4' />

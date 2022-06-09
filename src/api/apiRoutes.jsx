@@ -153,3 +153,6 @@ export const getDeleteCartBody = itemID => ({
 
 // GET ALL ORDERS
 export const GET_ALL_ORDERS = 'get-all-orders'
+
+// CREATE EMPTY CART
+export const CREATE_EMPTY_CART = 'create-bill'
