@@ -3,6 +3,7 @@ import OrderNowBanner from '../images/order-now.jpg'
 import RecommendationItems from '../components/RecommendationItems'
 import FavoriteItems from '../components/FavoriteItems'
 import BannerSlider from '../components/BannerSlider'
+import { Link } from 'react-router-dom'
 
 const Home = () => {
   return (
@@ -24,9 +25,11 @@ const Home = () => {
       <div className='relative mt-24'>
         <img src={OrderNowBanner} alt='Start Order Now' />
         {/* Start Order Now Button */}
-        <button className='absolute bottom-[75px] right-72 items-center bg-white text-[26px] text-secondary font-bold rounded-[22px] w-70 h-20 px-10'>
-          Start Order Now
-        </button>
+        <Link to='/menu'>
+          <button className='absolute bottom-[75px] right-72 items-center bg-white text-[26px] text-secondary font-bold rounded-[22px] w-70 h-20 px-10'>
+            Start Order Now
+          </button>
+        </Link>
       </div>
       {/* Newsletter */}
       <div className='px-32 mt-20'>

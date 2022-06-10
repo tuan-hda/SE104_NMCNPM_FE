@@ -18,7 +18,7 @@ const CartProductThumbnail = ({ itemData }) => {
           />
         </div>
         {/* Product Info */}
-        <div className='grid place-self-start h-full grid-rows-4 text-15 place-content-center col-span-2'>
+        <div className='grid place-self-start h-full grid-rows-4 text-15 col-span-2 place-content-start w-[280px]'>
           <h6 className='font-semibold row-span-2'>
             {itemData.product.itemName}
           </h6>

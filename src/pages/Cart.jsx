@@ -45,6 +45,8 @@ const Cart = ({ qty }) => {
     fetchCart()
   }, [qty])
 
+  const deliveryFee = 20000
+
   if (loading)
     return (
       <div className='w-full h-[75%] flex items-center justify-center'>
@@ -66,7 +68,7 @@ const Cart = ({ qty }) => {
 
       {/* Right section */}
       {/* Order Summary */}
-      <div className=' bg-[#F5F5F6] flex-grow h-full mt-10 rounded-xl'>
+      <div className=' bg-[#F5F5F6] flex-grow h-full mt-4 rounded-xl'>
         <div className=' px-11 py-11'>
           {/* Title */}
           <h2 className=' font-semibold text-[24px] mb-10 h-16 border-b-[1px] border-[#C6BDBD]'>
@@ -78,15 +80,20 @@ const Cart = ({ qty }) => {
             <h3 className='place-self-end font-medium'>{'$' + subTotal}</h3>
           </div>
           {/* TAX */}
-          <div className='w-full grid grid-cols-2 justify-between mb-24'>
+          <div className='w-full grid grid-cols-2 justify-between mb-10'>
             <h3>TAX</h3>
             <h3 className='place-self-end font-medium'>-</h3>
+          </div>
+          {/* Delivery Fee */}
+          <div className='w-full grid grid-cols-2 justify-between mb-20'>
+            <h3>DELIVERY FEE</h3>
+            <h3 className='place-self-end font-medium'>{'$' + deliveryFee}</h3>
           </div>
           {/* ESTIMATED TOTAL */}
           <div className='w-full grid grid-cols-2 justify-between place-content-center h-24 border-t-[1px] border-[#C6BDBD]'>
             <h3 className='font-semibold'>ESTIMATED TOTAL</h3>
             <h3 className='font-semibold text-secondary place-self-end'>
-              {'$' + subTotal}
+              {'$' + (subTotal+deliveryFee)}
             </h3>
           </div>
           {/* Add to Cart Button */}
