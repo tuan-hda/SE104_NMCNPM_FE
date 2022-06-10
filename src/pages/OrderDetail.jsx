@@ -1,94 +1,142 @@
-import React from 'react'
-import { useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useLocation, Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import CartItemList from '../components/CartItemList'
 import status_payed from '../images/order_status/payed.png'
 import arrowIcon from '../images/back-arrow.svg'
+import api from '../api/appApi'
+import * as routes from '../api/apiRoutes'
+import { hambursyLoader } from '../components/LoadingScreen'
 
 const OrderDetail = () => {
+    const { currentUser } = useSelector(state => state.user)
+    const [loading, setLoading] = useState(true)
+    const [items, setItems] = useState([])
+    //Get order from profile/orders
+    const location= useLocation();
+    const orderData= location.state;
 
-    //Get orderID from profile/orders
-    const { state } = useLocation();
-
-    //Get order Information by orderID from database
-    //Sample data
-    const orderData = {
-        orderID: '123456',
-        name: 'Nguyen Van A',
-        phoneNumber: '0123456789',
-        address: '150 Elgin Street, Floor 8, Ottawa ON K2P 1L4, Canada',
-        purchaseDate: '12/04/2022',
-        subTotal: 143.96,
-        ship: 3,
-        total: 146.96,
-        status: 2,
-        payment: 0,
-        cart: [
-            {
-                id: 1,
-                image: 'https://digitaleat.kfc.com/menus/image/bare/kfc-sidesloverstendersmeal?q=75&w=1280',
-                title: 'Hamburgers And Chips Meal',
-                calories: 6750,
-                category: 'Featured',
-                price: 59.99,
-                qty: 2
-            },
-            {
-                id: 2,
-                image: 'https://digitaleat.kfc.com/menus/image/bare/kfc-sidesloverstendersmeal?q=75&w=1280',
-                title: 'Hamburgers And Chips Meal',
-                calories: 6750,
-                category: 'Combos',
-                price: 59.99,
-                qty: 1
-            },
-            {
-                id: 3,
-                image: 'https://digitaleat.kfc.com/menus/image/bare/kfc-sidesloverstendersmeal?q=75&w=1280',
-                title: 'Hamburgers And Chips Meal',
-                calories: 6750,
-                category: 'Hamburgers',
-                price: 59.99,
-                qty: 3
-            }
-        ]
+    const getAddress = () => {
+        const detail = orderData.deliAddress
+        const ward  = orderData.deliWard.slice(orderData.deliWard.indexOf('_')+1)
+        const district = orderData.deliDistrict.slice(orderData.deliDistrict.indexOf('_')+1)
+        const province = orderData.deliProvince.slice(orderData.deliProvince.indexOf('_')+1)
+        return detail+', '+ward+', '+district+', '+province
+    }
+    
+    // get delivery status based on status code
+    const getDeliveryStatus = code => {
+        switch (code) {
+        case 1:
+            return 'Pending'
+        case 2:
+            return 'In progress'
+        case 3:
+            return 'Delivered'
+        case 4:
+            return 'Canceled'
+        default:
+            return 'Unknown'
+        }
+    }
+  
+    // Get text color based on status code
+    const getBtnColor = code => {
+        switch (code) {
+        case 1:
+            return 'bg-[#FFC107]'
+        case 2:
+            return 'bg-[#0086FF]'
+        case 3:
+            return 'bg-[#FF0000]'
+        case 4:
+            return 'bg-[#009D34]'
+        default:
+            return ''
+        }
     }
 
+    const fetchCart = async () => {
+        try {
+            const token = await currentUser.getIdToken()
+            const result = await api.get(
+                routes.DISPLAY_ORDER_ITEM,
+                {
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    },
+                    params: {
+                      id: orderData.id
+                    },
+                }
+            )
+            const cart = result.data.items.map((item, index) => ({
+                ...item,
+                product: item.Item,
+                key: index
+            }))
+            console.log(result.data.items)
+            setItems(cart)
+        } catch (err) {
+          if (err.response) {
+            console.log(err.response.data)
+            console.log(err.response.status)
+            console.log(err.response.headers)
+          } else {
+            console.log(err.message)
+          }
+        } finally {
+          setLoading(false)
+        }
+      }
+
+    useEffect(() => {
+        fetchCart()
+    },[])
+
+    if (loading)
     return (
-        <div className="px-32 py-28">
+      <div className='w-full h-[75%] flex items-center justify-center'>
+        {hambursyLoader}
+      </div>
+    )
+
+    return (
+        <div className="px-32 py-6">
             {/* Title */}
             <h1 className="text-34 font-extrabold">Order Detail</h1>
             <div className="flex gap-16">
                 {/* Left section */}
-                <div className=" w-2/3">
+                <div className=" w-2/3 text-15">
                     {/* Delivery Information */}
                     <div className="w-full mt-10 border-2 border-[#CFCFCF] rounded-xl mb-10">
-                        <div className="flex justify-between items-start p-2 gap-x-4">
+                        <div className="flex justify-between items-start p-5 gap-x-4">
                             {/* Order detail */}
-                            <div className="flex flex-col space-y-1">
+                            <div className="flex flex-col space-y-2 w-1/4">
                                 <h2>
-                                    Order #<span className="font-semibold">{state}</span>
+                                    Order #<span className="font-semibold">{orderData.id}</span>
                                 </h2>
-                                <h2>{"Purchase date: " + orderData.purchaseDate}</h2>
-                                <button className="bg-primary w-36 h-6 rounded-sm text-13 text-white font-semibold">
-                                    Finished
+                                <h2>{"Purchase date: " + orderData.date.slice(0,orderData.date.indexOf('T'))}</h2>
+                                <button className={`${getBtnColor(orderData.billstatus)} w-36 h-6 rounded-sm text-13 text-white font-semibold`}>
+                                    {getDeliveryStatus(orderData.billstatus)}
                                 </button>
                             </div>
                             {/* Delivery Address */}
-                            <div>
+                            <div className='w-2/4'>
                                 <h3 className="font-semibold">Delivery Address</h3>
                                 <h6>{orderData.name}</h6>
-                                <h6>{"Phone number: " + orderData.phoneNumber}</h6>
-                                <h6>{orderData.address}</h6>
+                                <h6>{"Phone number: " + orderData.deliPhoneNum}</h6>
+                                <h6>{getAddress()}</h6>
                             </div>
                             {/* Payment Method */}
-                            <div>
-                                <h3 className="font-semibold">Payment method</h3>
-                                <h6>Cash on Delivery (COD)</h6>
+                            <div className='space-y-2'>
+                                <h3 className="font-semibold">Payment method:</h3>
+                                <h6>Cash</h6>
                             </div>
                         </div>
                     </div>
-                    {/* Item list */}
-                    <CartItemList cart={orderData.cart} prop='' isEditable={false} />
+                    {/* Item list*/} 
+                    <CartItemList cart={items} prop='' isEditable={false} />
                 </div>
                 {/* Right section */}
                 <div className="flex-grow">
@@ -105,7 +153,7 @@ const OrderDetail = () => {
                             {/* Subtotal */}
                             <div className="flex justify-between py-4">
                                 <h5>Subtotal</h5>
-                                <h5>{"$" + orderData.subTotal}</h5>
+                                <h5>{"$" + (orderData.total-orderData.ship)}</h5>
                             </div>
                             {/* Tax */}
                             <div className="flex justify-between py-4">
@@ -115,7 +163,7 @@ const OrderDetail = () => {
                             {/* Estimated total */}
                             <div className="flex justify-between py-4">
                                 <h5>Estimated total</h5>
-                                <h5>{"$" + orderData.subTotal}</h5>
+                                <h5>{"$" + (orderData.total-orderData.ship)}</h5>
                             </div>
                             {/* Delivery fee */}
                             <div className="flex justify-between py-4">
@@ -131,10 +179,12 @@ const OrderDetail = () => {
                     </div>
 
                     {/* Back to Order History */}
-                    <div className="flex gap-2 items-center mt-5 justify-end">
-                        <img src={arrowIcon} alt="Back to Order History" />
-                        <h5 className="font-medium text-primary">Order History</h5>
-                    </div>
+                    <Link to='/profile/orders'>
+                        <div className="flex gap-2 items-center mt-5 justify-end">
+                            <img src={arrowIcon} alt="Back to Order History" />
+                            <h5 className="font-medium text-primary">Order History</h5>
+                        </div>
+                    </Link>
                 </div>
             </div>
         </div>
