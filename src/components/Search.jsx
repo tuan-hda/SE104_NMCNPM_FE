@@ -3,13 +3,13 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import SearchIcon from '../images/SearchIcon.svg'
 
 const Search = () => {
-  const [, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
 
   // Handle submit of search input here
   const handleSubmit = e => {
     e.preventDefault()
-    navigate('/menu/search?name=' + e.target[0].value)
+    if (e.target[0].value === '') navigate('/menu')
+    else navigate('/menu/search?name=' + e.target[0].value)
   }
 
   return (

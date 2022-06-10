@@ -65,7 +65,6 @@ const OrderSuccessModal = ({ isShowing, data, info }) => {
 
             {/* Right section */}
             <div className='font-semibold space-y-3 text-right text-red-500'>
-              import ProvinceGetter from '../components/ProvinceGetter'
               <p>
                 $
                 {(info.subtotal || 0) +

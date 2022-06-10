@@ -492,19 +492,6 @@ const Purchase = () => {
               />
               <span className='ml-4 text-red-500'>{error.phone}</span>
 
-              {/* Email */}
-              <input
-                className={`mt-4 ${
-                  error.email ? 'delivery-input-err' : 'delivery-input'
-                } font-semibold`}
-                type='email'
-                placeholder='Email'
-                name='email'
-                value={deliveryInfo.email}
-                onChange={handleChange}
-              />
-              <span className='ml-4 text-red-500'>{error.email}</span>
-
               {/* Address */}
               <input
                 className={`mt-4 ${

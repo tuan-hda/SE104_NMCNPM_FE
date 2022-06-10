@@ -435,7 +435,7 @@ const ProfileContainer = () => {
               <img
                 src={detail.photo || DefaultAvatar}
                 alt='Sample Avatar'
-                className='rounded-full w-44 h-44 object-contain'
+                className='rounded-full w-44 h-44 object-cover'
               />
             ) : (
               defaultAvatar('w-44 h-44')
