@@ -160,3 +160,11 @@ export const GET_ALL_ORDERS = 'get-all-orders'
 
 // CREATE EMPTY CART
 export const CREATE_EMPTY_CART = 'create-bill'
+
+// DISPLAY ORDER ITEM
+export const DISPLAY_ORDER_ITEM = 'display-order-items'
+export const getOrderItemParams = id => ({
+  params: {
+    id: id
+  }
+})

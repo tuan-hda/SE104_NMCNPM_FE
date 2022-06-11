@@ -48,8 +48,8 @@ const OrdersContainer = () => {
   const { currentUser } = useSelector(state => state.user)
 
   // handle when user click at orderID
-  const handleClick = orderID => {
-    navigate('/profile/orders/' + orderID, { state: orderID })
+  const handleClick = order => {
+    navigate('/profile/orders/' + order, { state: order })
   }
 
   const fetchOrders = async () => {
@@ -109,7 +109,7 @@ const OrdersContainer = () => {
                     <tr className='font-medium' height='40px'>
                       <td
                         className='text-[#1976D2] cursor-pointer hover:underline'
-                        onClick={() => handleClick(o.id)}
+                        onClick={() => handleClick(o)}
                       >
                         {'#' + o.id}
                       </td>

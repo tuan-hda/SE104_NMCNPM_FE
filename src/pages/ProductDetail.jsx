@@ -44,7 +44,7 @@ const ProductDetail = ({ addToCart }) => {
   }
 
   return (
-    <div className='grid grid-cols-2 pt-14 px-32 gap-10 justify-between'>
+    <div className='flex pt-14 px-32 gap-10 justify-between'>
       {/* Product Image */}
       <div className='bg-gray-thumb rounded-lg w-[750px] h-[500px] grid place-content-center'>
         <img
@@ -54,7 +54,7 @@ const ProductDetail = ({ addToCart }) => {
         />
       </div>
       {/* Product Detail */}
-      <div className='grid place-self-end h-full grid-rows-2 w-[600px]'>
+      <div className='grid grid-rows-2 w-[600px] '>
         {/* Product Title */}
         <h2 className='font-extrabold text-5xl place-self-start'>
           {product.itemName.toUpperCase()}

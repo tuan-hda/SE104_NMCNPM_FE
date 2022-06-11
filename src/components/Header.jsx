@@ -76,17 +76,17 @@ const Header = ({ qty, initCart }) => {
         {/* Logo */}
         <Logo />
         {/* Navbar */}
-        <ul className='hidden mr-10 md:flex'>
-          <li className='px-11 font-bold'>
+        <ul className='hidden mr-4 md:flex h-full place-items-center'>
+          <li className='px-11 font-bold hover:bg-white h-full grid content-center'>
             <Link to='/'>Home</Link>
           </li>
-          <li className='px-11 font-bold'>
+          <li className='px-11 font-bold hover:bg-white h-full grid content-center'>
             <Link to='/menu'>Menu</Link>
           </li>
-          <li className='px-11 font-bold'>
+          <li className='px-11 font-bold hover:bg-white h-full grid content-center'>
             <Link to='/about'>About</Link>
           </li>
-          <li className='px-11 font-bold'>
+          <li className='px-11 font-bold hover:bg-white h-full grid content-center'>
             <Link to='/contact'>Contact</Link>
           </li>
         </ul>
