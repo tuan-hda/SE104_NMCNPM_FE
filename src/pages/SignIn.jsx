@@ -166,6 +166,7 @@ const SignIn = () => {
         <div
           className='absolute rounded-full cursor-pointer right-7 top-7
           transition duration-300 hover:bg-gray-200 w-8 h-8 flex justify-center items-center'
+          onClick={() => navigate('/')}
         >
           <img className='w-4 h-4' alt='Close' src={CrossIcon}></img>
         </div>

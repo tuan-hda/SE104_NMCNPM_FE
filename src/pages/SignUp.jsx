@@ -5,24 +5,27 @@ import GoogleIcon from '../images/GoogleIcon.svg'
 import FacebookIcon from '../images/FacebookIcon.png'
 import { validateInfo } from '../utils/validateInfo'
 import { useDispatch, useSelector } from 'react-redux'
-import { facebookSigninInitiate, googleSigninInitiate, signupInitiate } from '../actions'
+import {
+  facebookSigninInitiate,
+  googleSigninInitiate,
+  signupInitiate
+} from '../actions'
 import LoadingScreen from '../components/LoadingScreen'
 import api from '../api/appApi'
 import * as routes from '../api/apiRoutes'
 
 const showError = (text, isPassword = false) => {
   if (isPassword && text && Array.isArray(text)) {
-    return text.map((t, i) => <span
-      key={i}
-      className='ml-4 text-red-500 font-normal text-xs'>
-      {t}
-      <br />
-    </span>)
+    return text.map((t, i) => (
+      <span key={i} className='ml-4 text-red-500 font-normal text-xs'>
+        {t}
+        <br />
+      </span>
+    ))
   }
 
-  if (text) return <span className='ml-4 text-red-500 font-normal text-xs'>
-    {text}
-  </span>
+  if (text)
+    return <span className='ml-4 text-red-500 font-normal text-xs'>{text}</span>
 }
 
 const SignUp = () => {
@@ -30,13 +33,13 @@ const SignUp = () => {
     email: '',
     name: '',
     password: '',
-    confirmPassword: '',
+    confirmPassword: ''
   })
 
   // Validate information
   const [infoError, setError] = useState({
     password: []
-  });
+  })
 
   const navigate = useNavigate()
 
@@ -44,15 +47,20 @@ const SignUp = () => {
 
   const dispatch = useDispatch()
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
 
     const err = validateInfo(detail)
-    setError(err);
+    setError(err)
 
-    if (!err.email && !err.name && err.password.length === 0 && !err.confirmPassword) {
+    if (
+      !err.email &&
+      !err.name &&
+      err.password.length === 0 &&
+      !err.confirmPassword
+    ) {
       dispatch(signupInitiate(detail.email, detail.password, detail.name))
-      setDetail((previousState) => ({
+      setDetail(previousState => ({
         ...previousState,
         password: '',
         confirmPassword: ''
@@ -94,7 +102,7 @@ const SignUp = () => {
   useEffect(() => {
     if (error) {
       if (error.includes('auth/email-already-in-use')) {
-        setError((previousState) => ({
+        setError(previousState => ({
           ...previousState,
           email: 'Email already exists.'
         }))
@@ -117,7 +125,7 @@ const SignUp = () => {
   }, [currentUser, navigate, error])
 
   // Change detail state when user typ
-  const changeDetail = (e) => {
+  const changeDetail = e => {
     const key = e.target.name
     const value = e.target.value
 
@@ -135,32 +143,35 @@ const SignUp = () => {
       })
     }
 
-    setError((previousState) => ({
+    setError(previousState => ({
       ...previousState,
       [key]: err[key]
     }))
   }
 
-  if (loading)
-    return <LoadingScreen loading={true} />
+  if (loading) return <LoadingScreen loading={true} />
 
   return (
     <div className='py-8 -mt-28 bg-gray-auth text-13 font-semibold min-h-screen flex justify-center items-center'>
-      <div className='h-full w-[90%] md:w-4/6 lg:w-3/5 xl:w-2/5  py-8 bg-white rounded-xl flex flex-col justify-center
-        px-4 sm:px-10 md:px-20 lg:px-24 relative'>
+      <div
+        className='h-full w-[90%] md:w-4/6 lg:w-3/5 xl:w-2/5  py-8 bg-white rounded-xl flex flex-col justify-center
+        px-4 sm:px-10 md:px-20 lg:px-24 relative'
+      >
         {/* Close button */}
-        <div className='absolute rounded-full cursor-pointer right-7 top-7
-          transition duration-300 hover:bg-gray-200 w-8 h-8 flex justify-center items-center'>
-          <img
-            className='w-4 h-4'
-            alt='Close'
-            src={CrossIcon}></img>
+        <div
+          className='absolute rounded-full cursor-pointer right-7 top-7
+          transition duration-300 hover:bg-gray-200 w-8 h-8 flex justify-center items-center'
+          onClick={() => navigate('/')}
+        >
+          <img className='w-4 h-4' alt='Close' src={CrossIcon}></img>
         </div>
 
         {/* Greetings go here */}
         <div>
           <h1 className='text-32 font-extrabold text-center'>HELLO THERE!</h1>
-          <p className='text-13 text-center font-normal mt-1'>Let's create an account for you.</p>
+          <p className='text-13 text-center font-normal mt-1'>
+            Let's create an account for you.
+          </p>
         </div>
 
         {/* Login form here */}
@@ -168,41 +179,53 @@ const SignUp = () => {
           {/* Email */}
           <input
             type='text'
-            className={`${infoError.email ? 'auth-input-err' : 'auth-input'} font-semibold`}
+            className={`${
+              infoError.email ? 'auth-input-err' : 'auth-input'
+            } font-semibold`}
             placeholder='Email'
             value={detail.email}
             name='email'
-            onChange={changeDetail} />
+            onChange={changeDetail}
+          />
           {showError(infoError.email)}
 
           {/* Name */}
           <input
             type='text'
-            className={`${infoError.name ? 'auth-input-err' : 'auth-input'} font-semibold`}
+            className={`${
+              infoError.name ? 'auth-input-err' : 'auth-input'
+            } font-semibold`}
             placeholder='Name'
             value={detail.name}
             name='name'
-            onChange={changeDetail} />
+            onChange={changeDetail}
+          />
           {showError(infoError.name)}
 
           {/* Password */}
           <input
             type='password'
-            className={`${infoError.password.length !== 0 ? 'auth-input-err' : 'auth-input'} font-semibold`}
+            className={`${
+              infoError.password.length !== 0 ? 'auth-input-err' : 'auth-input'
+            } font-semibold`}
             value={detail.password}
             name='password'
             onChange={changeDetail}
-            placeholder='Password' />
+            placeholder='Password'
+          />
           {showError(infoError.password, true)}
 
           {/* Confirm password */}
           <input
             type='password'
-            className={`${infoError.confirmPassword ? 'auth-input-err' : 'auth-input'} font-semibold`}
+            className={`${
+              infoError.confirmPassword ? 'auth-input-err' : 'auth-input'
+            } font-semibold`}
             value={detail.confirmPassword}
             name='confirmPassword'
             onChange={changeDetail}
-            placeholder='Confirm Password' />
+            placeholder='Confirm Password'
+          />
           {showError(infoError.confirmPassword)}
 
           {/* Button sign up */}
@@ -210,7 +233,8 @@ const SignUp = () => {
             type='submit'
             onClick={handleSubmit}
             className='auth-input bg-primary text-white font-bold hover:bg-opacity-90
-            transition duration-300 '>
+            transition duration-300 '
+          >
             SIGN UP
           </button>
         </form>
@@ -223,28 +247,29 @@ const SignUp = () => {
         </div>
         {/* Sign up with Google | Sign up with Facebook */}
         <div>
-          <button className='flex mt-6 gap-2 justify-center items-center auth-input font-bold transition duration-300 hover:bg-gray-100'
-            onClick={() => handleGoogle()}>
-            <img
-              src={GoogleIcon}
-              alt='Google Icon'
-              className='w-5 h-5' />
+          <button
+            className='flex mt-6 gap-2 justify-center items-center auth-input font-bold transition duration-300 hover:bg-gray-100'
+            onClick={() => handleGoogle()}
+          >
+            <img src={GoogleIcon} alt='Google Icon' className='w-5 h-5' />
             Sign up with Google
           </button>
 
-          <button className='text-center mt-2 auth-input font-bold bg-blue-facebook transition duration-300 hover:bg-opacity-90 text-white flex gap-2 justify-center items-center'
-            onClick={() => handleFacebook()}>
-            <img
-              src={FacebookIcon}
-              alt='Facebook Icon'
-              className='w-5 h-5' />
+          <button
+            className='text-center mt-2 auth-input font-bold bg-blue-facebook transition duration-300 hover:bg-opacity-90 text-white flex gap-2 justify-center items-center'
+            onClick={() => handleFacebook()}
+          >
+            <img src={FacebookIcon} alt='Facebook Icon' className='w-5 h-5' />
             Sign up with Facebook
           </button>
         </div>
 
         {/* Sign In */}
         <div className='flex justify-center mt-6 whitespace-pre'>
-          Already have an account? <Link to='/signin' className='underline'>Sign in</Link>
+          Already have an account?{' '}
+          <Link to='/signin' className='underline'>
+            Sign in
+          </Link>
         </div>
       </div>
     </div>
@@ -252,4 +277,3 @@ const SignUp = () => {
 }
 
 export default SignUp
-

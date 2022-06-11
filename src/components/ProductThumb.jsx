@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { addToCart } from '../actions/cart-actions'
 import * as routes from '../api/apiRoutes'
 import appApi from '../api/appApi'
@@ -9,7 +9,7 @@ import appApi from '../api/appApi'
 // product image, title, calories, price
 const ProductThumb = ({ product }) => {
   const { currentUser } = useSelector(state => state.user)
-
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const handleOrderClick = e => {
@@ -19,6 +19,7 @@ const ProductThumb = ({ product }) => {
   }
 
   const handleAddToCart = async () => {
+    if (!currentUser) navigate('/signin')
     try {
       const token = await currentUser.getIdToken()
 

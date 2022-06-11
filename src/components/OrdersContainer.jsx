@@ -33,9 +33,9 @@ const getTextColor = code => {
     case 2:
       return 'text-[#0086FF]'
     case 3:
-      return 'text-[#FF0000]'
-    case 4:
       return 'text-[#009D34]'
+    case 4:
+      return 'text-[#FF0000]'
     default:
       return ''
   }

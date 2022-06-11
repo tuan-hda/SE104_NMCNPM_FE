@@ -10,7 +10,7 @@ const Cart = ({ qty }) => {
   const [loading, setLoading] = useState(true)
   const [items, setItems] = useState([])
   const [subTotal, setSubTotal] = useState(0)
-  const { currentUser } = useSelector(state => state.user)
+  const { currentUser, loading: loadin } = useSelector(state => state.user)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -44,6 +44,11 @@ const Cart = ({ qty }) => {
   useEffect(() => {
     fetchCart()
   }, [qty])
+
+  // navigate to login if user is anonymous
+  useEffect(() => {
+    if (!loadin && !currentUser) navigate('/signin')
+  }, [loadin, currentUser, navigate])
 
   if (loading)
     return (
