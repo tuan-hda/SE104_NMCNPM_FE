@@ -22,7 +22,8 @@ const PurchaseItemList = ({ currentUser, setInfo }) => {
 
       setInfo(prev => ({
         ...prev,
-        subtotal: calculateSubtotal(result.data.cartItems)
+        subtotal: calculateSubtotal(result.data.cartItems),
+        deliveryFee: 20000
       }))
     } catch (err) {
       console.log(err)
