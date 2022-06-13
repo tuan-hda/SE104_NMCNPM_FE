@@ -3,7 +3,6 @@ import DefaultAvatar from '../images/User-avatar.svg'
 import useModal from '../utils/useModal'
 import AlertModal from './modals/AlertModal'
 import GenderRadioButton from './GenderRadioButton'
-import ProvinceGetter from './ProvinceGetter'
 import * as routes from '../api/apiRoutes'
 import api from '../api/appApi'
 import { storage } from '../firebase'
@@ -13,6 +12,7 @@ import handleApiCallError from '../utils/handleApiCallError'
 import provinceApi from '../api/provinceApi'
 import sortByName from '../utils/sortByName'
 import normalizeText from '../utils/normalizeText'
+import { v4 } from 'uuid'
 
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
 
@@ -257,7 +257,12 @@ const ProfileContainer = () => {
   }
 
   const handleUploadImage = () => {
-    const task = storage.ref(`images/${image.name}`).put(image)
+    // Generate a random id to make sure images' name are not duplicate
+    const imageName = v4()
+    // Get extension of image (jpg/png)
+    const imageExt = image.name.split('.').pop()
+    const name = imageName + '.' + imageExt
+    const task = storage.ref(`images/${name}`).put(image)
     task.on(
       'state_changed',
       snapshot => {},
@@ -267,7 +272,7 @@ const ProfileContainer = () => {
       () => {
         storage
           .ref('images')
-          .child(image.name)
+          .child(name)
           .getDownloadURL()
           .then(url => {
             setDetail(previousState => ({
