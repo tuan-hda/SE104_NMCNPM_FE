@@ -12,6 +12,7 @@ const Cart = ({ qty }) => {
   const [subTotal, setSubTotal] = useState(0)
   const [promoPrice,setPromoPrice] = useState(0)
   const { currentUser } = useSelector(state => state.user)
+  const { currentUser, loading: loadin } = useSelector(state => state.user)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -35,8 +36,6 @@ const Cart = ({ qty }) => {
         routes.getAccessTokenHeader(token)
       )
 
-      console.log([...result.data.cartItems])
-
       if (result.data.cartItems !== 'hmu') setItems([...result.data.cartItems])
     } catch (err) {
       console.log(err)
@@ -50,6 +49,10 @@ const Cart = ({ qty }) => {
     fetchCart()
   }, [qty])
 
+  // navigate to login if user is anonymous
+  useEffect(() => {
+    if (!loadin && !currentUser) navigate('/signin')
+  }, [loadin, currentUser, navigate])
   const deliveryFee = 20000
 
   if (loading)

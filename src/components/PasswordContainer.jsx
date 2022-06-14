@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { validateInfo } from '../utils/validateInfo';
-import firebase from 'firebase/compat/app';
-import { changePasswordInitiate } from '../actions';
+import { useDispatch, useSelector } from 'react-redux'
+import { validateInfo } from '../utils/validateInfo'
+import firebase from 'firebase/compat/app'
+import { changePasswordInitiate } from '../actions'
 import LoadingScreen from './LoadingScreen'
 
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
 
 const PasswordContainer = () => {
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [oldPassword, setOldPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [err, setError] = useState({
     oldPassword: '',
     password: '',
     confirmPassword: ''
-  });
+  })
   const [reauthenErr, setReauthenErr] = useState('')
 
-  const { loading, currentUser, error, message } = useSelector(state => state.user)
+  const { loading, currentUser, error, message } = useSelector(
+    state => state.user
+  )
   const dispatch = useDispatch()
 
   // Handle onChange for old password
-  const onOldPasswordChange = (e) => {
+  const onOldPasswordChange = e => {
     const key = e.target.name
     const value = e.target.value
 
@@ -30,7 +32,7 @@ const PasswordContainer = () => {
       [key]: value
     })
 
-    setError((previousState) => ({
+    setError(previousState => ({
       ...previousState,
       [key]: validateErr[key]
     }))
@@ -47,12 +49,12 @@ const PasswordContainer = () => {
       password: value
     })
 
-    setError((previousState) => ({
+    setError(previousState => ({
       ...previousState,
       [key]: validateErr[key]
     }))
 
-    setNewPassword(e.target.value);
+    setNewPassword(e.target.value)
   }
 
   // Handle onChange for confirm password
@@ -65,12 +67,12 @@ const PasswordContainer = () => {
       password: newPassword
     })
 
-    setError((previousState) => ({
+    setError(previousState => ({
       ...previousState,
       [key]: validateErr[key]
     }))
 
-    setConfirmPassword(e.target.value);
+    setConfirmPassword(e.target.value)
   }
 
   // Handle submit when user hit save button
@@ -112,6 +114,15 @@ const PasswordContainer = () => {
     }
   }
 
+  // console.log(currentUser)
+  if (currentUser?.providerData[0].providerId !== 'password')
+    return (
+      <p>
+        You can't change your password since you signed in with Google or
+        Facebook.
+      </p>
+    )
+
   return (
     <form className='mb-10' onSubmit={e => e.preventDefault()}>
       <LoadingScreen loading={loading} />
@@ -121,20 +132,30 @@ const PasswordContainer = () => {
         {/* Including Title, description */}
         <div>
           <h1 className='font-bold text-32'>Password</h1>
-          <p className='text-sm mt-2'>Please never share or give out your password.</p>
+          <p className='text-sm mt-2'>
+            Please never share or give out your password.
+          </p>
         </div>
 
-        <button className='save-button' onClick={handleSubmit}>Save</button>
+        <button className='save-button' onClick={handleSubmit}>
+          Save
+        </button>
       </div>
 
       {/* Success message */}
-      {message && <div className='text-black font-normal bg-[#47AC40] border-[1px] border-[#47AC40] py-5 px-4 rounded-md bg-opacity-50 mt-4 text-13'>{message}</div>}
+      {message && (
+        <div className='text-black font-normal bg-[#47AC40] border-[1px] border-[#47AC40] py-5 px-4 rounded-md bg-opacity-50 mt-4 text-13'>
+          {message}
+        </div>
+      )}
 
       {/* Error message */}
-      {(reauthenErr || error) && <div className='text-black font-normal bg-red-500 border-[1px] border-red-500 py-5 px-4 rounded-md bg-opacity-40 mt-4 text-13'>
-        <p>{reauthenErr}</p>
-        {error && <p>Change password failed.</p>}
-      </div>}
+      {(reauthenErr || error) && (
+        <div className='text-black font-normal bg-red-500 border-[1px] border-red-500 py-5 px-4 rounded-md bg-opacity-40 mt-4 text-13'>
+          <p>{reauthenErr}</p>
+          {error && <p>Change password failed.</p>}
+        </div>
+      )}
 
       {/* Old password */}
       <div className='flex mt-12 justify-between text-sm items-center'>
@@ -145,10 +166,13 @@ const PasswordContainer = () => {
           className={err.oldPassword ? 'profile-input-err' : 'profile-input'}
           name='oldPassword'
           value={oldPassword}
-          onChange={onOldPasswordChange} />
+          onChange={onOldPasswordChange}
+        />
       </div>
       {/* Show error if user does not enter old password field */}
-      {err.oldPassword && <p className='text-red-500 text-sm ml-40'>{err.oldPassword}</p>}
+      {err.oldPassword && (
+        <p className='text-red-500 text-sm ml-40'>{err.oldPassword}</p>
+      )}
 
       {divider}
 
@@ -158,16 +182,21 @@ const PasswordContainer = () => {
 
         <input
           type='password'
-          className={err.password.length ? 'profile-input-err' : 'profile-input'}
+          className={
+            err.password.length ? 'profile-input-err' : 'profile-input'
+          }
           name='password'
           value={newPassword}
-          onChange={onNewPasswordChange} />
+          onChange={onNewPasswordChange}
+        />
       </div>
       {/* Show errors if new password does not meet requirements */}
-      {err.password && err.password.map((err, i) => <p
-        className='text-red-500 text-sm ml-40'
-        key={i}>
-        {err}</p>)}
+      {err.password &&
+        err.password.map((err, i) => (
+          <p className='text-red-500 text-sm ml-40' key={i}>
+            {err}
+          </p>
+        ))}
 
       {divider}
 
@@ -177,14 +206,18 @@ const PasswordContainer = () => {
 
         <input
           type='password'
-          className={err.confirmPassword ? 'profile-input-err' : 'profile-input'}
+          className={
+            err.confirmPassword ? 'profile-input-err' : 'profile-input'
+          }
           name='confirmPassword'
           value={confirmPassword}
-          onChange={onConfirmPasswordChange} />
-
+          onChange={onConfirmPasswordChange}
+        />
       </div>
       {/* Show error if user type a password does not match with new password */}
-      {err.confirmPassword && <p className='text-red-500 text-sm ml-40'>{err.confirmPassword}</p>}
+      {err.confirmPassword && (
+        <p className='text-red-500 text-sm ml-40'>{err.confirmPassword}</p>
+      )}
     </form>
   )
 }

@@ -58,6 +58,17 @@ export const validateInfo = value => {
   return error
 }
 
+// VALIDATE PHONE
+export const validatePhone = value => {
+  let error
+  if (!value) {
+    error = 'Phone required.'
+  } else if (value.length < 10) {
+    error = 'At least 10 numbers.'
+  }
+  return error
+}
+
 // VALIDATE DELIVERY INFO
 
 export const validateDeliveryInfo = value => {
@@ -73,8 +84,8 @@ export const validateAddAddress = value => {
 
   if (!value.phone) {
     error.phone = 'Phone required.'
-  } else if (value.phone.length < 9) {
-    error.phone = 'At least 9 numbers.'
+  } else if (value.phone.length < 10) {
+    error.phone = 'At least 10 numbers.'
   }
 
   if (!value.address) {

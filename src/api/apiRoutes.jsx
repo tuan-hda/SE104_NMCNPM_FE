@@ -115,6 +115,7 @@ export const getPurchaseBody = (
   district,
   ward,
   note,
+  name,
   restaurantID
 ) => ({
   payment: payment,
@@ -124,6 +125,7 @@ export const getPurchaseBody = (
   district: district,
   ward: ward,
   note: note,
+  name,
   restaurantID
 })
 

@@ -15,6 +15,7 @@ import normalizeText from '../utils/normalizeText'
 import handleApiCallError from '../utils/handleApiCallError'
 import AlertModal from '../components/modals/AlertModal'
 import LoadingScreen from '../components/LoadingScreen'
+import { useNavigate } from 'react-router-dom'
 
 // Create data for combobox
 const createComboboxData = data => {
@@ -65,8 +66,14 @@ const Purchase = () => {
   const { isShowing: isSuccessShowing, toggle: toggleSuccessShowing } =
     useModal()
   const { isShowing: distanceError, toggle: toggleDistanceError } = useModal()
-  const { currentUser } = useSelector(state => state.user)
+  const { currentUser, loadin } = useSelector(state => state.user)
   const { qty } = useSelector(state => state.cart)
+  const navigate = useNavigate()
+
+  // Navigate to sign in if user is anonymous
+  useEffect(() => {
+    if (!loadin && !currentUser) navigate('/signin')
+  }, [loadin, currentUser, navigate])
 
   // Fetch province at first render
   useEffect(() => {
@@ -264,6 +271,7 @@ const Purchase = () => {
         deliveryInfo.district,
         deliveryInfo.ward,
         deliveryInfo.note,
+        deliveryInfo.name,
         restaurantID
       )
     )
@@ -277,6 +285,7 @@ const Purchase = () => {
         deliveryInfo.district,
         deliveryInfo.ward,
         deliveryInfo.note,
+        deliveryInfo.name,
         restaurantID
       ),
       routes.getAccessTokenHeader(token)

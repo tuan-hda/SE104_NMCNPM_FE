@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import * as routes from '../api/apiRoutes'
 import appApi from '../api/appApi'
 import { VscInbox } from 'react-icons/vsc'
+import { AiOutlineSearch } from 'react-icons/ai'
 
 const divider = (
   <tr className='border-t-[1px] border-[#F0F0F0] w-full' height='6px' />
@@ -33,9 +34,9 @@ const getTextColor = code => {
     case 2:
       return 'text-[#0086FF]'
     case 3:
-      return 'text-[#FF0000]'
-    case 4:
       return 'text-[#009D34]'
+    case 4:
+      return 'text-[#FF0000]'
     default:
       return ''
   }
@@ -43,7 +44,9 @@ const getTextColor = code => {
 
 const OrdersContainer = () => {
   const [orders, setOrders] = useState([])
+  const [originOrders, setOriginOrders] = useState([])
   const [loading, setLoading] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
   const navigate = useNavigate()
   const { currentUser } = useSelector(state => state.user)
 
@@ -62,11 +65,17 @@ const OrdersContainer = () => {
       )
       console.log(result.data)
       setOrders(result.data.orders)
+      setOriginOrders(result.data.orders)
     } catch (err) {
       console.log(err)
     } finally {
       setLoading(false)
     }
+  }
+
+  const getPaymentStatus = value => {
+    if (!value) return 'Cash'
+    else return 'Paid'
   }
 
   const reformatDate = date => {
@@ -78,6 +87,21 @@ const OrdersContainer = () => {
     fetchOrders()
   }, [])
 
+  const handleFilter = e => {
+    const value = e.target.value
+    setSearchValue(value)
+    setOrders(
+      originOrders.filter(
+        o =>
+          String(o.id).toLowerCase().includes(value) ||
+          reformatDate(o.date.substring(0, 10)).toLowerCase().includes(value) ||
+          String(o.total).toLowerCase().includes(value) ||
+          getDeliveryStatus(o.billstatus).toLowerCase().includes(value) ||
+          getPaymentStatus(o.payment).toLowerCase().includes(value)
+      )
+    )
+  }
+
   return (
     <div className='mb-10'>
       {/* This is the header. Including: Title, description */}
@@ -85,12 +109,31 @@ const OrdersContainer = () => {
         <h1 className='text-32 font-bold'>Orders</h1>
         <p className='mt-2 text-sm'>Your orders will be displayed here.</p>
       </div>
-
-      {orders.length ? (
-        // Order list here
+      {originOrders.length ? (
         <div className='overflow-y-auto'>
+          {/* Search */}
+          <div className='relative'>
+            <input
+              type='text'
+              className='outline-0 border-[1px] border-gray-border mb-8 rounded-md w-full text-sm py-2 pr-4 pl-8'
+              value={searchValue}
+              name='searchValue'
+              placeholder='Search by id, date, total, status, payment'
+              onChange={handleFilter}
+            />
+            <AiOutlineSearch className='absolute top-3 left-2' />
+          </div>
+
           {/* Order list */}
+
           <table className='text-sm font-medium md:w-full w-[640px] sm:w-[768px]'>
+            <colgroup>
+              <col span='1' width='15%' />
+              <col span='1' width='20%' />
+              <col span='1' width='20%' />
+              <col span='1' width='20%' />
+              <col span='1' width='15%' />
+            </colgroup>
             <thead>
               <tr className='font-semibold text-left' height='40px'>
                 <th>Order ID</th>
@@ -127,7 +170,6 @@ const OrdersContainer = () => {
           </table>
         </div>
       ) : (
-        // Show if order list is empty
         <div className='flex items-center justify-center flex-col gap-2'>
           <VscInbox className='text-3xl' />
           <p>You haven't ordered anything yet.</p>
