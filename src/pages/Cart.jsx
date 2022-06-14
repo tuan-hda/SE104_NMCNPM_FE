@@ -11,7 +11,6 @@ const Cart = ({ qty }) => {
   const [items, setItems] = useState([])
   const [subTotal, setSubTotal] = useState(0)
   const [promoPrice,setPromoPrice] = useState(0)
-  const { currentUser } = useSelector(state => state.user)
   const { currentUser, loading: loadin } = useSelector(state => state.user)
   const navigate = useNavigate()
 
