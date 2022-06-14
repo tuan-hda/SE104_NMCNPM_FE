@@ -10,17 +10,20 @@ const Cart = ({ qty }) => {
   const [loading, setLoading] = useState(true)
   const [items, setItems] = useState([])
   const [subTotal, setSubTotal] = useState(0)
+  const [promoPrice,setPromoPrice] = useState(0)
   const { currentUser } = useSelector(state => state.user)
   const navigate = useNavigate()
 
   useEffect(() => {
-    let price = 0
+    let price = 0, promoPrice=0
 
     for (let i = 0; i < items.length; i++) {
       price += items[i].number * items[i].product.price
+      promoPrice += items[i].totalPricePromo
     }
 
     setSubTotal(price)
+    setPromoPrice(promoPrice)
   }, [items, subTotal, setSubTotal])
 
   const fetchCart = async () => {
@@ -32,6 +35,8 @@ const Cart = ({ qty }) => {
         routes.getAccessTokenHeader(token)
       )
 
+      console.log([...result.data.cartItems])
+
       if (result.data.cartItems !== 'hmu') setItems([...result.data.cartItems])
     } catch (err) {
       console.log(err)
@@ -40,7 +45,7 @@ const Cart = ({ qty }) => {
     }
   }
 
-  //get Cart count
+  //get Cart
   useEffect(() => {
     fetchCart()
   }, [qty])
@@ -81,8 +86,8 @@ const Cart = ({ qty }) => {
           </div>
           {/* TAX */}
           <div className='w-full grid grid-cols-2 justify-between mb-10'>
-            <h3>TAX</h3>
-            <h3 className='place-self-end font-medium'>-</h3>
+            <h3>DISCOUNT</h3>
+            <h3 className='place-self-end font-medium'>{'$'+(+subTotal-promoPrice)}</h3>
           </div>
           {/* Delivery Fee */}
           <div className='w-full grid grid-cols-2 justify-between mb-20'>
@@ -93,7 +98,7 @@ const Cart = ({ qty }) => {
           <div className='w-full grid grid-cols-2 justify-between place-content-center h-24 border-t-[1px] border-[#C6BDBD]'>
             <h3 className='font-semibold'>ESTIMATED TOTAL</h3>
             <h3 className='font-semibold text-secondary place-self-end'>
-              {'$' + (subTotal+deliveryFee)}
+              {'$' + (promoPrice+deliveryFee)}
             </h3>
           </div>
           {/* Add to Cart Button */}
