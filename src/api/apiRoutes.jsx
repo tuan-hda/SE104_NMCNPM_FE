@@ -176,3 +176,6 @@ export const getPromotionParams = id => ({
     id: id
   }
 })
+
+// GET CURRENT PROMOTION
+export const GET_CURRENT_PROMOTION = 'get-current-promotion'
