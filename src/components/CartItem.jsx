@@ -1,31 +1,31 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import CartProductThumb from './CartProductThumb'
 import removeIcon from '../images/removeIcon.png'
 
-import { connect,useSelector } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { removeFromCart, adjustQty } from '../actions/cart-actions'
-import appApi from '../api/appApi';
+import appApi from '../api/appApi'
 import * as routes from '../api/apiRoutes'
+import round2digits from '../utils/round2digits'
 
-const CartItem = ({itemData,removeFromCart, adjustQty,isEditable}) => {
+const CartItem = ({ itemData, removeFromCart, adjustQty, isEditable }) => {
+  const [quantity, setQuantity] = useState(itemData.number)
+  const { currentUser } = useSelector(state => state.user)
 
-  const [quantity,setQuantity] = useState(itemData.number)
-  const { currentUser} = useSelector(state => state.user)
-
-  const onChangeHandler = (e) => {
-    adjustQty(quantity,+e.target.value)
-    setQuantity(+e.target.value);
+  const onChangeHandler = e => {
+    adjustQty(quantity, +e.target.value)
+    setQuantity(+e.target.value)
   }
-  
+
   const handleIncrease = () => {
-    adjustQty(quantity,+quantity+1)
-    setQuantity(+quantity+1)   
+    adjustQty(quantity, +quantity + 1)
+    setQuantity(+quantity + 1)
   }
   const handleDecrease = () => {
-      if (quantity>1) {
-        adjustQty(quantity,+quantity-1)
-        setQuantity(+quantity-1)
-      }
+    if (quantity > 1) {
+      adjustQty(quantity, +quantity - 1)
+      setQuantity(+quantity - 1)
+    }
   }
 
   const handleUpdateCart = async () => {
@@ -34,10 +34,7 @@ const CartItem = ({itemData,removeFromCart, adjustQty,isEditable}) => {
 
       await appApi.put(
         routes.UPDATE_CART_ITEM,
-        routes.getUpdateCartBody(
-          itemData.product.id,
-          quantity
-        ),
+        routes.getUpdateCartBody(itemData.product.id, quantity),
         routes.getAccessTokenHeader(token)
       )
     } catch (err) {
@@ -47,22 +44,20 @@ const CartItem = ({itemData,removeFromCart, adjustQty,isEditable}) => {
 
   useEffect(() => {
     handleUpdateCart()
-  },[quantity])
+  }, [quantity])
 
   const handleRemove = async () => {
     try {
       const token = await currentUser.getIdToken()
 
-      await appApi.delete(
-        routes.DELETE_CART_ITEM, {
-          headers: {
-            Authorization: 'Bearer '+token
-          },
-          data: {
-            itemID: itemData.product.id
-          }
+      await appApi.delete(routes.DELETE_CART_ITEM, {
+        headers: {
+          Authorization: 'Bearer ' + token
+        },
+        data: {
+          itemID: itemData.product.id
         }
-      );
+      })
 
       removeFromCart(quantity)
     } catch (err) {
@@ -70,53 +65,61 @@ const CartItem = ({itemData,removeFromCart, adjustQty,isEditable}) => {
         console.log(err.response.data)
         console.log(err.response.status)
         console.log(err.response.headers)
-      } 
-      else {
+      } else {
         console.log(err.message)
       }
-    } 
+    }
   }
 
   return (
-    <div className={'grid '+(isEditable ? 'grid-cols-6' : 'grid-cols-5')+' py-4 place-items-center'}>
+    <div
+      className={
+        'grid ' +
+        (isEditable ? 'grid-cols-6' : 'grid-cols-5') +
+        ' py-4 place-items-center'
+      }
+    >
       {/* Items */}
       <CartProductThumb itemData={itemData} />
       {/* Quantity */}
-      {isEditable ? 
-      <div className='flex items-center gap-3'>
-        <button onClick={handleDecrease}>
-          <h6 className='text-32 mb-1'>-</h6>
-        </button>
-        <input className=' w-8 h-8 placeholder-black-placeholder
-        border-gray-border font-semibold text-15 text-center outline-0 border-[1px] rounded-md' 
-        value={quantity}
-        onChange={onChangeHandler}
-        />
-        <button onClick={handleIncrease}>
-          <h6 className=' text-32'>+</h6>
-        </button> 
-      </div>
-      : 
-      <h6 className='font-semibold text-15'>{quantity}</h6>
-      }
+      {isEditable ? (
+        <div className='flex items-center gap-3'>
+          <button onClick={handleDecrease}>
+            <h6 className='text-32 mb-1'>-</h6>
+          </button>
+          <input
+            className=' w-8 h-8 placeholder-black-placeholder
+        border-gray-border font-semibold text-15 text-center outline-0 border-[1px] rounded-md'
+            value={quantity}
+            onChange={onChangeHandler}
+          />
+          <button onClick={handleIncrease}>
+            <h6 className=' text-32'>+</h6>
+          </button>
+        </div>
+      ) : (
+        <h6 className='font-semibold text-15'>{quantity}</h6>
+      )}
       {/* Total */}
-      <h6 className='font-semibold text-15 text-primary'>{'$'+itemData.product.price*quantity}</h6>
+      <h6 className='font-semibold text-15 text-primary'>
+        {'$' + round2digits(itemData.product.price * quantity)}
+      </h6>
       {/* Remove */}
-      {
-      isEditable&&
-      (<button className='w-6 h-6' onClick={handleRemove}>
-        <img src={removeIcon} alt="Remove" />
-      </button>)
-      }
+      {isEditable && (
+        <button className='w-6 h-6' onClick={handleRemove}>
+          <img src={removeIcon} alt='Remove' />
+        </button>
+      )}
     </div>
   )
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    removeFromCart: (quantity) => dispatch(removeFromCart(quantity)),
-    adjustQty: (quantityBefore,quantityAfter) => dispatch(adjustQty(quantityBefore,quantityAfter))
+    removeFromCart: quantity => dispatch(removeFromCart(quantity)),
+    adjustQty: (quantityBefore, quantityAfter) =>
+      dispatch(adjustQty(quantityBefore, quantityAfter))
   }
 }
 
-export default connect(null,mapDispatchToProps)(CartItem)
+export default connect(null, mapDispatchToProps)(CartItem)

@@ -47,7 +47,7 @@ const Purchase = () => {
   })
   const [saveAddress, setSaveAddress] = useState(false)
   const [currMethod, setMethod] = useState('COD')
-
+  const [msg, setMsg] = useState('')
   const [province, setProvince] = useState([])
   const [district, setDistrict] = useState([])
   const [ward, setWard] = useState([])
@@ -303,8 +303,9 @@ const Purchase = () => {
     return nominatimApi.get('search.php?format=jsonv2&q=' + q)
   }
 
-  const showDistanceError = () => {
+  const showDistanceError = msg => {
     console.log('Error distance too far')
+    setMsg(msg)
     toggleDistanceError()
   }
 
@@ -352,7 +353,9 @@ const Purchase = () => {
       // Get current Coordinates of user's address
       const result = await getCoordinates()
       if (result.data.length === 0) {
-        showDistanceError()
+        showDistanceError(
+          "Your location is too far. Sorry that we can't confirm your order."
+        )
         return
       }
       const coordinates = {
@@ -379,10 +382,26 @@ const Purchase = () => {
 
       // If the distance is too far then show error
       if (nearestRestaurant.distance > 5) {
-        showDistanceError()
+        showDistanceError(
+          "Your location is too far. Sorry that we can't confirm your order."
+        )
         return
       }
+
       console.log(nearestRestaurant)
+      const open = nearestRestaurant.openData
+
+      // Check open time
+      const m = new Date()
+      if (
+        m.getHours() < open.fromHour ||
+        (m.getHours() == open.fromHour && m.getMinutes < open.fromMin) ||
+        m.getHours() > open.toHour ||
+        (m.getHours() == open.toHour && m.getMinutes() > open.toMin)
+      ) {
+        showDistanceError('Restaurant closed.')
+        return
+      }
 
       // console.log(nearestRestaurant.id)
       // return
@@ -416,7 +435,7 @@ const Purchase = () => {
       <LoadingScreen loading={loading} />
       <AlertModal
         isShowing={distanceError}
-        msg="Your location is too far. Sorry that we can't confirm your order."
+        msg={msg}
         hide={toggleDistanceError}
         disableCancel={true}
       />

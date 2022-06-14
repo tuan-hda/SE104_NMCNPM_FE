@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { initCart } from '../../actions/cart-actions'
 import Check from '../../images/check.png'
+import round2digits from '../../utils/round2digits'
 
 const OrderSuccessModal = ({ isShowing, data, info }) => {
   const navigate = useNavigate()
@@ -67,9 +68,11 @@ const OrderSuccessModal = ({ isShowing, data, info }) => {
             <div className='font-semibold space-y-3 text-right text-red-500'>
               <p>
                 $
-                {(info.subtotal || 0) +
-                  (info.deliveryFee || 0) -
-                  (info.discount || 0)}
+                {round2digits(
+                  (info.subtotal || 0) +
+                    (info.deliveryFee || 0) -
+                    (info.discount || 0)
+                )}
               </p>
             </div>
           </div>

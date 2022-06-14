@@ -6,6 +6,7 @@ import appApi from '../api/appApi'
 import { VscInbox } from 'react-icons/vsc'
 import { AiOutlineSearch } from 'react-icons/ai'
 import LoadingScreen from './LoadingScreen'
+import round2digits from '../utils/round2digits'
 
 const divider = (
   <tr className='border-t-[1px] border-[#F0F0F0] w-full' height='6px' />
@@ -160,7 +161,9 @@ const OrdersContainer = () => {
                         {'#' + o.id}
                       </td>
                       <td>{reformatDate(o.date.substring(0, 10))}</td>
-                      <td className='text-primary'>{'$ ' + o.total}</td>
+                      <td className='text-primary'>
+                        {'$ ' + round2digits(o.total)}
+                      </td>
                       <td className={getTextColor(o.billstatus)}>
                         {getDeliveryStatus(o.billstatus)}
                       </td>
