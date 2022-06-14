@@ -77,18 +77,30 @@ const Header = ({ qty, initCart }) => {
         <Logo />
         {/* Navbar */}
         <ul className='hidden mr-4 md:flex h-full place-items-center'>
-          <li className='px-11 font-bold hover:bg-white h-full grid content-center'>
-            <Link to='/'>Home</Link>
-          </li>
-          <li className='px-11 font-bold hover:bg-white h-full grid content-center'>
-            <Link to='/menu'>Menu</Link>
-          </li>
-          <li className='px-11 font-bold hover:bg-white h-full grid content-center'>
-            <Link to='/about'>About</Link>
-          </li>
-          <li className='px-11 font-bold hover:bg-white h-full grid content-center'>
-            <Link to='/contact'>Contact</Link>
-          </li>
+          <Link
+            to='/'
+            className='px-11 font-bold hover:bg-white h-full grid content-center'
+          >
+            Home
+          </Link>
+          <Link
+            to='/menu'
+            className='px-11 font-bold hover:bg-white h-full grid content-center'
+          >
+            Menu
+          </Link>
+          <Link
+            to='/about'
+            className='px-11 font-bold hover:bg-white h-full grid content-center'
+          >
+            About
+          </Link>
+          <Link
+            to='/contact'
+            className='px-11 font-bold hover:bg-white h-full grid content-center'
+          >
+            Contact
+          </Link>
         </ul>
         {/* Search */}
         <Search />

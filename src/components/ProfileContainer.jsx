@@ -13,6 +13,7 @@ import provinceApi from '../api/provinceApi'
 import sortByName from '../utils/sortByName'
 import normalizeText from '../utils/normalizeText'
 import { v4 } from 'uuid'
+import { validateInfo, validatePhone } from '../utils/validateInfo'
 
 const divider = <div className='border-t-[1px] border-[#F0F0F0] w-full mt-6' />
 
@@ -69,6 +70,7 @@ const ProfileContainer = () => {
     gender: '',
     dob: ''
   })
+  const [error, setError] = useState('')
 
   // Get province, district and ward state from store
   // const province = useSelector((state) => state.province);
@@ -193,6 +195,19 @@ const ProfileContainer = () => {
   const handleChange = e => {
     const key = e.target.name
     const value = e.target.value
+    let err
+
+    if (key === 'phone') {
+      if (value === '' || /^[0-9\b]+$/.test(value)) {
+        setDetail({
+          ...detail,
+          [key]: value
+        })
+        err = validatePhone(value)
+        setError(err)
+      }
+      return
+    }
 
     if (key === 'province' && value !== 'default') {
       setDetail({
@@ -235,6 +250,8 @@ const ProfileContainer = () => {
   }
 
   const handleSubmit = e => {
+    const err = validatePhone(detail.phone)
+    if (err) return
     setLoading(true)
     e.preventDefault()
     if (image) handleUploadImage()
@@ -554,13 +571,19 @@ const ProfileContainer = () => {
       <div className='profile-div'>
         <p className='sm:w-24 w-full lg:w-36 font-semibold'>Your phone</p>
 
-        <input
-          type='text'
-          className='profile-input'
-          name='phone'
-          value={detail.phone || ''}
-          onChange={handleChange}
-        />
+        <div className='flex-1'>
+          <input
+            type='text'
+            className={`${
+              error ? 'profile-input-err' : 'profile-input'
+            } w-full`}
+            name='phone'
+            maxLength={10}
+            value={detail.phone || ''}
+            onChange={handleChange}
+          />
+          {error && <p className='text-red-500'>{error}</p>}
+        </div>
       </div>
 
       {divider}
