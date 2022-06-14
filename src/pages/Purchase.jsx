@@ -67,8 +67,14 @@ const Purchase = () => {
   const { isShowing: isSuccessShowing, toggle: toggleSuccessShowing } =
     useModal()
   const { isShowing: distanceError, toggle: toggleDistanceError } = useModal()
-  const { currentUser, loadin } = useSelector(state => state.user)
+  const { currentUser, loading: loadin } = useSelector(state => state.user)
   const { qty } = useSelector(state => state.cart)
+  const navigate = useNavigate()
+
+  // Navigate to sign in if user is anonymous
+  useEffect(() => {
+    if (!loadin && !currentUser) navigate('/signin')
+  }, [loadin, currentUser, navigate])
 
   // Fetch province at first render
   useEffect(() => {
