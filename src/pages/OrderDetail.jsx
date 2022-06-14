@@ -168,12 +168,12 @@ const OrderDetail = () => {
                             {/* Discount */}
                             <div className="flex justify-between py-4">
                                 <h5>Discount</h5>
-                                <h5>{orderData.total-orderData.ship-originTotal()}</h5>
+                                <h5>{Number((orderData.total-orderData.ship-originTotal()).toFixed(2))}</h5>
                             </div>
                             {/* Estimated total */}
                             <div className="flex justify-between py-4">
                                 <h5>Estimated total</h5>
-                                <h5>{"$" + (orderData.total-orderData.ship)}</h5>
+                                <h5>{"$" + Number((orderData.total-orderData.ship).toFixed(2))}</h5>
                             </div>
                             {/* Delivery fee */}
                             <div className="flex justify-between py-4">
