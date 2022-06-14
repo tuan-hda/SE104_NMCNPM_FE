@@ -49,7 +49,7 @@ const RecommendationItems = () => {
           {/* Product Thumbs */}
           {Object.keys(productData) !== 0 && 
             productData.map((p, i) => {
-              return <ProductThumb key={i} product={p} />
+              return <ProductThumb key={i} product={p.item} />
             })
           }  
       </div>
