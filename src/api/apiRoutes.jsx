@@ -168,3 +168,11 @@ export const getOrderItemParams = id => ({
     id: id
   }
 })
+
+// GET ALL PROMOTIONS
+export const GET_PROMOTION = 'get-promotion'
+export const getPromotionParams = id => ({
+  params: {
+    id: id
+  }
+})
