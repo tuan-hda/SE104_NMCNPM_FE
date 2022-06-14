@@ -17,7 +17,7 @@ const BannerSlider = () => {
             let result = await api.get(routes.GET_CURRENT_PROMOTION)
             console.log(result)
             if (result.data.promotions!=null)
-              setPromotions(result.data.promotions)
+              setPromotions(result.data.promotions.banner)
         }
         catch (err) {
             if (err.response) {
@@ -50,9 +50,10 @@ const BannerSlider = () => {
         return hambursyLoader
     return (
         <Slider {...settings} className="w-screen">
+        {promotions&&
           <div>
-            <img src={promotions.banner} alt="Slide" className="w-screen"/>
-          </div>
+          <img src={promotions} alt="Slide" className="w-screen"/>
+          </div>}
           <div>
             <img src={Slide2} alt="Slide" className="w-screen"/>
           </div>
