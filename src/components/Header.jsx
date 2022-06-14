@@ -66,7 +66,10 @@ const Header = ({ qty, initCart }) => {
   }, [qty])
 
   const handleLogout = value => {
-    if (value) dispatch(logoutInitiate())
+    if (value) {
+      dispatch(logoutInitiate())
+      navigate('/')
+    }
   }
 
   return (
