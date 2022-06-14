@@ -5,6 +5,7 @@ import * as routes from '../api/apiRoutes'
 import appApi from '../api/appApi'
 import { VscInbox } from 'react-icons/vsc'
 import { AiOutlineSearch } from 'react-icons/ai'
+import LoadingScreen from './LoadingScreen'
 
 const divider = (
   <tr className='border-t-[1px] border-[#F0F0F0] w-full' height='6px' />
@@ -63,7 +64,7 @@ const OrdersContainer = () => {
         routes.GET_ALL_ORDERS,
         routes.getAccessTokenHeader(token)
       )
-      console.log(result.data)
+      console.log(result.data.orders)
       setOrders(result.data.orders)
       setOriginOrders(result.data.orders)
     } catch (err) {
@@ -104,6 +105,8 @@ const OrdersContainer = () => {
 
   return (
     <div className='mb-10'>
+      <LoadingScreen loading={loading} />
+
       {/* This is the header. Including: Title, description */}
       <div className='mb-11'>
         <h1 className='text-32 font-bold'>Orders</h1>
@@ -157,7 +160,7 @@ const OrdersContainer = () => {
                         {'#' + o.id}
                       </td>
                       <td>{reformatDate(o.date.substring(0, 10))}</td>
-                      <td>{'$ ' + o.total}</td>
+                      <td className='text-primary'>{'$ ' + o.total}</td>
                       <td className={getTextColor(o.billstatus)}>
                         {getDeliveryStatus(o.billstatus)}
                       </td>

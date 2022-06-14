@@ -16,6 +16,7 @@ import handleApiCallError from '../utils/handleApiCallError'
 import AlertModal from '../components/modals/AlertModal'
 import LoadingScreen from '../components/LoadingScreen'
 import { useNavigate } from 'react-router-dom'
+import round2digits from '../utils/round2digits'
 
 // Create data for combobox
 const createComboboxData = data => {
@@ -68,12 +69,6 @@ const Purchase = () => {
   const { isShowing: distanceError, toggle: toggleDistanceError } = useModal()
   const { currentUser, loadin } = useSelector(state => state.user)
   const { qty } = useSelector(state => state.cart)
-  const navigate = useNavigate()
-
-  // Navigate to sign in if user is anonymous
-  useEffect(() => {
-    if (!loadin && !currentUser) navigate('/signin')
-  }, [loadin, currentUser, navigate])
 
   // Fetch province at first render
   useEffect(() => {
@@ -449,9 +444,11 @@ const Purchase = () => {
           <br />
           <p className='font-normal mt-1'>
             {'$' +
-              ((info.subtotal || 0) +
-                (info.deliveryFee || 0) -
-                (info.discount || 0))}
+              round2digits(
+                (info.subtotal || 0) +
+                  (info.deliveryFee || 0) -
+                  (info.discount || 0)
+              )}
           </p>
         </button>
 
@@ -641,7 +638,7 @@ const Purchase = () => {
           {/* Subtotal */}
           <div className='flex justify-between pt-4 font-semibold'>
             <p>Subtotal</p>
-            <p>{'$' + (info.subtotal || 0)}</p>
+            <p>{'$' + round2digits(info.subtotal || 0)}</p>
           </div>
 
           {/* Delivery fee */}
@@ -664,9 +661,11 @@ const Purchase = () => {
             <p>Total</p>
             <p>
               {'$' +
-                ((info.subtotal || 0) +
-                  (info.deliveryFee || 0) -
-                  (info.discount || 0))}
+                round2digits(
+                  (info.subtotal || 0) +
+                    (info.deliveryFee || 0) -
+                    (info.discount || 0)
+                )}
             </p>
           </div>
 

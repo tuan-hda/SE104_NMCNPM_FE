@@ -61,9 +61,7 @@ export const validateInfo = value => {
 // VALIDATE PHONE
 export const validatePhone = value => {
   let error
-  if (!value) {
-    error = 'Phone required.'
-  } else if (value.length < 10) {
+  if (value && value.length < 10) {
     error = 'At least 10 numbers.'
   }
   return error

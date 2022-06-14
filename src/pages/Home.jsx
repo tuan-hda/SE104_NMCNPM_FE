@@ -11,7 +11,7 @@ const Home = () => {
       {/* Banner Slider */}
       <BannerSlider />
       {/* Recommendation Items */}
-      <div className='px-32 mt-20'>
+      <div className='px-2 sm:px-8 md:px-16 xl:px-32 mt-20'>
         <h1 className='text-34 font-extrabold mb-10'>RECOMMENDATION ITEMS</h1>
         <RecommendationItems />
       </div>
@@ -26,13 +26,13 @@ const Home = () => {
         <img src={OrderNowBanner} alt='Start Order Now' />
         {/* Start Order Now Button */}
         <Link to='/menu'>
-          <button className='absolute bottom-[75px] right-72 items-center bg-white text-[26px] text-secondary font-bold rounded-[22px] w-70 h-20 px-10'>
+          <button className='absolute bottom-[13%] right-[17%] items-center bg-white text-[1.5vw] text-secondary font-bold rounded-[22px] w-[20vw] h-[6vw] '>
             Start Order Now
           </button>
         </Link>
       </div>
       {/* Newsletter */}
-      <div className='px-32 mt-20'>
+      <div className='px-2 sm:px-8 md:px-16 xl:px-32 mt-20'>
         <h2 className='text-34 font-bold text-[#202124] border-b-[1px] border-divider'>
           DELICIOUS NEWS IN YOUR MAILBOX
         </h2>
@@ -54,7 +54,7 @@ const Home = () => {
             name='email'
           />
           {/* Register Button */}
-          <button className='items-center ml-10 bg-secondary text-[18px] text-white font-bold rounded-[15px] w-50 h-12 px-10'>
+          <button className='items-center ml-10 bg-secondary text-[18px] text-white font-bold rounded-[15px] w-50 h-12 px-10 sm:w-auto w-[50%] my-2'>
             Register
           </button>
         </div>

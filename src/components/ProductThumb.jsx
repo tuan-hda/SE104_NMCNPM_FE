@@ -52,7 +52,16 @@ const ProductThumb = ({ product }) => {
           <div>
             <h2 className='font-semibold'>{product.itemName}</h2>
             <p className='mt-0.5'>Calories: {product.calories}</p>
-            <p className='font-bold mt-0.5 text-red-500'>${product.price}</p>
+            <p className='mt-0.5'>
+              {product.pricePromo !== product.price && (
+                <span className='mr-4 line-through'>
+                  $ {product.pricePromo}
+                </span>
+              )}
+              <span className='font-bold text-red-500'>
+                $ {product.pricePromo}
+              </span>
+            </p>
           </div>
 
           <button
