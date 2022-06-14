@@ -52,7 +52,6 @@ const Cart = ({ qty }) => {
   useEffect(() => {
     if (!loadin && !currentUser) navigate('/signin')
   }, [loadin, currentUser, navigate])
-  const deliveryFee = 20000
 
   if (loading)
     return (
@@ -91,16 +90,11 @@ const Cart = ({ qty }) => {
             <h3>DISCOUNT</h3>
             <h3 className='place-self-end font-medium'>{'$'+(+subTotal-promoPrice)}</h3>
           </div>
-          {/* Delivery Fee */}
-          <div className='w-full grid grid-cols-2 justify-between mb-20'>
-            <h3>DELIVERY FEE</h3>
-            <h3 className='place-self-end font-medium'>{'$' + deliveryFee}</h3>
-          </div>
           {/* ESTIMATED TOTAL */}
           <div className='w-full grid grid-cols-2 justify-between place-content-center h-24 border-t-[1px] border-[#C6BDBD]'>
             <h3 className='font-semibold'>ESTIMATED TOTAL</h3>
             <h3 className='font-semibold text-secondary place-self-end'>
-              {'$' + (promoPrice+deliveryFee)}
+              {'$' + (promoPrice)}
             </h3>
           </div>
           {/* Add to Cart Button */}
