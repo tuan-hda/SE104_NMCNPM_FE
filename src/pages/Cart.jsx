@@ -5,17 +5,19 @@ import api from '../api/appApi'
 import * as routes from '../api/apiRoutes'
 import { hambursyLoader } from '../components/LoadingScreen'
 import { useNavigate } from 'react-router-dom'
+import round2digits from '../utils/round2digits'
 
 const Cart = ({ qty }) => {
   const [loading, setLoading] = useState(true)
   const [items, setItems] = useState([])
   const [subTotal, setSubTotal] = useState(0)
-  const [promoPrice,setPromoPrice] = useState(0)
+  const [promoPrice, setPromoPrice] = useState(0)
   const { currentUser, loading: loadin } = useSelector(state => state.user)
   const navigate = useNavigate()
 
   useEffect(() => {
-    let price = 0, promoPrice=0
+    let price = 0,
+      promoPrice = 0
 
     for (let i = 0; i < items.length; i++) {
       price += items[i].number * items[i].product.price
@@ -83,18 +85,22 @@ const Cart = ({ qty }) => {
           {/* Subtotal */}
           <div className='w-full grid grid-cols-2 justify-between mb-10'>
             <h3>SUBTOTAL</h3>
-            <h3 className='place-self-end font-medium'>{'$' + subTotal}</h3>
+            <h3 className='place-self-end font-medium'>
+              {'$' + round2digits(subTotal)}
+            </h3>
           </div>
           {/* TAX */}
           <div className='w-full grid grid-cols-2 justify-between mb-10'>
             <h3>DISCOUNT</h3>
-            <h3 className='place-self-end font-medium'>{'$'+(+subTotal-promoPrice)}</h3>
+            <h3 className='place-self-end font-medium'>
+              {'$' + round2digits(+subTotal - promoPrice)}
+            </h3>
           </div>
           {/* ESTIMATED TOTAL */}
           <div className='w-full grid grid-cols-2 justify-between place-content-center h-24 border-t-[1px] border-[#C6BDBD]'>
             <h3 className='font-semibold'>ESTIMATED TOTAL</h3>
             <h3 className='font-semibold text-secondary place-self-end'>
-              {'$' + (promoPrice)}
+              {'$' + round2digits(promoPrice)}
             </h3>
           </div>
           {/* Add to Cart Button */}

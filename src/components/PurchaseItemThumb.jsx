@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import round2digits from '../utils/round2digits'
 
 const PurchaseItemThumb = ({ itemData }) => {
   return (
@@ -23,7 +24,7 @@ const PurchaseItemThumb = ({ itemData }) => {
           <div className='flex justify-between'>
             <h6 className='text-blue-primary'>{itemData.number}</h6>
             <h6 className=''>
-              {'$' + itemData.product.price * itemData.number}
+              {'$' + round2digits(itemData.product.price * itemData.number)}
             </h6>
           </div>
         </div>

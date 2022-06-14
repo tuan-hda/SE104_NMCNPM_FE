@@ -42,6 +42,7 @@ const ProductContainer = ({
       }
       // Split product list by category
       let productByCategoryList = {}
+      console.log(result.data.items)
       productByCategoryList = productByCategory(result.data.items)
       productByCategoryList['Featured'] = getFeaturedItems(result.data.items)
       setProduct(productByCategoryList)

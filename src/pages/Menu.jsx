@@ -34,7 +34,7 @@ const Menu = ({ searchValue }) => {
   }, [isVisible])
 
   return (
-    <div className='md:flex px-2 pt-2 md:pt-0 sm:px-8 md:px-16 xl:px-32 justify-between gap-x-10 sm:gap-x-20 lg:gap-x-32 xl:gap-x-44'>
+    <div className='md:flex pt-2 md:pt-0 px-2 sm:px-8 md:px-16 xl:px-32 justify-between gap-x-10 sm:gap-x-20 lg:gap-x-32 xl:gap-x-44'>
       <button
         className='text-white font-semibold fixed top-20 bg-black hover:black w-full left-0 hover:bg-gray-800 transition duration-300 pl-2 h-10 z-10 md:hidden'
         onClick={() => toggle(!isShowing)}

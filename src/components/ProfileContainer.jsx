@@ -590,7 +590,7 @@ const ProfileContainer = () => {
 
       {/* Your address */}
       <div className='profile-div'>
-        <p className='sm:w-24 w-full lg:w-36 font-semibold'>Your address</p>
+        <p className='sm:w-24 w-full lg:w-36 font-semibold'>Address detail</p>
 
         <input
           type='text'

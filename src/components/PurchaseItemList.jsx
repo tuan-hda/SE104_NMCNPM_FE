@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import * as routes from '../api/apiRoutes'
 import appApi from '../api/appApi'
+import round2digits from '../utils/round2digits'
 import LoadingScreen from './LoadingScreen'
 import PurchaseItemThumb from './PurchaseItemThumb'
 
@@ -19,17 +20,27 @@ const PurchaseItemList = ({ currentUser, setInfo }) => {
       )
 
       setItems(result.data.cartItems)
+      console.log(result.data.cartItems)
 
       setInfo(prev => ({
         ...prev,
         subtotal: calculateSubtotal(result.data.cartItems),
-        deliveryFee: 20000
+        deliveryFee: 1,
+        discount: caculateDiscount(result.data.cartItems)
       }))
     } catch (err) {
       console.log(err)
     } finally {
       setLoading(false)
     }
+  }
+
+  const caculateDiscount = data => {
+    if (!Array.isArray(data)) return
+    return round2digits(
+      calculateSubtotal(data) -
+        data.reduce((total, curr) => total + curr.totalPricePromo, 0)
+    )
   }
 
   const calculateSubtotal = data => {

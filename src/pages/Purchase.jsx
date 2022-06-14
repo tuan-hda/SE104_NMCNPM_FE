@@ -16,6 +16,7 @@ import handleApiCallError from '../utils/handleApiCallError'
 import AlertModal from '../components/modals/AlertModal'
 import LoadingScreen from '../components/LoadingScreen'
 import { useNavigate } from 'react-router-dom'
+import round2digits from '../utils/round2digits'
 
 // Create data for combobox
 const createComboboxData = data => {
@@ -46,7 +47,7 @@ const Purchase = () => {
   })
   const [saveAddress, setSaveAddress] = useState(false)
   const [currMethod, setMethod] = useState('COD')
-
+  const [msg, setMsg] = useState('')
   const [province, setProvince] = useState([])
   const [district, setDistrict] = useState([])
   const [ward, setWard] = useState([])
@@ -66,7 +67,7 @@ const Purchase = () => {
   const { isShowing: isSuccessShowing, toggle: toggleSuccessShowing } =
     useModal()
   const { isShowing: distanceError, toggle: toggleDistanceError } = useModal()
-  const { currentUser, loadin } = useSelector(state => state.user)
+  const { currentUser, loading: loadin } = useSelector(state => state.user)
   const { qty } = useSelector(state => state.cart)
   const navigate = useNavigate()
 
@@ -302,8 +303,9 @@ const Purchase = () => {
     return nominatimApi.get('search.php?format=jsonv2&q=' + q)
   }
 
-  const showDistanceError = () => {
+  const showDistanceError = msg => {
     console.log('Error distance too far')
+    setMsg(msg)
     toggleDistanceError()
   }
 
@@ -351,7 +353,9 @@ const Purchase = () => {
       // Get current Coordinates of user's address
       const result = await getCoordinates()
       if (result.data.length === 0) {
-        showDistanceError()
+        showDistanceError(
+          "Your location is too far. Sorry that we can't confirm your order."
+        )
         return
       }
       const coordinates = {
@@ -378,10 +382,26 @@ const Purchase = () => {
 
       // If the distance is too far then show error
       if (nearestRestaurant.distance > 5) {
-        showDistanceError()
+        showDistanceError(
+          "Your location is too far. Sorry that we can't confirm your order."
+        )
         return
       }
+
       console.log(nearestRestaurant)
+      const open = nearestRestaurant.openData
+
+      // Check open time
+      const m = new Date()
+      if (
+        m.getHours() < open.fromHour ||
+        (m.getHours() == open.fromHour && m.getMinutes < open.fromMin) ||
+        m.getHours() > open.toHour ||
+        (m.getHours() == open.toHour && m.getMinutes() > open.toMin)
+      ) {
+        showDistanceError('Restaurant closed.')
+        return
+      }
 
       // console.log(nearestRestaurant.id)
       // return
@@ -415,7 +435,7 @@ const Purchase = () => {
       <LoadingScreen loading={loading} />
       <AlertModal
         isShowing={distanceError}
-        msg="Your location is too far. Sorry that we can't confirm your order."
+        msg={msg}
         hide={toggleDistanceError}
         disableCancel={true}
       />
@@ -449,9 +469,11 @@ const Purchase = () => {
           <br />
           <p className='font-normal mt-1'>
             {'$' +
-              ((info.subtotal || 0) +
-                (info.deliveryFee || 0) -
-                (info.discount || 0))}
+              round2digits(
+                (info.subtotal || 0) +
+                  (info.deliveryFee || 0) -
+                  (info.discount || 0)
+              )}
           </p>
         </button>
 
@@ -641,7 +663,7 @@ const Purchase = () => {
           {/* Subtotal */}
           <div className='flex justify-between pt-4 font-semibold'>
             <p>Subtotal</p>
-            <p>{'$' + (info.subtotal || 0)}</p>
+            <p>{'$' + round2digits(info.subtotal || 0)}</p>
           </div>
 
           {/* Delivery fee */}
@@ -664,9 +686,11 @@ const Purchase = () => {
             <p>Total</p>
             <p>
               {'$' +
-                ((info.subtotal || 0) +
-                  (info.deliveryFee || 0) -
-                  (info.discount || 0))}
+                round2digits(
+                  (info.subtotal || 0) +
+                    (info.deliveryFee || 0) -
+                    (info.discount || 0)
+                )}
             </p>
           </div>
 

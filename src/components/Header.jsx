@@ -66,13 +66,16 @@ const Header = ({ qty, initCart }) => {
   }, [qty])
 
   const handleLogout = value => {
-    if (value) dispatch(logoutInitiate())
+    if (value) {
+      dispatch(logoutInitiate())
+      navigate('/')
+    }
   }
 
   return (
     <div className='w-screen h-[80px] bg-[#F8F8F8] fixed top-0 z-20'>
       {/* Header */}
-      <div className='px-32 justify-between flex items-center w-full h-full '>
+      <div className='px-4 sm:px-8 md:px-16 xl:px-32 justify-between flex items-center w-full h-full '>
         {/* Logo */}
         <Logo />
         {/* Navbar */}
