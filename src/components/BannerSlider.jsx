@@ -54,10 +54,10 @@ const BannerSlider = () => {
             <img src={promotions.banner} alt="Slide" className="w-screen"/>
           </div>
           <div>
-            <img src={Slide1} alt="Slide" className="w-screen"/>
+            <img src={Slide2} alt="Slide" className="w-screen"/>
           </div>
           <div>
-            <img src={Slide2} alt="Slide" className="w-screen"/>
+            <img src={Slide1} alt="Slide" className="w-screen"/>
           </div>
         </Slider>
     );
