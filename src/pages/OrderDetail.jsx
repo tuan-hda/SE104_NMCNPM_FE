@@ -15,6 +15,7 @@ const OrderDetail = () => {
     //Get order from profile/orders
     const location= useLocation();
     const orderData= location.state;
+    console.log(orderData)
 
     const getAddress = () => {
         const detail = orderData.deliAddress
@@ -90,6 +91,15 @@ const OrderDetail = () => {
         }
       }
 
+    const originTotal = () => {
+        console.log(items)
+        let result=0;
+        for (let i=0; i<items.length;i++) {
+            result+= items[i].Item.price
+        }
+        return result
+    }
+   
     useEffect(() => {
         fetchCart()
     },[])
@@ -153,12 +163,12 @@ const OrderDetail = () => {
                             {/* Subtotal */}
                             <div className="flex justify-between py-4">
                                 <h5>Subtotal</h5>
-                                <h5>{"$" + (orderData.total-orderData.ship)}</h5>
+                                <h5>{"$" + originTotal()}</h5>
                             </div>
-                            {/* Tax */}
+                            {/* Discount */}
                             <div className="flex justify-between py-4">
-                                <h5>Tax</h5>
-                                <h5>-</h5>
+                                <h5>Discount</h5>
+                                <h5>{orderData.total-orderData.ship-originTotal()}</h5>
                             </div>
                             {/* Estimated total */}
                             <div className="flex justify-between py-4">
