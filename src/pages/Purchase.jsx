@@ -392,16 +392,16 @@ const Purchase = () => {
       const open = nearestRestaurant.openData
 
       // Check open time
-      const m = new Date()
-      if (
-        m.getHours() < open.fromHour ||
-        (m.getHours() == open.fromHour && m.getMinutes < open.fromMin) ||
-        m.getHours() > open.toHour ||
-        (m.getHours() == open.toHour && m.getMinutes() > open.toMin)
-      ) {
-        showDistanceError('Restaurant closed.')
-        return
-      }
+      // const m = new Date()
+      // if (
+      //   m.getHours() < open.fromHour ||
+      //   (m.getHours() == open.fromHour && m.getMinutes < open.fromMin) ||
+      //   m.getHours() > open.toHour ||
+      //   (m.getHours() == open.toHour && m.getMinutes() > open.toMin)
+      // ) {
+      //   showDistanceError('Restaurant closed.')
+      //   return
+      // }
 
       // console.log(nearestRestaurant.id)
       // return
