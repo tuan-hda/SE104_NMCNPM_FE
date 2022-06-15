@@ -7,6 +7,7 @@ import arrowIcon from '../images/back-arrow.svg'
 import api from '../api/appApi'
 import * as routes from '../api/apiRoutes'
 import { hambursyLoader } from '../components/LoadingScreen'
+import round2digits from '../utils/round2digits'
 
 const OrderDetail = () => {
   const { currentUser } = useSelector(state => state.user)
@@ -53,9 +54,9 @@ const OrderDetail = () => {
       case 2:
         return 'bg-[#0086FF]'
       case 3:
-        return 'bg-[#FF0000]'
-      case 4:
         return 'bg-[#009D34]'
+      case 4:
+        return 'bg-[#FF0000]'
       default:
         return ''
     }
@@ -96,7 +97,10 @@ const OrderDetail = () => {
     console.log(items)
     let result = 0
     for (let i = 0; i < items.length; i++) {
-      result += items[i].Item.price
+      result +=
+        (items[i].Item.pricePromo
+          ? items[i].Item.pricePromo
+          : items[i].Item.price) * items[i].number
     }
     return result
   }
@@ -111,6 +115,11 @@ const OrderDetail = () => {
         {hambursyLoader}
       </div>
     )
+
+  const calculateTotal = items => {
+    if (!items || !Array.isArray(items) || !items.length) return
+    return items.reduce((prev, curr) => prev + curr.currentprice, 1)
+  }
 
   return (
     <div className='px-32 py-6'>
@@ -173,25 +182,22 @@ const OrderDetail = () => {
               {/* Subtotal */}
               <div className='flex justify-between py-4'>
                 <h5>Subtotal</h5>
-                <h5>{'$' + originTotal()}</h5>
+                <h5>{'$' + round2digits(originTotal())}</h5>
               </div>
               {/* Discount */}
               <div className='flex justify-between py-4'>
                 <h5>Discount</h5>
                 <h5>
+                  $
                   {Number(
-                    (orderData.total - orderData.ship - originTotal()).toFixed(
-                      2
-                    )
+                    (originTotal() - calculateTotal(items) + 1).toFixed(2)
                   )}
                 </h5>
               </div>
               {/* Estimated total */}
               <div className='flex justify-between py-4'>
                 <h5>Estimated total</h5>
-                <h5>
-                  {'$' + Number((orderData.total - orderData.ship).toFixed(2))}
-                </h5>
+                <h5>{'$' + Number((calculateTotal(items) - 1).toFixed(2))}</h5>
               </div>
               {/* Delivery fee */}
               <div className='flex justify-between py-4'>
@@ -201,7 +207,7 @@ const OrderDetail = () => {
               {/* Total */}
               <div className='flex justify-between py-4'>
                 <h5 className='font-semibold'>Total</h5>
-                <h5 className='font-semibold'>{'$' + orderData.total}</h5>
+                <h5 className='font-semibold'>{'$' + calculateTotal(items)}</h5>
               </div>
             </div>
           </div>
