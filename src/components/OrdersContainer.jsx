@@ -135,14 +135,13 @@ const OrdersContainer = () => {
               <col span='1' width='15%' />
               <col span='1' width='20%' />
               <col span='1' width='20%' />
-              <col span='1' width='20%' />
               <col span='1' width='15%' />
             </colgroup>
             <thead>
               <tr className='font-semibold text-left' height='40px'>
                 <th>Order ID</th>
                 <th>Purchase date</th>
-                <th>Total</th>
+                {/* <th>Total</th> */}
                 <th>Status</th>
                 <th>Payment</th>
               </tr>
@@ -161,9 +160,9 @@ const OrdersContainer = () => {
                         {'#' + o.id}
                       </td>
                       <td>{reformatDate(o.date.substring(0, 10))}</td>
-                      <td className='text-primary'>
+                      {/* <td className='text-primary'>
                         {'$ ' + round2digits(o.total)}
-                      </td>
+                      </td> */}
                       <td className={getTextColor(o.billstatus)}>
                         {getDeliveryStatus(o.billstatus)}
                       </td>
