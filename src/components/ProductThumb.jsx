@@ -41,7 +41,7 @@ const ProductThumb = ({ product }) => {
     return (
       <>
         {product.pricePromo !== product.price && (
-          <span className='mr-4 line-through'>$ {product.pricePromo}</span>
+          <span className='mr-4 line-through'>$ {product.price}</span>
         )}
         <span className='font-bold text-red-500'>$ {product.pricePromo}</span>
       </>
