@@ -36,7 +36,7 @@ const Cart = ({ qty }) => {
         routes.DISPLAY_CART_ITEM,
         routes.getAccessTokenHeader(token)
       )
-
+      console.log(result.data.cartItems)
       if (result.data.cartItems !== 'hmu') setItems([...result.data.cartItems])
     } catch (err) {
       console.log(err)
