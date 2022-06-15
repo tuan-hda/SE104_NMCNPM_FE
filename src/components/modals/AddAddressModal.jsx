@@ -349,6 +349,7 @@ const AddAddressModal = ({
               name='phone'
               value={address.phone}
               onChange={handleChange}
+              maxLength={10}
             />
             <p className='text-red-500 ml-4 mt-1'>{error.phone}</p>
           </div>
