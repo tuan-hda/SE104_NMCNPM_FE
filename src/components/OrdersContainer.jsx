@@ -97,7 +97,6 @@ const OrdersContainer = () => {
         o =>
           String(o.id).toLowerCase().includes(value) ||
           reformatDate(o.date.substring(0, 10)).toLowerCase().includes(value) ||
-          String(o.total).toLowerCase().includes(value) ||
           getDeliveryStatus(o.billstatus).toLowerCase().includes(value) ||
           getPaymentStatus(o.payment).toLowerCase().includes(value)
       )
