@@ -48,7 +48,7 @@ const RecommendationItems = () => {
       <div className="w-max flex gap-x-16 mb-14">
           {/* Product Thumbs */}
           {Object.keys(productData) !== 0 && 
-            productData.map((p, i) => {
+            (productData || []).map((p, i) => {
               return <ProductThumb key={i} product={p} />
             })
           }  
