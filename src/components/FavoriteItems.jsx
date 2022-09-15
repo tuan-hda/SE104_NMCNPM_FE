@@ -58,7 +58,7 @@ const FavoriteItems = () => {
         className="flex gap-x-10 mb-14"
         >  
           {/* Product Thumbs */}
-          {Object.keys(productData) !== 0 && productData.map((p, i) => {
+          {Array.isArray(productData) && productData.map((p, i) => {
               return <ProductThumb key={i} product={p} />
             })
           }
